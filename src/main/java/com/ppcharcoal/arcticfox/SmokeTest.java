@@ -191,8 +191,8 @@ public final class SmokeTest {
             }
         }
         double exposedPct = total == 0 ? 0 : 100.0 * exposed / total;
-        log("ores in 36 chunks: %d, exposed to air/fluid: %.1f%% (expected > 40%%), raw ore vein blocks: %d (expected 0)", total, exposedPct, rawBlocks);
-        if (total == 0 || exposedPct < 40 || rawBlocks > 0) ok = false;
+        log("ores in 36 chunks: %d, exposed to air/fluid: %.1f%% (expected > 50%%), raw ore vein blocks: %d (expected 0)", total, exposedPct, rawBlocks);
+        if (total == 0 || exposedPct < 50 || rawBlocks > 0) ok = false;
 
         // --- evaporation: a placed water source is scheduled, a waterlogged grate is not
         BlockPos base = level.getHeightmapPos(Heightmap.Types.WORLD_SURFACE, new BlockPos(8, 0, 8)).above(3);

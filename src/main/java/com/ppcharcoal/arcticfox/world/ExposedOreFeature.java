@@ -27,7 +27,7 @@ public class ExposedOreFeature extends Feature<ExposedOreFeature.Config> {
         public static final Codec<Config> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 Codec.list(OreConfiguration.TargetBlockState.CODEC).fieldOf("targets").forGetter(Config::targets),
                 Codec.intRange(0, 64).fieldOf("size").forGetter(Config::size),
-                Codec.floatRange(0.0F, 1.0F).optionalFieldOf("buried_chance", 0.08F).forGetter(Config::buriedChance)
+                Codec.floatRange(0.0F, 1.0F).optionalFieldOf("buried_chance", 0.03F).forGetter(Config::buriedChance)
         ).apply(instance, Config::new));
     }
 

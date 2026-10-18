@@ -1,0 +1,80 @@
+{
+  "dimensions": {
+    "minecraft:overworld": {
+      "type": "minecraft:overworld",
+      "generator": {
+        "type": "minecraft:noise",
+        "biome_source": {
+          "type": "arcticfox:arctic",
+          "delegate": {
+            "type": "minecraft:multi_noise",
+            "preset": "minecraft:overworld"
+          },
+          "remap": {
+            "minecraft:badlands": "minecraft:snowy_plains",
+            "minecraft:bamboo_jungle": "minecraft:snowy_taiga",
+            "minecraft:beach": "minecraft:snowy_beach",
+            "minecraft:birch_forest": "minecraft:snowy_taiga",
+            "minecraft:cherry_grove": "minecraft:grove",
+            "minecraft:cold_ocean": "minecraft:frozen_ocean",
+            "minecraft:dark_forest": "minecraft:grove",
+            "minecraft:deep_cold_ocean": "minecraft:deep_frozen_ocean",
+            "minecraft:deep_lukewarm_ocean": "minecraft:deep_frozen_ocean",
+            "minecraft:deep_ocean": "minecraft:deep_frozen_ocean",
+            "minecraft:desert": "minecraft:snowy_plains",
+            "minecraft:eroded_badlands": "minecraft:ice_spikes",
+            "minecraft:flower_forest": "minecraft:grove",
+            "minecraft:forest": "minecraft:snowy_taiga",
+            "minecraft:jungle": "minecraft:snowy_taiga",
+            "minecraft:lukewarm_ocean": "minecraft:frozen_ocean",
+            "minecraft:mangrove_swamp": "minecraft:ice_spikes",
+            "minecraft:meadow": "minecraft:grove",
+            "minecraft:mushroom_fields": "minecraft:ice_spikes",
+            "minecraft:ocean": "minecraft:frozen_ocean",
+            "minecraft:old_growth_birch_forest": "minecraft:snowy_taiga",
+            "minecraft:old_growth_pine_taiga": "minecraft:snowy_taiga",
+            "minecraft:old_growth_spruce_taiga": "minecraft:snowy_taiga",
+            "minecraft:plains": "minecraft:snowy_plains",
+            "minecraft:river": "minecraft:frozen_river",
+            "minecraft:savanna": "minecraft:snowy_plains",
+            "minecraft:savanna_plateau": "minecraft:snowy_plains",
+            "minecraft:sparse_jungle": "minecraft:snowy_plains",
+            "minecraft:stony_peaks": "minecraft:frozen_peaks",
+            "minecraft:stony_shore": "minecraft:snowy_beach",
+            "minecraft:sunflower_plains": "minecraft:snowy_plains",
+            "minecraft:swamp": "minecraft:snowy_plains",
+            "minecraft:taiga": "minecraft:snowy_taiga",
+            "minecraft:warm_ocean": "minecraft:frozen_ocean",
+            "minecraft:windswept_forest": "minecraft:grove",
+            "minecraft:windswept_gravelly_hills": "minecraft:snowy_slopes",
+            "minecraft:windswept_hills": "minecraft:snowy_slopes",
+            "minecraft:windswept_savanna": "minecraft:snowy_slopes",
+            "minecraft:wooded_badlands": "minecraft:snowy_taiga"
+          }
+        },
+        "settings": "minecraft:overworld"
+      }
+    },
+    "minecraft:the_end": {
+      "type": "minecraft:the_end",
+      "generator": {
+        "type": "minecraft:noise",
+        "biome_source": {
+          "type": "minecraft:the_end"
+        },
+        "settings": "minecraft:end"
+      }
+    },
+    "minecraft:the_nether": {
+      "type": "minecraft:the_nether",
+      "generator": {
+        "type": "minecraft:noise",
+        "biome_source": {
+          "type": "minecraft:multi_noise",
+          "preset": "minecraft:nether"
+        },
+        "settings": "minecraft:nether"
+      }
+    }
+  }
+}

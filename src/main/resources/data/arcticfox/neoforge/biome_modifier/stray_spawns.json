@@ -1,0 +1,12 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": "#arcticfox:snowy_surface",
+  "spawners": [
+    {
+      "type": "minecraft:stray",
+      "weight": 90,
+      "minCount": 2,
+      "maxCount": 4
+    }
+  ]
+}

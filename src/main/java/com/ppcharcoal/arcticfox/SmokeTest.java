@@ -235,6 +235,15 @@ public final class SmokeTest {
         if (spawned == null) ok = false;
 
         if (net.neoforged.fml.ModList.get().isLoaded("sereneseasons")) {
+            try {
+                boolean merged = java.util.Arrays.stream(Class.forName("sereneseasons.season.SeasonHooks").getDeclaredMethods())
+                        .anyMatch(mth -> mth.getName().contains("sprinklerRain"));
+                log("SeasonHooks mixin applied=%s (true)", merged);
+                if (!merged) ok = false;
+            } catch (Throwable t) {
+                ArcticFox.LOGGER.error(P + "mixin check failed", t);
+                ok = false;
+            }
             log("sprinkler rain compat: %s, isRainingAt(spawn)=%s", com.ppcharcoal.arcticfox.compat.SprinklerRain.describe(),
                     level.isRainingAt(base));
         }

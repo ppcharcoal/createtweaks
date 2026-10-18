@@ -118,7 +118,9 @@ public final class SmokeTest {
             }
             log("advancements loaded: %d", server.getAdvancements().getAllAdvancements().size());
             boolean woodenRecipe = server.getRecipeManager().byKey(ResourceLocation.parse("minecraft:wooden_pickaxe")).isPresent();
-            boolean flintRecipe = server.getRecipeManager().byKey(ResourceLocation.parse("minecraft:stone_pickaxe")).isPresent();
+            boolean flintRecipe = server.getRecipeManager().byKey(ResourceLocation.parse("minecraft:stone_pickaxe"))
+                    .map(h -> h.value().getIngredients().stream().anyMatch(i -> i.test(Items.FLINT.getDefaultInstance())))
+                    .orElse(false);
             boolean copperRecipe = server.getRecipeManager().byKey(ArcticFox.id("copper_pickaxe")).isPresent();
             log("recipes: wooden_pickaxe=%s (false) flint/stone_pickaxe=%s (true) copper_pickaxe=%s (true)", woodenRecipe, flintRecipe, copperRecipe);
             if (woodenRecipe || !flintRecipe || !copperRecipe) ok = false;

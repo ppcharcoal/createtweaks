@@ -46,3 +46,6 @@ type = "optional"
 versionRange = "*"
 ordering = "NONE"
 side = "BOTH"
+
+[[mixins]]
+config = "arcticfox.mixins.json"

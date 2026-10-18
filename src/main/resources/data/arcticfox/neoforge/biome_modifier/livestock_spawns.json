@@ -3,28 +3,28 @@
   "biomes": "#arcticfox:snowy_land",
   "spawners": [
     {
-      "type": "minecraft:sheep",
-      "weight": 8,
+      "type": "arcticfox:winter_sheep",
+      "weight": 5,
       "minCount": 2,
-      "maxCount": 4
+      "maxCount": 3
     },
     {
-      "type": "minecraft:cow",
-      "weight": 6,
+      "type": "arcticfox:winter_cow",
+      "weight": 4,
       "minCount": 2,
-      "maxCount": 4
+      "maxCount": 3
     },
     {
       "type": "minecraft:pig",
-      "weight": 6,
+      "weight": 3,
       "minCount": 2,
-      "maxCount": 4
+      "maxCount": 3
     },
     {
       "type": "minecraft:chicken",
-      "weight": 6,
+      "weight": 3,
       "minCount": 2,
-      "maxCount": 4
+      "maxCount": 3
     }
   ]
 }

@@ -66,6 +66,8 @@ dependencies {
         runtimeOnly "maven.modrinth:create:${create_version}"
         runtimeOnly "maven.modrinth:serene-seasons:${serene_seasons_version}"
         runtimeOnly "maven.modrinth:glitchcore:${glitchcore_version}"
+        runtimeOnly "maven.modrinth:slice-and-dice:${slice_and_dice_version}"
+        runtimeOnly "maven.modrinth:ordsPcFz:${kotlin_for_forge_version}"
     }
 }
 

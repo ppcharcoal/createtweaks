@@ -17,6 +17,14 @@ public final class Config {
             .comment("Force the waterSourceConversion gamerule off on every server start (no infinite water).")
             .define("fluids.disableInfiniteWater", true);
 
+    public static final ModConfigSpec.BooleanValue EVAPORATE_PLACED_WATER = BUILDER
+            .comment("Water source blocks placed after world generation (buckets, dispensers, Create pipes) evaporate. Waterlogged blocks are never affected.")
+            .define("fluids.evaporatePlacedWater", true);
+
+    public static final ModConfigSpec.IntValue EVAPORATION_SECONDS = BUILDER
+            .comment("Seconds before a placed water source evaporates.")
+            .defineInRange("fluids.evaporationSeconds", 15, 1, 3600);
+
     public static final ModConfigSpec.BooleanValue SCORIA_GENERATORS = BUILDER
             .comment("Fluid interactions that would create blocks in #arcticfox:fluid_generator_outputs (cobblestone, stone, Create limestone/scoria) create useless Scoria instead.")
             .define("fluids.scoriaGenerators", true);
@@ -36,6 +44,10 @@ public final class Config {
     public static final ModConfigSpec.ConfigValue<String> WINTER_SUB_SEASON = BUILDER
             .comment("Serene Seasons sub-season to lock to: early_winter, mid_winter or late_winter.")
             .define("compat.winterSubSeason", "mid_winter");
+
+    public static final ModConfigSpec.BooleanValue SPRINKLER_RAIN_FIX = BUILDER
+            .comment("Let Create Slice & Dice sprinkler 'rain' count as rain while Serene Seasons is installed (replaces Serene & Slice Compat).")
+            .define("compat.sprinklerRainFix", true);
 
     public static final ModConfigSpec SPEC = BUILDER.build();
 

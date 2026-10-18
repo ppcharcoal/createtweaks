@@ -22,6 +22,8 @@ public final class ArcticFox {
     public ArcticFox(IEventBus modBus, ModContainer container) {
         ModBlocks.BLOCKS.register(modBus);
         ModItems.ITEMS.register(modBus);
+        com.ppcharcoal.arcticfox.registry.ModEntities.ENTITY_TYPES.register(modBus);
+        ModWorldgen.FEATURES.register(modBus);
         ModWorldgen.BIOME_SOURCES.register(modBus);
         ModConditions.CONDITIONS.register(modBus);
 

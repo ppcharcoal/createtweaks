@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.ppcharcoal.arcticfox.mixin",
+  "plugin": "com.ppcharcoal.arcticfox.mixin.ArcticMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "SeasonHooksMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}

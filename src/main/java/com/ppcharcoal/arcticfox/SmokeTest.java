@@ -154,6 +154,7 @@ public final class SmokeTest {
             log("lava+water in world produces: %s (expected arcticfox:scoria)", BuiltInRegistries.BLOCK.getKey(fluidResult.getBlock()));
             if (!fluidResult.is(com.ppcharcoal.arcticfox.registry.ModBlocks.SCORIA.get())) ok = false;
 
+            ok &= checkNewFeatures(server, level);
             ok &= checkCompat(server, level);
         } catch (Throwable t) {
             ArcticFox.LOGGER.error(P + "smoke test crashed", t);
@@ -161,6 +162,83 @@ public final class SmokeTest {
         }
         log(ok ? "ARCTICFOX SMOKETEST PASS" : "ARCTICFOX SMOKETEST FAIL");
         server.halt(false);
+    }
+
+    private static boolean checkNewFeatures(MinecraftServer server, ServerLevel level) {
+        boolean ok = true;
+        // --- ores: generate a patch of chunks and measure how many ore blocks touch air/fluid
+        java.util.Set<net.minecraft.world.level.block.Block> ores = java.util.Set.of(
+                Blocks.COAL_ORE, Blocks.DEEPSLATE_COAL_ORE, Blocks.IRON_ORE, Blocks.DEEPSLATE_IRON_ORE,
+                Blocks.COPPER_ORE, Blocks.DEEPSLATE_COPPER_ORE, Blocks.GOLD_ORE, Blocks.DEEPSLATE_GOLD_ORE,
+                Blocks.REDSTONE_ORE, Blocks.DEEPSLATE_REDSTONE_ORE, Blocks.LAPIS_ORE, Blocks.DEEPSLATE_LAPIS_ORE,
+                Blocks.DIAMOND_ORE, Blocks.DEEPSLATE_DIAMOND_ORE, Blocks.RAW_IRON_BLOCK, Blocks.RAW_COPPER_BLOCK);
+        int total = 0, exposed = 0, rawBlocks = 0;
+        BlockPos.MutableBlockPos m = new BlockPos.MutableBlockPos();
+        for (int cx = 20; cx < 26; cx++) {
+            for (int cz = 20; cz < 26; cz++) {
+                net.minecraft.world.level.chunk.LevelChunk chunk = level.getChunk(cx, cz);
+                for (int x = 1; x < 15; x++) for (int z = 1; z < 15; z++) for (int y = -63; y < 200; y++) {
+                    m.set(chunk.getPos().getMinBlockX() + x, y, chunk.getPos().getMinBlockZ() + z);
+                    BlockState st = chunk.getBlockState(m);
+                    if (!ores.contains(st.getBlock())) continue;
+                    if (st.is(Blocks.RAW_IRON_BLOCK) || st.is(Blocks.RAW_COPPER_BLOCK)) { rawBlocks++; continue; }
+                    total++;
+                    for (net.minecraft.core.Direction d : net.minecraft.core.Direction.values()) {
+                        BlockState n = level.getBlockState(m.relative(d));
+                        if (n.isAir() || !n.getFluidState().isEmpty()) { exposed++; break; }
+                    }
+                }
+            }
+        }
+        double exposedPct = total == 0 ? 0 : 100.0 * exposed / total;
+        log("ores in 36 chunks: %d, exposed to air/fluid: %.1f%% (expected > 40%%), raw ore vein blocks: %d (expected 0)", total, exposedPct, rawBlocks);
+        if (total == 0 || exposedPct < 40 || rawBlocks > 0) ok = false;
+
+        // --- evaporation: a placed water source is scheduled, a waterlogged grate is not
+        BlockPos base = level.getHeightmapPos(Heightmap.Types.WORLD_SURFACE, new BlockPos(8, 0, 8)).above(3);
+        int before = com.ppcharcoal.arcticfox.world.Evaporation.get(level).size();
+        level.setBlock(base, Blocks.WATER.defaultBlockState(), 3);
+        int afterWater = com.ppcharcoal.arcticfox.world.Evaporation.get(level).size();
+        BlockPos grate = base.east(3);
+        level.setBlock(grate, Blocks.WAXED_COPPER_GRATE.defaultBlockState()
+                .setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED, true), 3);
+        int afterGrate = com.ppcharcoal.arcticfox.world.Evaporation.get(level).size();
+        log("evaporation: water source scheduled=%s (true) waterlogged grate scheduled=%s (false)", afterWater == before + 1, afterGrate != afterWater);
+        if (afterWater != before + 1 || afterGrate != afterWater) ok = false;
+
+        if (net.neoforged.fml.ModList.get().isLoaded("create")) {
+            try {
+                Class<?> fanType = Class.forName("com.simibubi.create.content.kinetics.fan.processing.FanProcessingType");
+                Object type = fanType.getMethod("getAt", net.minecraft.world.level.Level.class, BlockPos.class).invoke(null, level, grate);
+                log("create: fan processing type at waterlogged copper grate = %s (expected splashing)", type == null ? "none" : type.getClass().getSimpleName());
+                if (type == null || !type.getClass().getSimpleName().toLowerCase(java.util.Locale.ROOT).contains("splash")) ok = false;
+            } catch (Throwable t) {
+                ArcticFox.LOGGER.error(P + "fan check failed", t);
+                ok = false;
+            }
+        }
+
+        // --- recipes & animals
+        boolean smoking = server.getRecipeManager().byKey(ArcticFox.id("leather_from_smoking_rotten_flesh"))
+                .map(h -> h.value().getType() == net.minecraft.world.item.crafting.RecipeType.SMOKING).orElse(false);
+        log("smoker rotten flesh -> leather recipe present=%s (true)", smoking);
+        if (!smoking) ok = false;
+        var snowyPlains = level.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.BIOME)
+                .getHolderOrThrow(net.minecraft.world.level.biome.Biomes.SNOWY_PLAINS);
+        var creatures = snowyPlains.value().getMobSettings().getMobs(net.minecraft.world.entity.MobCategory.CREATURE).unwrap();
+        boolean cow = creatures.stream().anyMatch(d -> d.type == com.ppcharcoal.arcticfox.registry.ModEntities.WINTER_COW.get());
+        boolean sheep = creatures.stream().anyMatch(d -> d.type == com.ppcharcoal.arcticfox.registry.ModEntities.WINTER_SHEEP.get());
+        log("snowy plains spawns winter cow=%s winter sheep=%s (true/true)", cow, sheep);
+        if (!cow || !sheep) ok = false;
+        var spawned = com.ppcharcoal.arcticfox.registry.ModEntities.WINTER_SHEEP.get().create(level);
+        log("winter sheep entity creatable=%s", spawned != null);
+        if (spawned == null) ok = false;
+
+        if (net.neoforged.fml.ModList.get().isLoaded("sereneseasons")) {
+            log("sprinkler rain compat: %s, isRainingAt(spawn)=%s", com.ppcharcoal.arcticfox.compat.SprinklerRain.describe(),
+                    level.isRainingAt(base));
+        }
+        return ok;
     }
 
     private static boolean checkCompat(MinecraftServer server, ServerLevel level) {

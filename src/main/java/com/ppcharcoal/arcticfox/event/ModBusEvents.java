@@ -46,6 +46,9 @@ public final class ModBusEvents {
             event.insertAfter(new ItemStack(Items.STONE_AXE), new ItemStack(ModItems.COPPER_AXE.get()), parentOnly);
         } else if (event.getTabKey() == CreativeModeTabs.NATURAL_BLOCKS) {
             event.accept(ModItems.SCORIA.get());
+        } else if (event.getTabKey() == CreativeModeTabs.SPAWN_EGGS) {
+            event.accept(ModItems.WINTER_COW_SPAWN_EGG.get());
+            event.accept(ModItems.WINTER_SHEEP_SPAWN_EGG.get());
         }
     }
 }

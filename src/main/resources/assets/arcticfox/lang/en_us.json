@@ -6,5 +6,9 @@
   "item.arcticfox.copper_hoe": "Copper Hoe",
   "block.arcticfox.scoria": "Scoria",
   "message.arcticfox.dimension_sealed": "The way is frozen shut.",
-  "arcticfox.configuration.title": "Arctic Fox : Create Tweaks"
+  "arcticfox.configuration.title": "Arctic Fox : Create Tweaks",
+  "entity.arcticfox.winter_cow": "Winter Cow",
+  "entity.arcticfox.winter_sheep": "Winter Sheep",
+  "item.arcticfox.winter_cow_spawn_egg": "Winter Cow Spawn Egg",
+  "item.arcticfox.winter_sheep_spawn_egg": "Winter Sheep Spawn Egg"
 }

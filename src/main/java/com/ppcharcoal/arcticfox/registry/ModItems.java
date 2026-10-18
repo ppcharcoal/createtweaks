@@ -15,6 +15,7 @@ import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
+import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -69,6 +70,11 @@ public final class ModItems {
             () -> new HoeItem(COPPER, new Item.Properties().attributes(DiggerItem.createAttributes(COPPER, -1.0F, -2.0F))));
 
     public static final DeferredItem<BlockItem> SCORIA = ITEMS.registerSimpleBlockItem(ModBlocks.SCORIA);
+
+    public static final DeferredItem<DeferredSpawnEggItem> WINTER_COW_SPAWN_EGG = ITEMS.register("winter_cow_spawn_egg",
+            () -> new DeferredSpawnEggItem(ModEntities.WINTER_COW, 0xD9DCE0, 0x6B7380, new Item.Properties()));
+    public static final DeferredItem<DeferredSpawnEggItem> WINTER_SHEEP_SPAWN_EGG = ITEMS.register("winter_sheep_spawn_egg",
+            () -> new DeferredSpawnEggItem(ModEntities.WINTER_SHEEP, 0xF2F4F7, 0x2E2A30, new Item.Properties()));
 
     private ModItems() {
     }

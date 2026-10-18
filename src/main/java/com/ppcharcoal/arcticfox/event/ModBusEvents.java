@@ -13,7 +13,7 @@ import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 
 import java.util.List;
 
-@EventBusSubscriber(modid = ArcticFox.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = ArcticFox.MOD_ID)
 public final class ModBusEvents {
     public static final List<Item> WOODEN_TOOLS = List.of(
             Items.WOODEN_SWORD, Items.WOODEN_SHOVEL, Items.WOODEN_PICKAXE, Items.WOODEN_AXE, Items.WOODEN_HOE);

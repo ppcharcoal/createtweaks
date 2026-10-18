@@ -76,7 +76,8 @@ public final class SmokeTest {
             log("samples=%d oceanBiomes=%.1f%% terrainBelowSea=%.1f%% nonSnowySurface=%d", samples,
                     100.0 * oceans / samples, 100.0 * below / samples, nonSnowy);
             log("height mean=%.1f sd=%.1f min=%d max=%d lowlandWithinSea+24=%.1f%%", mean, sd, min, max, 100.0 * flatColumns / samples);
-            biomes.forEach((k, v) -> log("  biome %-32s %5.1f%%", k, 100.0 * v / samples));
+            final int total = samples;
+            biomes.forEach((k, v) -> log("  biome %-32s %5.1f%%", k, 100.0 * v / total));
             if (nonSnowy > samples / 50) {
                 log("FAIL: too many non-snowy surface samples");
                 ok = false;

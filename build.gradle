@@ -63,9 +63,9 @@ dependencies {
 
     // Only for the CI compatibility smoke test (./gradlew runSmokeTest -PcompatMods); never shipped.
     if (project.hasProperty('compatMods')) {
-        localRuntime "maven.modrinth:create:${create_version}"
-        localRuntime "maven.modrinth:serene-seasons:${serene_seasons_version}"
-        localRuntime "maven.modrinth:glitchcore:${glitchcore_version}"
+        runtimeOnly "maven.modrinth:create:${create_version}"
+        runtimeOnly "maven.modrinth:serene-seasons:${serene_seasons_version}"
+        runtimeOnly "maven.modrinth:glitchcore:${glitchcore_version}"
     }
 }
 

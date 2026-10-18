@@ -69,4 +69,4 @@ Mod id: `arcticfox` · Requires NeoForge 21.1+ · Server **and** client.
 ```
 ./gradlew build
 ```
-The jar ends up in `build/libs/`. GitHub Actions builds every push, runs a dedicated-server world generation smoke test, and uploads the jar as an artifact (tags starting with `v` publish a release).
+The jar ends up in `build/libs/`. GitHub Actions builds every push, then boots a dedicated server twice - once alone and once with Create + Serene Seasons - generates a world and checks biomes, terrain, advancements, recipes, mining tiers, scoria generation and the winter lock. The jar is uploaded as an artifact, and tags starting with `v` publish a release. Build/test logs are mirrored to the `ci-logs` branch.

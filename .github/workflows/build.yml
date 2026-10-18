@@ -5,6 +5,8 @@ on:
     branches: [ '**' ]
     tags: [ 'v*' ]
   pull_request:
+  release:
+    types: [ published ]
   workflow_dispatch:
 
 permissions:
@@ -77,8 +79,9 @@ jobs:
           name: arcticfox-jar
           path: build/libs/*.jar
 
-      - name: Publish release (tags only)
-        if: startsWith(github.ref, 'refs/tags/v')
+      - name: Attach jar to release
+        if: github.event_name == 'release' || startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.event.release.tag_name || github.ref_name }}
           files: build/libs/*.jar

@@ -10,6 +10,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.StructureTags;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.NoiseColumn;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeSource;
@@ -148,12 +149,67 @@ public final class SmokeTest {
                     server.getGameRules().getBoolean(net.minecraft.world.level.GameRules.RULE_DO_PATROL_SPAWNING),
                     server.getGameRules().getBoolean(net.minecraft.world.level.GameRules.RULE_DO_TRADER_SPAWNING));
             log("scoria block registered: %s", BuiltInRegistries.BLOCK.containsKey(ArcticFox.id("scoria")));
+
+            BlockState fluidResult = net.neoforged.neoforge.event.EventHooks.fireFluidPlaceBlockEvent(level, BlockPos.ZERO, BlockPos.ZERO, Blocks.COBBLESTONE.defaultBlockState());
+            log("lava+water in world produces: %s (expected arcticfox:scoria)", BuiltInRegistries.BLOCK.getKey(fluidResult.getBlock()));
+            if (!fluidResult.is(com.ppcharcoal.arcticfox.registry.ModBlocks.SCORIA.get())) ok = false;
+
+            ok &= checkCompat(server, level);
         } catch (Throwable t) {
             ArcticFox.LOGGER.error(P + "smoke test crashed", t);
             ok = false;
         }
         log(ok ? "ARCTICFOX SMOKETEST PASS" : "ARCTICFOX SMOKETEST FAIL");
         server.halt(false);
+    }
+
+    private static boolean checkCompat(MinecraftServer server, ServerLevel level) {
+        boolean ok = true;
+        net.neoforged.fml.ModList mods = net.neoforged.fml.ModList.get();
+        if (mods.isLoaded("sereneseasons")) {
+            try {
+                Object state = Class.forName("sereneseasons.api.season.SeasonHelper")
+                        .getMethod("getSeasonState", net.minecraft.world.level.Level.class).invoke(null, level);
+                Object sub = state.getClass().getMethod("getSubSeason").invoke(state);
+                var key = new java.util.concurrent.atomic.AtomicReference<GameRules.Key<GameRules.BooleanValue>>();
+                GameRules.visitGameRuleTypes(new GameRules.GameRuleTypeVisitor() {
+                    @Override
+                    @SuppressWarnings("unchecked")
+                    public <T extends GameRules.Value<T>> void visit(GameRules.Key<T> k, GameRules.Type<T> type) {
+                        if (k.getId().equals("doSeasonCycle")) key.set((GameRules.Key<GameRules.BooleanValue>) (Object) k);
+                    }
+                });
+                Boolean cycle = key.get() == null ? null : server.getGameRules().getBoolean(key.get());
+                log("serene seasons: subSeason=%s doSeasonCycle=%s (expected MID_WINTER / false)", sub, cycle);
+                if (!"MID_WINTER".equals(String.valueOf(sub)) || !Boolean.FALSE.equals(cycle)) ok = false;
+            } catch (Throwable t) {
+                ArcticFox.LOGGER.error(P + "serene seasons check failed", t);
+                ok = false;
+            }
+        }
+        if (mods.isLoaded("create")) {
+            try {
+                var bottomless = net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.FLUID,
+                        ResourceLocation.fromNamespaceAndPath("create", "bottomless/allow"));
+                boolean waterBottomless = net.minecraft.world.level.material.Fluids.WATER.defaultFluidState().is(bottomless);
+                log("create: water is bottomless=%s (expected false)", waterBottomless);
+                if (waterBottomless) ok = false;
+
+                Class<?> spill = Class.forName("com.simibubi.create.api.event.PipeCollisionEvent$Spill");
+                Object event = spill.getConstructor(net.minecraft.world.level.Level.class, BlockPos.class,
+                                net.minecraft.world.level.material.Fluid.class, net.minecraft.world.level.material.Fluid.class, BlockState.class)
+                        .newInstance(level, BlockPos.ZERO, net.minecraft.world.level.material.Fluids.WATER, net.minecraft.world.level.material.Fluids.LAVA, null);
+                net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post((net.neoforged.bus.api.Event) event);
+                BlockState pipeResult = (BlockState) spill.getMethod("getState").invoke(event);
+                log("create: lava pipe into water produces %s (expected arcticfox:scoria)",
+                        pipeResult == null ? "null" : BuiltInRegistries.BLOCK.getKey(pipeResult.getBlock()));
+                if (pipeResult == null || !pipeResult.is(com.ppcharcoal.arcticfox.registry.ModBlocks.SCORIA.get())) ok = false;
+            } catch (Throwable t) {
+                ArcticFox.LOGGER.error(P + "create check failed", t);
+                ok = false;
+            }
+        }
+        return ok;
     }
 
     private static boolean isAir(BlockState state) {

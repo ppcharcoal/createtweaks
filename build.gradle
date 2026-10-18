@@ -9,6 +9,10 @@ group = mod_group_id
 
 repositories {
     mavenLocal()
+    exclusiveContent {
+        forRepository { maven { name = 'Modrinth'; url = 'https://api.modrinth.com/maven' } }
+        filter { includeGroup 'maven.modrinth' }
+    }
     maven {
         name = 'BlameJared (JEI)'
         url = 'https://maven.blamejared.com'
@@ -56,6 +60,13 @@ neoForge {
 
 dependencies {
     compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
+
+    // Only for the CI compatibility smoke test (./gradlew runSmokeTest -PcompatMods); never shipped.
+    if (project.hasProperty('compatMods')) {
+        localRuntime "maven.modrinth:create:${create_version}"
+        localRuntime "maven.modrinth:serene-seasons:${serene_seasons_version}"
+        localRuntime "maven.modrinth:glitchcore:${glitchcore_version}"
+    }
 }
 
 var generateModMetadata = tasks.register('generateModMetadata', ProcessResources) {

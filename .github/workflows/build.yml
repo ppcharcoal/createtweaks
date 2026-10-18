@@ -39,6 +39,14 @@ jobs:
           grep -E "ArcticFox/SMOKE|ERROR|Exception|Failed to|Couldn't" smoke.log | head -200 || true
           grep -q "ARCTICFOX SMOKETEST PASS" smoke.log
 
+      - name: Compatibility smoke test (Create + Serene Seasons)
+        run: |
+          rm -rf run-smoke/world
+          timeout 1500 ./gradlew runSmokeTest -PcompatMods --stacktrace 2>&1 | tee compat.log || true
+          echo "----- compat report -----"
+          grep -E "ArcticFox/SMOKE|ERROR|Exception" compat.log | head -200 || true
+          grep -q "ARCTICFOX SMOKETEST PASS" compat.log
+
       - name: Upload smoke test log
         if: always()
         uses: actions/upload-artifact@v4
@@ -53,7 +61,7 @@ jobs:
         if: always()
         run: |
           mkdir -p /tmp/ci-logs
-          cp build.log smoke.log /tmp/ci-logs/ 2>/dev/null || true
+          cp build.log smoke.log compat.log /tmp/ci-logs/ 2>/dev/null || true
           cp run-smoke/logs/latest.log /tmp/ci-logs/server.log 2>/dev/null || true
           cd /tmp/ci-logs
           git init -q -b ci-logs

@@ -13,7 +13,8 @@ Mod id: `arcticfox` · Requires NeoForge 21.1+ · Server **and** client.
 - **Mostly land, not ocean.** Continentalness is pushed inland, so oceans are noticeably rarer and the frozen biomes are real land, not just ice sheets on water.
 - **Flat wasteland terrain.** Lowland relief between sea level and the foothills is squashed to ~30% of vanilla, giving wide, flat, windswept plains. Mountain ranges and peaks keep their shape (just slightly lower).
 - **No floating islands.** The terrain "factor" has a floor and the 3D terrain noise is dampened, which stops land from detaching into floating chunks and overhangs.
-- **Livestock still exists.** Cows, sheep, pigs and chickens are added to snowy land biomes so leather, wool, beds and food stay possible.
+- **Winter Cows & Winter Sheep.** New pale, shaggy cows and dark-faced sheep spawn sparsely on snowy land (on snow as well as grass), breed true, can be milked/sheared, and have spawn eggs. Winter cows drop 1-3 leather. A few pigs and chickens spawn too.
+- **Ores only where you can see them.** Coal, copper, iron, gold, redstone, lapis, diamond, emerald and Create zinc only generate in blocks that touch air or water: cave walls, ravines, cliffs and mountain faces. Only 3% of ore that would be sealed inside solid rock survives, and the huge noise-generated raw iron/copper veins are off. Strip mining finds almost nothing - explore caves instead.
 - Applies to newly created worlds using the default world type (the `minecraft:normal` world preset is overridden).
 
 ### Eternal winter (Serene Seasons)
@@ -25,6 +26,8 @@ Mod id: `arcticfox` · Requires NeoForge 21.1+ · Server **and** client.
 
 ### No infinite resources
 - **No infinite water.** The `waterSourceConversion` gamerule is forced off, so two sources no longer create a third.
+- **Placed water evaporates.** Any water source placed after world generation - bucket, dispenser or Create pipe - evaporates after 15 seconds (configurable). Natural water and **waterlogged blocks** are never touched, so keep water in Create fluid tanks.
+- **Washing with fans.** A **waterlogged copper grate** in front of an encased fan is a permanent bulk-washing catalyst (Create already treats copper grates as fan-transparent and reads their water). Waterlogged iron/Create bars work too.
 - **Create bottomless fluids disabled.** The `create:bottomless/allow` fluid tag is emptied, so a hose pulley in a big lake no longer counts as an infinite source.
 - **No cobblestone/stone generators.** Whenever lava and water meet - in the world *or* inside Create pipes - the block produced is **Scoria**: a cobblestone-like volcanic block that drops **nothing**, not even with Silk Touch. This also catches Create's honey/chocolate + lava limestone and scoria generators. Obsidian is still produced as normal.
   - Outputs are controlled by the block tag `#arcticfox:fluid_generator_outputs`.
@@ -43,6 +46,7 @@ Mod id: `arcticfox` · Requires NeoForge 21.1+ · Server **and** client.
 - **Stone tools are now Flint tools**: crafted from flint and sticks, retextured and renamed. They mine copper, **not iron**.
 - **Copper tools backported** from 1.21.9: sword, shovel, pickaxe, axe and hoe (190 durability, speed 5, enchantability 13). Copper is the first tier that can mine iron.
 - New shapeless recipe: **3 gravel → 1 flint**, so you can't get stuck at the start.
+- **Smoker: rotten flesh → leather.**
 - Progression: punch logs → dig gravel → flint tools → copper → copper tools → iron → diamond.
 
 ### Advancements that stay achievable
@@ -55,10 +59,11 @@ Mod id: `arcticfox` · Requires NeoForge 21.1+ · Server **and** client.
 | Mod | Notes |
 | --- | --- |
 | Create | Pipe lava/water collisions produce scoria; bottomless fluid sources off. No hard dependency. |
-| Serene Seasons / GlitchCore | Locked to winter on every server start. |
+| Serene Seasons / GlitchCore | Locked to winter on every server start. Crops need greenhouses; farmland can be hydrated by waterlogged blocks or sprinklers. |
 | Cold Sweat / Create: Cold Sweat | Works as-is - permanent winter makes heating and insulation essential. |
 | Create: Netherless | Detected automatically; keeps the Nether-material advancements reachable. |
 | JEI | Wooden tools hidden. |
+| Create Slice & Dice | Sprinkler rain works under Serene Seasons: built-in replacement for Serene & Slice Compat, supporting both Slice & Dice 4.3+ (Atmosphere) and 4.2.x and older (WetAir). |
 | Create Aeronautics / Sable, Copycats+, Slice & Dice, Serene & Slice Compat | No conflicts; only the Nether and End are blocked. |
 
 ## Configuration

@@ -26,7 +26,8 @@ jobs:
       - name: Build
         run: |
           chmod +x gradlew
-          ./gradlew build --stacktrace
+          set -o pipefail
+          ./gradlew build --stacktrace 2>&1 | tee build.log
 
       - name: World generation smoke test
         run: |
@@ -47,6 +48,20 @@ jobs:
             smoke.log
             run-smoke/logs/latest.log
           if-no-files-found: ignore
+
+      - name: Publish logs to ci-logs branch
+        if: always()
+        run: |
+          mkdir -p /tmp/ci-logs
+          cp build.log smoke.log /tmp/ci-logs/ 2>/dev/null || true
+          cp run-smoke/logs/latest.log /tmp/ci-logs/server.log 2>/dev/null || true
+          cd /tmp/ci-logs
+          git init -q -b ci-logs
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          echo "${{ github.sha }} ${{ job.status }}" > STATUS
+          git add -A && git commit -q -m "logs for ${{ github.sha }}"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" ci-logs
 
       - name: Upload mod jar
         uses: actions/upload-artifact@v4

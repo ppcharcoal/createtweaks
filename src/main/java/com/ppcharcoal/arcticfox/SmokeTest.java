@@ -60,7 +60,7 @@ public final class SmokeTest {
                     biomes.merge(name, 1, Integer::sum);
                     samples++;
                     if (b.is(BiomeTags.IS_OCEAN)) oceans++;
-                    if (!b.value().coldEnoughToSnow(new BlockPos(x, y, z))) nonSnowy++;
+                    if (!b.is(BiomeTags.IS_OCEAN) && !b.value().coldEnoughToSnow(new BlockPos(x, y, z))) nonSnowy++;
                     if (h < sea) below++;
                     if (!b.is(BiomeTags.IS_OCEAN) && !b.is(BiomeTags.IS_MOUNTAIN)) {
                         if (h >= sea - 2 && h <= sea + 24) flatColumns++;
@@ -73,7 +73,7 @@ public final class SmokeTest {
             }
             double mean = (double) sum / samples;
             double sd = Math.sqrt((double) sumSq / samples - mean * mean);
-            log("samples=%d oceanBiomes=%.1f%% terrainBelowSea=%.1f%% nonSnowySurface=%d", samples,
+            log("samples=%d oceanBiomes=%.1f%% terrainBelowSea=%.1f%% nonSnowyLandSurface=%d", samples,
                     100.0 * oceans / samples, 100.0 * below / samples, nonSnowy);
             log("height mean=%.1f sd=%.1f min=%d max=%d lowlandWithinSea+24=%.1f%%", mean, sd, min, max, 100.0 * flatColumns / samples);
             final int total = samples;

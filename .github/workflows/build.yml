@@ -33,7 +33,7 @@ jobs:
         run: |
           mkdir -p run-smoke
           echo "eula=true" > run-smoke/eula.txt
-          printf "online-mode=false\nlevel-seed=arcticfox\nspawn-protection=0\n" > run-smoke/server.properties
+          printf "online-mode=false\nlevel-seed=arcticfox\nspawn-protection=0\nmax-tick-time=-1\n" > run-smoke/server.properties
           timeout 1500 ./gradlew runSmokeTest --stacktrace 2>&1 | tee smoke.log || true
           echo "----- smoke test report -----"
           grep -E "ArcticFox/SMOKE|ERROR|Exception|Failed to|Couldn't" smoke.log | head -200 || true

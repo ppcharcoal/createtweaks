@@ -23,8 +23,23 @@ Mod id: `arcticfox` · Requires NeoForge 21.1+ · Server **and** client.
 - Frostmaw, igloos, mineshafts, ruined portals and trial chambers all generate in the wastes.
 
 ### Blizzards and deep snow
-- **A snowstorm every night**, cleared at dawn. Natural lightning is suppressed, so it's a blizzard, not a thunderstorm (Trident Channeling still works).
+- **Arctic Fox runs the weather**: each day is either **sunny** or **snowy** (about 50/50, rolled per day from the world seed), and **every night is a blizzard**. Natural lightning is suppressed, so blizzards aren't thunderstorms (Trident Channeling still works).
+- **Blizzard fog**: outdoors in a blizzard, thick white fog closes in to about 20 blocks. Under a roof it clears.
 - **Snow piles up**, up to **3 blocks deep**: layers grow to a full block, then become snow blocks with new layers on top. It builds about a block per stormy night. Snow never settles on glass, ice, campfires or magma, or next to bright light (torches), so greenhouse roofs and lit paths stay clear. Works on its own and alongside Snow! Real Magic.
+
+### Points of interest
+Rare structures reward exploring the wastes:
+- **Buried Camp**: a half-buried tent with a cold campfire, bedroll and supplies (food, coal, flint, leather, sometimes a spear).
+- **Frozen Supply Cache**: chests and barrels sealed inside packed ice, marked by a lantern pole. Seeds, ingots, coal, bone meal.
+- **Trapper's Cabin**: a spruce cabin with a lit fireplace, bed, furnace and stocked chests (seeds, food, saplings, a fishing rod).
+- With Create: **Abandoned Train Station**, a copper-roofed platform with a ticket booth and overgrown rails, stocked with Create parts.
+- With Create: **Abandoned Metro Station** (underground, y -24 to 16), a sealed platform hall with old rails and electron tubes and brass.
+- Ruined portals no longer generate.
+
+### Survival
+- **Cook your food**: raw meat and fish (vanilla and Farmer's Delight) have an 80% chance to give Hunger for 30 s, like rotten flesh.
+- **Fish only live in natural water**: you catch nothing unless the water is connected to water that generated with the world. Bucket ponds, tank water and waterlogged-block pools don't count; holes in a frozen lake do.
+- **A start with trees**: new worlds spawn you in snowy plains with scattered spruces, not a forest and not bare wastes. If it's bare, a few spruces are planted.
 
 ### Farming only indoors
 Crops (and anything else that "grows", like sugar cane and berries) only grow when all three hold:
@@ -102,10 +117,12 @@ With the End sealed, both are built on a **Mechanical Crafter** grid (Create req
 | Mod | Notes |
 | --- | --- |
 | Create | Pipe lava/water collisions produce scoria; bottomless fluid sources off. No hard dependency. |
-| Serene Seasons / GlitchCore | Locked to winter on every server start. Crops need greenhouses; farmland can be hydrated by waterlogged blocks or sprinklers. |
-| Cold Sweat / Create: Cold Sweat | Surface biomes sit around **-12 °C by day and -18 °C at night** (colder in storms), measured in game. Crop growth uses Cold Sweat's real temperature. **No grace period when you respawn at your own bed or respawn anchor** (Cold Sweat would otherwise grant it after every death); first join still gets it. |
+| Serene Seasons / GlitchCore | **Optional.** If installed it's locked to winter, and carrots, potatoes, beetroots (plus Farmer's Delight cabbages and onions) count as winter crops so early greenhouses work. Arctic Fox doesn't need it: it runs the weather and crop rules itself. |
+| Cold Sweat + Create (replaces Create: Cold Sweat) | **A working factory keeps you warm.** Blaze burners (+3 to +20 °C by heat level), lit blaze burners, steam engines on a running boiler, and pipes, pumps, valves, basins, spouts and item drains holding lava or other hot fluids all radiate heat. Fluid tanks with lava and boilers use Cold Sweat's own heating. Measured 2 blocks away: seething burner +13 °C, lava basin +13 °C, lava tank +7 °C. |
+| Cold Sweat | Surface biomes sit around **-12 °C by day and -18 °C at night** (colder in storms), measured in game. Crop growth uses Cold Sweat's real temperature. **No grace period when you respawn at your own bed or respawn anchor** (Cold Sweat would otherwise grant it after every death); first join still gets it. |
+| Farmer's Delight | Its wild crops only spawn in warm biomes, so its seeds (cabbage, tomato, onion, rice) are added to cabin and supply cache loot. Greenhouse crops then feed Slice & Dice's cutting automation. Raw FD meats count as raw food. |
 | Snow! Real Magic | Its own snow covering still works; Arctic Fox stacks snow above one block, up to 3 blocks deep. |
-| Mowzie's Mobs | **Frostmaw is the only boss.** Ferrous Wroughtnaut, Umvuthi and the Sculptor are removed, along with their structures (wrought chamber, Umvuthana grove, monastery) and advancements. Frostmaw spawns in Frozen Wastes and snowfields, and drops and steals its ice crystal as normal. Advancements for jungle, savanna and forest Mowzie mobs that can't spawn here are removed. |
+| Mowzie's Mobs | **Frostmaw is the only boss, and a very rare find** (one per ~96 chunks instead of 25). Ferrous Wroughtnaut, Umvuthi and the Sculptor are removed, along with their structures (wrought chamber, Umvuthana grove, monastery) and advancements. Frostmaw spawns in Frozen Wastes and snowfields, and drops and steals its ice crystal as normal. Advancements for jungle, savanna and forest Mowzie mobs that can't spawn here are removed. |
 | Create: Netherless | Detected automatically; keeps the Nether-material advancements reachable. |
 | JEI | Wooden tools hidden. |
 | Create Slice & Dice | Sprinkler rain works under Serene Seasons: built-in replacement for Serene & Slice Compat, supporting both Slice & Dice 4.3+ (Atmosphere) and 4.2.x and older (WetAir). |

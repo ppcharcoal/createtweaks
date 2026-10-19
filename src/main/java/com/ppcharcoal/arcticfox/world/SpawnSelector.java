@@ -45,6 +45,7 @@ public final class SpawnSelector {
             for (int dz = -64; dz <= 64; dz += 16) {
                 BlockPos column = center.offset(dx, 0, dz);
                 if (!level.getBiome(column.atY(80)).is(SPAWN_BIOMES)) continue;
+                level.getChunk(column.getX() >> 4, column.getZ() >> 4); // heightmaps need the chunk generated
                 BlockPos top = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, column);
                 BlockState ground = level.getBlockState(top.below());
                 if (!ground.getFluidState().isEmpty() || ground.is(BlockTags.ICE)) continue;
@@ -71,7 +72,9 @@ public final class SpawnSelector {
         int trunks = 0;
         for (int x = -radius; x <= radius; x += 2) {
             for (int z = -radius; z <= radius; z += 2) {
-                BlockPos top = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, center.offset(x, 0, z));
+                BlockPos column = center.offset(x, 0, z);
+                level.getChunk(column.getX() >> 4, column.getZ() >> 4);
+                BlockPos top = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, column);
                 if (level.getBlockState(top.below()).is(BlockTags.LOGS)) trunks++;
             }
         }

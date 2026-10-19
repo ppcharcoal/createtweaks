@@ -286,15 +286,16 @@ public final class SmokeTest {
         long saved = level.getDayTime();
         level.setDayTime(saved - saved % 24000 + 14000);
         com.ppcharcoal.arcticfox.world.WinterWeather.updateWeather(level);
-        boolean storm = level.isRaining() && level.isThundering();
+        boolean storm = level.getLevelData().isRaining() && level.getLevelData().isThundering();
         level.setDayTime(saved - saved % 24000 + 1000);
         com.ppcharcoal.arcticfox.world.WinterWeather.updateWeather(level);
-        boolean clearedAtDawn = !level.isThundering();
+        boolean clearedAtDawn = !level.getLevelData().isThundering();
         level.setDayTime(saved);
         log("night snowstorm=%s (true) cleared at dawn=%s (true)", storm, clearedAtDawn);
         if (!storm || !clearedAtDawn) ok = false;
 
         // --- snow stacking: grows past one block but stops at 3
+        level.getChunk(40 >> 4, 40 >> 4);
         BlockPos base = level.getHeightmapPos(Heightmap.Types.WORLD_SURFACE, new BlockPos(40, 0, 40)).above(10);
         for (int dy = -1; dy < 6; dy++) level.setBlock(base.above(dy), dy == -1 ? Blocks.STONE.defaultBlockState() : Blocks.AIR.defaultBlockState(), 3);
         int added = 0;
@@ -312,6 +313,7 @@ public final class SmokeTest {
         if (onGlass) ok = false;
 
         // --- crops: exposed surface farm never grows, sealed underground farm does
+        level.getChunk(-40 >> 4, -40 >> 4);
         BlockPos field = level.getHeightmapPos(Heightmap.Types.WORLD_SURFACE, new BlockPos(-40, 0, -40)).above(2);
         level.setBlock(field.below(), Blocks.FARMLAND.defaultBlockState().setValue(net.minecraft.world.level.block.FarmBlock.MOISTURE, 7), 3);
         level.setBlock(field, Blocks.WHEAT.defaultBlockState(), 3);

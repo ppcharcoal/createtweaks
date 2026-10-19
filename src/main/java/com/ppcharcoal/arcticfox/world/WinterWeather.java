@@ -59,7 +59,7 @@ public final class WinterWeather {
         long t = level.getDayTime() % 24000L;
         if (isNight(level)) {
             int untilDawn = (int) (NIGHT_END - t) + 100;
-            if (!level.isRaining() || !level.isThundering()) {
+            if (!level.getLevelData().isRaining() || !level.getLevelData().isThundering()) {
                 level.setWeatherParameters(0, untilDawn, true, true);
             }
             FORCED.put(level, true);

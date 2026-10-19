@@ -50,8 +50,16 @@ public final class Config {
             .define("compat.sprinklerRainFix", true);
 
     public static final ModConfigSpec.BooleanValue NIGHT_SNOWSTORMS = BUILDER
-            .comment("Every night the overworld gets a snowstorm (cleared at dawn).")
+            .comment("Arctic Fox controls the weather: sunny or snowy days, a blizzard every night.")
             .define("weather.nightSnowstorms", true);
+
+    public static final ModConfigSpec.DoubleValue SNOWY_DAY_CHANCE = BUILDER
+            .comment("Chance that a day is snowy instead of sunny (nights are always blizzards).")
+            .defineInRange("weather.snowyDayChance", 0.5, 0.0, 1.0);
+
+    public static final ModConfigSpec.BooleanValue BLIZZARD_FOG = BUILDER
+            .comment("Thick white fog outdoors during blizzards (client side).")
+            .define("weather.blizzardFog", true);
 
     public static final ModConfigSpec.BooleanValue NO_NATURAL_LIGHTNING = BUILDER
             .comment("Suppress natural lightning so storms are blizzards (trident Channeling still works).")
@@ -80,6 +88,22 @@ public final class Config {
     public static final ModConfigSpec.BooleanValue NO_GRACE_ON_RESPAWN = BUILDER
             .comment("Cold Sweat: players who respawn at their own spawn point (bed / respawn anchor) don't get the grace period again.")
             .define("compat.noGraceOnRespawn", true);
+
+    public static final ModConfigSpec.BooleanValue RAW_FOOD_SICKNESS = BUILDER
+            .comment("Eating raw meat or fish has an 80% chance to give Hunger for 30 seconds, like rotten flesh.")
+            .define("survival.rawFoodSickness", true);
+
+    public static final ModConfigSpec.BooleanValue NATURAL_FISHING_ONLY = BUILDER
+            .comment("Fishing only catches anything in water connected to naturally generated water.")
+            .define("survival.naturalFishingOnly", true);
+
+    public static final ModConfigSpec.BooleanValue SPAWN_NEAR_TREES = BUILDER
+            .comment("New worlds put the spawn point in a biome with scattered trees (#arcticfox:spawn_biomes).")
+            .define("world.spawnNearTrees", true);
+
+    public static final ModConfigSpec.BooleanValue CREATE_HEAT = BUILDER
+            .comment("Cold Sweat + Create: blaze burners, steam engines and hot fluids in pipes, pumps, basins etc. warm you up.")
+            .define("compat.createHeat", true);
 
     public static final ModConfigSpec SPEC = BUILDER.build();
 

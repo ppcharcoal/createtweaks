@@ -29,8 +29,8 @@ import java.util.WeakHashMap;
 /**
  * Night-time snowstorms and deep snow.
  * <ul>
- *     <li>Every night the overworld gets a snowstorm (rain + thunder, which falls as snow in cold biomes);
- *     it clears at dawn. Natural lightning is suppressed so storms are blizzards, not thunderstorms.</li>
+ *     <li>Each day is either sunny or snowy (rolled per day from the world seed); every night is a blizzard
+ *     (rain + thunder, which falls as snow). Natural lightning is suppressed. Clients get blizzard fog.</li>
  *     <li>While it snows, snow keeps piling up: layers grow to a full block, then turn into snow blocks
  *     with new layers on top, up to {@code snow.maxDepthBlocks} (3) blocks. Bright block light (torches)
  *     and glass/ice/heat blocks keep spots clear. Works with or without Snow! Real Magic.</li>
@@ -41,7 +41,6 @@ public final class WinterWeather {
     public static final TagKey<Block> NO_SETTLE = TagKey.create(Registries.BLOCK, ArcticFox.id("snow_does_not_settle_on"));
     private static final int NIGHT_START = 12600;
     private static final int NIGHT_END = 23400;
-    private static final Map<ServerLevel, Boolean> FORCED = new WeakHashMap<>();
 
     private WinterWeather() {
     }
@@ -51,21 +50,46 @@ public final class WinterWeather {
         return t >= NIGHT_START && t < NIGHT_END;
     }
 
-    /** Called every 20 ticks for the overworld. */
+    public enum Sky { CLEAR, SNOW, BLIZZARD }
+
+    /** Which day (dawn to dawn) a given day time belongs to. */
+    public static long dayIndex(long dayTime) {
+        return Math.floorDiv(dayTime - NIGHT_END + 24000L, 24000L);
+    }
+
+    /** Daytime weather for a day: deterministic per world seed, so it survives restarts. */
+    public static boolean isSnowyDay(ServerLevel level, long day) {
+        long h = level.getSeed() ^ (day * 0x9E3779B97F4A7C15L);
+        h ^= (h >>> 33); h *= 0xff51afd7ed558ccdL; h ^= (h >>> 33);
+        double roll = (h >>> 11) * 0x1.0p-53;
+        return roll < Config.SNOWY_DAY_CHANCE.get();
+    }
+
+    public static Sky desired(ServerLevel level) {
+        if (isNight(level)) return Sky.BLIZZARD;
+        return isSnowyDay(level, dayIndex(level.getDayTime())) ? Sky.SNOW : Sky.CLEAR;
+    }
+
+    /** Ticks until the next weather change (dawn or dusk). */
+    private static int ticksUntilChange(ServerLevel level) {
+        long t = level.getDayTime() % 24000L;
+        long next = isNight(level) ? (t < NIGHT_END ? NIGHT_END : NIGHT_END + 24000) : (t < NIGHT_START ? NIGHT_START : NIGHT_START + 24000);
+        return (int) (next - t) + 40;
+    }
+
+    /** Called every 20 ticks for the overworld: sunny or snowy days, a blizzard every night. */
     public static void updateWeather(ServerLevel level) {
-        if (!Config.NIGHT_SNOWSTORMS.get() || !level.dimensionType().hasSkyLight() || level.dimension() != Level.OVERWORLD) {
+        if (!Config.NIGHT_SNOWSTORMS.get() || level.dimension() != Level.OVERWORLD) {
             return;
         }
-        long t = level.getDayTime() % 24000L;
-        if (isNight(level)) {
-            int untilDawn = (int) (NIGHT_END - t) + 100;
-            if (!level.getLevelData().isRaining() || !level.getLevelData().isThundering()) {
-                level.setWeatherParameters(0, untilDawn, true, true);
-            }
-            FORCED.put(level, true);
-        } else if (Boolean.TRUE.equals(FORCED.remove(level))) {
-            RandomSource random = level.getRandom();
-            level.setWeatherParameters(6000 + random.nextInt(6000), 0, false, false);
+        Sky sky = desired(level);
+        boolean raining = level.getLevelData().isRaining();
+        boolean thundering = level.getLevelData().isThundering();
+        int duration = ticksUntilChange(level);
+        switch (sky) {
+            case BLIZZARD -> { if (!raining || !thundering) level.setWeatherParameters(0, duration, true, true); }
+            case SNOW -> { if (!raining || thundering) level.setWeatherParameters(0, duration, true, false); }
+            case CLEAR -> { if (raining || thundering) level.setWeatherParameters(duration, 0, false, false); }
         }
     }
 

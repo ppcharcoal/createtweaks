@@ -60,6 +60,8 @@ neoForge {
 
 dependencies {
     compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
+    // Cold Sweat's block temperature API (optional at runtime)
+    compileOnly "maven.modrinth:cold-sweat:${cold_sweat_version}"
 
     // Only for the CI compatibility smoke test (./gradlew runSmokeTest -PcompatMods); never shipped.
     if (project.hasProperty('compatMods')) {

@@ -14,5 +14,12 @@
   "item.arcticfox.iron_spear": "Iron Spear",
   "item.arcticfox.diamond_spear": "Diamond Spear",
   "item.arcticfox.netherite_spear": "Netherite Spear",
-  "biome.arcticfox.frozen_wastes": "Frozen Wastes"
+  "biome.arcticfox.frozen_wastes": "Frozen Wastes",
+  "tooltip.arcticfox.raw_food": "Raw - cook it first or you may get sick",
+  "message.arcticfox.no_fish": "Nothing lives in this water...",
+  "structure.arcticfox.buried_camp": "Buried Camp",
+  "structure.arcticfox.supply_cache": "Frozen Supply Cache",
+  "structure.arcticfox.cabin": "Trapper's Cabin",
+  "structure.arcticfox.train_station": "Abandoned Train Station",
+  "structure.arcticfox.metro_station": "Abandoned Metro Station"
 }

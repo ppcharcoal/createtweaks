@@ -51,12 +51,21 @@ public final class Evaporation {
 
     @SubscribeEvent
     public static void onBlockChanged(BlockEvent.NeighborNotifyEvent event) {
-        if (!Config.EVAPORATE_PLACED_WATER.get()) return;
         if (!(event.getLevel() instanceof ServerLevel level)) return;
-        if (!isPlacedWaterSource(event.getState())) return;
+        BlockState changed = event.getState();
+        // track player-made waterlogging (it never evaporates, but fish don't live in it)
+        if (changed.getFluidState().isSource() && changed.getFluidState().is(net.minecraft.tags.FluidTags.WATER) && !changed.is(Blocks.WATER)) {
+            get(level).markArtificial(event.getPos());
+        } else if (!changed.getFluidState().is(net.minecraft.tags.FluidTags.WATER)) {
+            Data data = level.getDataStorage().get(factory(), DATA_NAME);
+            if (data != null) data.unmarkArtificial(event.getPos());
+        }
+        if (!Config.EVAPORATE_PLACED_WATER.get()) return;
+        if (!isPlacedWaterSource(changed)) return;
         BlockPos pos = event.getPos();
         if (pos.asLong() == lastIceBreakPos && level.getGameTime() - lastIceBreakTick <= 1) return;
         get(level).schedule(pos, level.getGameTime() + Config.EVAPORATION_SECONDS.get() * 20L);
+        get(level).markArtificial(pos);
     }
 
     @SubscribeEvent
@@ -78,6 +87,19 @@ public final class Evaporation {
 
     public static final class Data extends SavedData {
         private final Long2LongOpenHashMap pending = new Long2LongOpenHashMap();
+        private final it.unimi.dsi.fastutil.longs.LongOpenHashSet artificial = new it.unimi.dsi.fastutil.longs.LongOpenHashSet();
+
+        public boolean isArtificial(long pos) {
+            return artificial.contains(pos) || pending.containsKey(pos);
+        }
+
+        public void markArtificial(BlockPos pos) {
+            if (artificial.add(pos.asLong())) setDirty();
+        }
+
+        public void unmarkArtificial(BlockPos pos) {
+            if (artificial.remove(pos.asLong())) setDirty();
+        }
 
         public void schedule(BlockPos pos, long dueTick) {
             pending.put(pos.asLong(), dueTick);
@@ -120,6 +142,7 @@ public final class Evaporation {
             }
             tag.putLongArray("positions", positions);
             tag.putLongArray("due", due);
+            tag.putLongArray("artificial", artificial.toLongArray());
             return tag;
         }
 
@@ -130,6 +153,7 @@ public final class Evaporation {
             for (int i = 0; i < Math.min(positions.length, due.length); i++) {
                 data.pending.put(positions[i], due[i]);
             }
+            for (long p : tag.getLongArray("artificial")) data.artificial.add(p);
             return data;
         }
     }

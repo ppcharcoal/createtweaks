@@ -32,6 +32,9 @@ public final class ArcticFox {
         if (ModList.get().isLoaded("create")) {
             CreateCompat.init();
         }
+        if (ModList.get().isLoaded("cold_sweat")) {
+            com.ppcharcoal.arcticfox.compat.coldsweat.CreateHeat.init();
+        }
     }
 
     public static ResourceLocation id(String path) {

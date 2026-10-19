@@ -17,6 +17,23 @@ Mod id: `arcticfox` · Requires NeoForge 21.1+ · Server **and** client.
 - **Ores only where you can see them.** Coal, copper, iron, gold, redstone, lapis, diamond, emerald and Create zinc only generate in blocks that touch air or water: cave walls, ravines, cliffs and mountain faces. Only 3% of ore that would be sealed inside solid rock survives, and the huge noise-generated raw iron/copper veins are off. Strip mining finds almost nothing - explore caves instead.
 - Applies to newly created worlds using the default world type (the `minecraft:normal` world preset is overridden).
 
+### Frozen Wastes
+- New **Frozen Wastes** biome is the default landscape (~60% of the world): flat, treeless snowfields over patchy **stone outcrops, gravel, coarse dirt and dirt**.
+- **Forests are rare** (~4%): only old-growth taiga regions keep their spruce trees, plus vanilla snowy taiga and groves on mountain slopes.
+- Frostmaw, igloos, mineshafts, ruined portals and trial chambers all generate in the wastes.
+
+### Blizzards and deep snow
+- **A snowstorm every night**, cleared at dawn. Natural lightning is suppressed, so it's a blizzard, not a thunderstorm (Trident Channeling still works).
+- **Snow piles up**, up to **3 blocks deep**: layers grow to a full block, then become snow blocks with new layers on top. It builds about a block per stormy night. Snow never settles on glass, ice, campfires or magma, or next to bright light (torches), so greenhouse roofs and lit paths stay clear. Works on its own and alongside Snow! Real Magic.
+
+### Farming only indoors
+Crops (and anything else that "grows", like sugar cane and berries) only grow when all three hold:
+1. **Sheltered**: any roof above them. Open-sky fields never grow.
+2. **Warm**: above 0 °C. With Cold Sweat the real temperature is used: hearths, fires, depth (20+ blocks down is about +15 °C) and insulation all count. Without Cold Sweat, crops count as warm underground (no sky light) or with a heat source within 5 blocks (campfire, lit furnace, magma, lava, Create blaze burner).
+3. **Watered**: farmland must be moist. Use Create sprinklers, waterlogged blocks, or water from your tanks.
+
+So farms belong in heated glass greenhouses or underground, watered by Create. Serene Seasons' own greenhouse-glass and underground rules still apply on top.
+
 ### Eternal winter (Serene Seasons)
 - On every server start the mod sets `doSeasonCycle=false` and `/season set mid_winter`, so the season never changes. Crops need greenhouses (Serene Seasons' glass rule) to grow.
 - Configurable sub-season (`early_winter`, `mid_winter`, `late_winter`).
@@ -41,6 +58,12 @@ Mod id: `arcticfox` · Requires NeoForge 21.1+ · Server **and** client.
 ### Only frozen monsters on the surface
 - Monsters spawning naturally where they can see the sky are cancelled unless they are in `#arcticfox:surface_monsters` (default: strays, plus phantoms so membranes stay obtainable).
 - Stray spawns are boosted in all snowy biomes. Caves and the deep dark spawn normally.
+
+### Spears (1.21.11 backport)
+- **Iron, Diamond and Netherite spears** (netherite via smithing upgrade). Recipe: ingot (top right), stick (center), stick (bottom left).
+- **Jab** (attack): a fast stab with +1.5 blocks of reach.
+- **Charge** (hold right-click while moving): everything in front of the tip gets struck, with damage scaling with your speed (or your horse's). A full gallop hits about 3x as hard as a jab and can knock riders off their mounts. Each target can be hit once per second; a charge lasts up to 5 seconds.
+- Takes Sharpness, Smite, Bane, Fire Aspect, Knockback, Looting, Unbreaking and Mending.
 
 ### Tool progression
 - **Wooden tools removed**: no recipes, hidden from the creative menu and JEI; the bonus chest gives flint tools instead.
@@ -80,7 +103,9 @@ With the End sealed, both are built on a **Mechanical Crafter** grid (Create req
 | --- | --- |
 | Create | Pipe lava/water collisions produce scoria; bottomless fluid sources off. No hard dependency. |
 | Serene Seasons / GlitchCore | Locked to winter on every server start. Crops need greenhouses; farmland can be hydrated by waterlogged blocks or sprinklers. |
-| Cold Sweat / Create: Cold Sweat | Works as-is - permanent winter makes heating and insulation essential. |
+| Cold Sweat / Create: Cold Sweat | Surface biomes sit around **-12 °C by day and -18 °C at night** (colder in storms), measured in game. Crop growth uses Cold Sweat's real temperature. **No grace period when you respawn at your own bed or respawn anchor** (Cold Sweat would otherwise grant it after every death); first join still gets it. |
+| Snow! Real Magic | Its own snow covering still works; Arctic Fox stacks snow above one block, up to 3 blocks deep. |
+| Mowzie's Mobs | **Frostmaw is the only boss.** Ferrous Wroughtnaut, Umvuthi and the Sculptor are removed, along with their structures (wrought chamber, Umvuthana grove, monastery) and advancements. Frostmaw spawns in Frozen Wastes and snowfields, and drops and steals its ice crystal as normal. Advancements for jungle, savanna and forest Mowzie mobs that can't spawn here are removed. |
 | Create: Netherless | Detected automatically; keeps the Nether-material advancements reachable. |
 | JEI | Wooden tools hidden. |
 | Create Slice & Dice | Sprinkler rain works under Serene Seasons: built-in replacement for Serene & Slice Compat, supporting both Slice & Dice 4.3+ (Atmosphere) and 4.2.x and older (WetAir). |

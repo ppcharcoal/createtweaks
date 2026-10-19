@@ -36,6 +36,7 @@ Mod id: `arcticfox` · Requires NeoForge 21.1+ · Server **and** client.
 - Villagers, zombie villagers, wandering traders, trader llamas, pillagers, vindicators, evokers, illusioners, ravagers, vexes and witches are removed the moment they try to exist (`#arcticfox:banished`).
 - Patrols and wandering traders are switched off by gamerule.
 - **Villages (all types), pillager outposts, woodland mansions and witch huts never generate.**
+- **Strongholds never generate** (eyes of ender have nothing to find).
 
 ### Only frozen monsters on the surface
 - Monsters spawning naturally where they can see the sky are cancelled unless they are in `#arcticfox:surface_monsters` (default: strays, plus phantoms so membranes stay obtainable).
@@ -48,6 +49,25 @@ Mod id: `arcticfox` · Requires NeoForge 21.1+ · Server **and** client.
 - New shapeless recipe: **3 gravel → 1 flint**, so you can't get stuck at the start.
 - **Smoker: rotten flesh → leather.**
 - Progression: punch logs → dig gravel → flint tools → copper → copper tools → iron → diamond.
+
+### Elytra & shulker boxes, Create-made
+With the End sealed, both are built on a **Mechanical Crafter** grid (Create required):
+- **Elytra** (7x4): brass sheets, a precision mechanism, andesite alloy, leather, white sails and phantom membranes.
+  ```
+  B B . P . B B      B = brass sheet       P = precision mechanism
+  M S A L A S M      M = phantom membrane  S = white sail
+  M S . . . S M      A = andesite alloy    L = leather
+  M . . . . . M
+  ```
+- **Shulker shells x2** (5x4): brass sheets, iron sheets, an ender pearl (from cave endermen) and a brass casing. Shulker boxes then use the normal vanilla recipe.
+  ```
+  . B B B .      B = brass sheet   I = iron sheet
+  B I E I B      E = ender pearl   C = brass casing
+  B . C . B
+  I . . . I
+  ```
+- **Create-style textures:** shulker boxes look like brass-framed casings (dyed boxes tint the wooden panels), the shell is a brass clamshell, and the elytra is sail canvas on wooden spars with brass edging.
+- "Sky's the Limit" moves to the Adventure tab.
 
 ### Advancements that stay achievable
 - The entire **Nether** and **End** tabs are removed, along with every advancement that needs villagers, illagers, raids, bees, warm biomes, sniffers, frogs, allays, armadillos or the other dimensions (65 in total).

@@ -218,6 +218,10 @@ public final class SmokeTest {
             }
         }
 
+        BlockPos stronghold = level.findNearestMapStructure(StructureTags.EYE_OF_ENDER_LOCATED, BlockPos.ZERO, 100, false);
+        log("nearest stronghold within 100 chunks: %s (expected null)", stronghold);
+        if (stronghold != null) ok = false;
+
         // --- recipes & animals
         boolean smoking = server.getRecipeManager().byKey(ArcticFox.id("leather_from_smoking_rotten_flesh"))
                 .map(h -> h.value().getType() == net.minecraft.world.item.crafting.RecipeType.SMOKING).orElse(false);
@@ -291,6 +295,17 @@ public final class SmokeTest {
                 log("create: lava pipe into water produces %s (expected arcticfox:scoria)",
                         pipeResult == null ? "null" : BuiltInRegistries.BLOCK.getKey(pipeResult.getBlock()));
                 if (pipeResult == null || !pipeResult.is(com.ppcharcoal.arcticfox.registry.ModBlocks.SCORIA.get())) ok = false;
+
+                for (String r : List.of("mechanical_crafting/elytra", "mechanical_crafting/shulker_shell")) {
+                    var recipe = server.getRecipeManager().byKey(ArcticFox.id(r));
+                    String type = recipe.map(h -> BuiltInRegistries.RECIPE_TYPE.getKey(h.value().getType()).toString()).orElse("missing");
+                    String result = recipe.map(h -> BuiltInRegistries.ITEM.getKey(h.value().getResultItem(level.registryAccess()).getItem()).toString()).orElse("-");
+                    log("create recipe %s: type=%s result=%s", r, type, result);
+                    if (!type.equals("create:mechanical_crafting")) ok = false;
+                }
+                boolean sky = server.getAdvancements().get(ResourceLocation.parse("minecraft:end/elytra")) != null;
+                log("advancement 'Sky's the Limit' present with Create=%s (true)", sky);
+                if (!sky) ok = false;
             } catch (Throwable t) {
                 ArcticFox.LOGGER.error(P + "create check failed", t);
                 ok = false;

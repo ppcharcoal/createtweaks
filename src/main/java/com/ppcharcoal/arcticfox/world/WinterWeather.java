@@ -93,7 +93,7 @@ public final class WinterWeather {
     public static void onLightning(EntityJoinLevelEvent event) {
         if (event.getEntity() instanceof LightningBolt bolt && !event.getLevel().isClientSide()
                 && Config.NIGHT_SNOWSTORMS.get() && Config.NO_NATURAL_LIGHTNING.get()
-                && bolt.getCause() == null && !bolt.isVisualOnly() && event.getLevel().dimension() == Level.OVERWORLD) {
+                && bolt.getCause() == null && event.getLevel().dimension() == Level.OVERWORLD) {
             event.setCanceled(true);
         }
     }

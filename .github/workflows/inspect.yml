@@ -12,6 +12,10 @@ jobs:
           mkdir -p out && cd out
           get() { url=$(curl -s "https://api.modrinth.com/v2/version/$2" | jq -r '.files[0].url'); curl -sL "$url" -o "$1.jar"; mkdir -p "$1"; (cd "$1" && unzip -q -o "../$1.jar" -x '*.class' 'assets/*/textures/*' 'assets/*/sounds/*' 'assets/*/geo/*' 'assets/*/animations/*' 'assets/*/models/*' || true); unzip -l "$1.jar" > "$1.filelist.txt"; rm "$1.jar"; }
           get mowziesmobs xgAXTl17
+          url=$(curl -s "https://api.modrinth.com/v2/version/xgAXTl17" | jq -r '.files[0].url'); curl -sL "$url" -o m.jar
+          mkdir -p cls && (cd cls && unzip -q -o ../m.jar 'com/bobmowzie/mowziesmobs/server/config/*' 'com/bobmowzie/mowziesmobs/server/world/*' || true)
+          find cls -name '*.class' | while read c; do echo "=== $c"; strings -n 3 "$c" | grep -i -E 'snow|cold|frost|biome|is_|tag|dimension|minecraft:|c:' ; done > mowzie_config_strings.txt || true
+          rm -rf cls m.jar
           # class-name list is enough to see config / entity structure
           ls -la
       - name: Push dump

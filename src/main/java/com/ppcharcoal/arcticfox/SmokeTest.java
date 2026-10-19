@@ -338,15 +338,24 @@ public final class SmokeTest {
             long keep = level.getDayTime();
             level.setWeatherParameters(24000, 0, false, false);
             level.setRainLevel(0); level.setThunderLevel(0);
-            BlockPos open = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, new BlockPos(-40, 0, -40)).above();
-            level.setDayTime(keep - keep % 24000 + 6000);
-            Double noon = com.ppcharcoal.arcticfox.compat.ColdSweatCompat.temperatureCelsius(level, open, true);
-            level.setDayTime(keep - keep % 24000 + 18000);
-            Double midnight = com.ppcharcoal.arcticfox.compat.ColdSweatCompat.temperatureCelsius(level, open, true);
+            double sumNoon = 0, sumNight = 0; int n = 0;
+            for (int i = 0; i < 12; i++) {
+                int x = -1500 + (i % 4) * 1000, z = -1000 + (i / 4) * 1000;
+                level.getChunk(x >> 4, z >> 4);
+                BlockPos open = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, new BlockPos(x, 0, z)).above();
+                if (level.getBiome(open).is(BiomeTags.IS_OCEAN)) continue;
+                level.setDayTime(keep - keep % 24000 + 6000);
+                Double noon = com.ppcharcoal.arcticfox.compat.ColdSweatCompat.temperatureCelsius(level, open, true);
+                level.setDayTime(keep - keep % 24000 + 18000);
+                Double midnight = com.ppcharcoal.arcticfox.compat.ColdSweatCompat.temperatureCelsius(level, open, true);
+                log("  cold sweat %s %s: noon=%.1f C midnight=%.1f C", open.toShortString(),
+                        level.getBiome(open).unwrapKey().map(k -> k.location().getPath()).orElse("?"), noon, midnight);
+                sumNoon += noon; sumNight += midnight; n++;
+            }
             level.setDayTime(keep);
-            log("cold sweat clear-weather surface temperature at %s (%s): noon=%.1f C midnight=%.1f C (expected -15..-9 / -21..-15)",
-                    open.toShortString(), level.getBiome(open).unwrapKey().map(k -> k.location().toString()).orElse("?"), noon, midnight);
-            if (noon > -9 || noon < -15 || midnight > -15 || midnight < -21) ok = false;
+            double noonAvg = sumNoon / Math.max(1, n), nightAvg = sumNight / Math.max(1, n);
+            log("cold sweat clear-weather surface average over %d spots: noon=%.1f C midnight=%.1f C (expected -15..-9 / -21..-15)", n, noonAvg, nightAvg);
+            if (n == 0 || noonAvg > -9 || noonAvg < -15 || nightAvg > -15 || nightAvg < -21) ok = false;
         }
 
         // --- spears

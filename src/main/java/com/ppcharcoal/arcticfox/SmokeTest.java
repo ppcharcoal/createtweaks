@@ -344,9 +344,9 @@ public final class SmokeTest {
             level.setDayTime(keep - keep % 24000 + 18000);
             Double midnight = com.ppcharcoal.arcticfox.compat.ColdSweatCompat.temperatureCelsius(level, open, true);
             level.setDayTime(keep);
-            log("cold sweat clear-weather surface temperature at %s (%s): noon=%.1f C midnight=%.1f C (expected about -12 / -18)",
+            log("cold sweat clear-weather surface temperature at %s (%s): noon=%.1f C midnight=%.1f C (expected -15..-9 / -21..-15)",
                     open.toShortString(), level.getBiome(open).unwrapKey().map(k -> k.location().toString()).orElse("?"), noon, midnight);
-            if (noon > -5 || midnight < -25 || midnight >= noon) ok = false;
+            if (noon > -9 || noon < -15 || midnight > -15 || midnight < -21) ok = false;
         }
 
         // --- spears

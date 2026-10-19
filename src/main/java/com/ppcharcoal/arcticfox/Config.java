@@ -49,6 +49,38 @@ public final class Config {
             .comment("Let Create Slice & Dice sprinkler 'rain' count as rain while Serene Seasons is installed (replaces Serene & Slice Compat).")
             .define("compat.sprinklerRainFix", true);
 
+    public static final ModConfigSpec.BooleanValue NIGHT_SNOWSTORMS = BUILDER
+            .comment("Every night the overworld gets a snowstorm (cleared at dawn).")
+            .define("weather.nightSnowstorms", true);
+
+    public static final ModConfigSpec.BooleanValue NO_NATURAL_LIGHTNING = BUILDER
+            .comment("Suppress natural lightning so storms are blizzards (trident Channeling still works).")
+            .define("weather.noNaturalLightning", true);
+
+    public static final ModConfigSpec.BooleanValue SNOW_STACKING = BUILDER
+            .comment("Snow piles up while it snows, beyond one block, up to snow.maxDepthBlocks.")
+            .define("snow.stacking", true);
+
+    public static final ModConfigSpec.IntValue SNOW_MAX_DEPTH = BUILDER
+            .comment("Maximum snow depth in blocks.")
+            .defineInRange("snow.maxDepthBlocks", 3, 1, 8);
+
+    public static final ModConfigSpec.IntValue SNOW_ATTEMPTS_PER_TICK = BUILDER
+            .comment("Columns per player per tick that receive snow while it snows (doubled during snowstorms). ~6 gives roughly 1 block per snowstorm night.")
+            .defineInRange("snow.attemptsPerTick", 6, 0, 256);
+
+    public static final ModConfigSpec.BooleanValue CROP_RULES = BUILDER
+            .comment("Crops only grow when sheltered (roof above), warm (above crops.minTemperature) and watered (moist farmland).")
+            .define("crops.enabled", true);
+
+    public static final ModConfigSpec.DoubleValue CROP_MIN_TEMPERATURE = BUILDER
+            .comment("Minimum temperature in Celsius for crops to grow (needs Cold Sweat; otherwise heat sources / underground are used).")
+            .defineInRange("crops.minTemperature", 0.0, -100.0, 100.0);
+
+    public static final ModConfigSpec.BooleanValue NO_GRACE_ON_RESPAWN = BUILDER
+            .comment("Cold Sweat: players who respawn at their own spawn point (bed / respawn anchor) don't get the grace period again.")
+            .define("compat.noGraceOnRespawn", true);
+
     public static final ModConfigSpec SPEC = BUILDER.build();
 
     private Config() {

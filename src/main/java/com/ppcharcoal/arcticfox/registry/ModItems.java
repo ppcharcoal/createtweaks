@@ -15,6 +15,8 @@ import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
+import com.ppcharcoal.arcticfox.item.SpearItem;
+import net.minecraft.world.item.Tiers;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -75,6 +77,13 @@ public final class ModItems {
             () -> new DeferredSpawnEggItem(ModEntities.WINTER_COW, 0xD9DCE0, 0x6B7380, new Item.Properties()));
     public static final DeferredItem<DeferredSpawnEggItem> WINTER_SHEEP_SPAWN_EGG = ITEMS.register("winter_sheep_spawn_egg",
             () -> new DeferredSpawnEggItem(ModEntities.WINTER_SHEEP, 0xF2F4F7, 0x2E2A30, new Item.Properties()));
+
+    public static final DeferredItem<SpearItem> IRON_SPEAR = ITEMS.register("iron_spear",
+            () -> new SpearItem(Tiers.IRON, 5.0F, new Item.Properties()));
+    public static final DeferredItem<SpearItem> DIAMOND_SPEAR = ITEMS.register("diamond_spear",
+            () -> new SpearItem(Tiers.DIAMOND, 6.0F, new Item.Properties()));
+    public static final DeferredItem<SpearItem> NETHERITE_SPEAR = ITEMS.register("netherite_spear",
+            () -> new SpearItem(Tiers.NETHERITE, 7.0F, new Item.Properties().fireResistant()));
 
     private ModItems() {
     }

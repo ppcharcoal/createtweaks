@@ -83,6 +83,10 @@ public final class SmokeTest {
                 log("FAIL: too many non-snowy surface samples");
                 ok = false;
             }
+            double forest = 100.0 * (biomes.getOrDefault("minecraft:snowy_taiga", 0) + biomes.getOrDefault("minecraft:grove", 0)) / samples;
+            double wastes = 100.0 * biomes.getOrDefault("arcticfox:frozen_wastes", 0) / samples;
+            log("forest biomes=%.1f%% (expected < 12%%) frozen wastes=%.1f%% (expected > 35%%)", forest, wastes);
+            if (forest >= 12 || wastes <= 35) ok = false;
 
             // Floating island / overhang scan: solid block above an air gap of >=4, above sea level+12,
             // with the solid run touching open sky above it (i.e. not a cave roof inside a mountain).
@@ -155,6 +159,7 @@ public final class SmokeTest {
             if (!fluidResult.is(com.ppcharcoal.arcticfox.registry.ModBlocks.SCORIA.get())) ok = false;
 
             ok &= checkNewFeatures(server, level);
+            ok &= checkWinter(server, level);
             ok &= checkCompat(server, level);
         } catch (Throwable t) {
             ArcticFox.LOGGER.error(P + "smoke test crashed", t);
@@ -250,6 +255,107 @@ public final class SmokeTest {
             }
             log("sprinkler rain compat: %s, isRainingAt(spawn)=%s", com.ppcharcoal.arcticfox.compat.SprinklerRain.describe(),
                     level.isRainingAt(base));
+        }
+        return ok;
+    }
+
+    private static boolean checkWinter(MinecraftServer server, ServerLevel level) {
+        boolean ok = true;
+        // --- frozen wastes surface is rocky / dirt
+        java.util.Map<String, Integer> surface = new TreeMap<>();
+        int wasteCols = 0;
+        for (int x = -3000; x <= 3000; x += 48) {
+            for (int z = -3000; z <= 3000; z += 48) {
+                if (!level.getBiome(new BlockPos(x, 70, z)).is(ResourceLocation.parse("arcticfox:frozen_wastes"))) continue;
+                NoiseColumn col = level.getChunkSource().getGenerator().getBaseColumn(x, z, level, level.getChunkSource().randomState());
+                int h = level.getChunkSource().getGenerator().getBaseHeight(x, z, Heightmap.Types.WORLD_SURFACE_WG, level, level.getChunkSource().randomState());
+                if (wasteCols++ > 60) break;
+                level.getChunk(x >> 4, z >> 4); // fully generate so surface rules ran
+                BlockPos top = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, new BlockPos(x, 0, z)).below();
+                BlockState st = level.getBlockState(top);
+                if (st.is(Blocks.SNOW) || st.is(Blocks.SNOW_BLOCK)) st = level.getBlockState(top.below());
+                surface.merge(BuiltInRegistries.BLOCK.getKey(st.getBlock()).getPath(), 1, Integer::sum);
+            }
+            if (wasteCols > 60) break;
+        }
+        log("frozen wastes ground under the snow: %s", surface);
+        int grass = surface.getOrDefault("grass_block", 0);
+        if (wasteCols == 0 || grass * 2 > wasteCols) ok = false;
+
+        // --- night snowstorm
+        long saved = level.getDayTime();
+        level.setDayTime(saved - saved % 24000 + 14000);
+        com.ppcharcoal.arcticfox.world.WinterWeather.updateWeather(level);
+        boolean storm = level.isRaining() && level.isThundering();
+        level.setDayTime(saved - saved % 24000 + 1000);
+        com.ppcharcoal.arcticfox.world.WinterWeather.updateWeather(level);
+        boolean clearedAtDawn = !level.isThundering();
+        level.setDayTime(saved);
+        log("night snowstorm=%s (true) cleared at dawn=%s (true)", storm, clearedAtDawn);
+        if (!storm || !clearedAtDawn) ok = false;
+
+        // --- snow stacking: grows past one block but stops at 3
+        BlockPos base = level.getHeightmapPos(Heightmap.Types.WORLD_SURFACE, new BlockPos(40, 0, 40)).above(10);
+        for (int dy = -1; dy < 6; dy++) level.setBlock(base.above(dy), dy == -1 ? Blocks.STONE.defaultBlockState() : Blocks.AIR.defaultBlockState(), 3);
+        int added = 0;
+        for (int i = 0; i < 40; i++) if (com.ppcharcoal.arcticfox.world.WinterWeather.addLayer(level, level.getHeightmapPos(Heightmap.Types.WORLD_SURFACE, base).below())) added++;
+        int snowBlocks = 0;
+        for (int dy = 0; dy < 5; dy++) if (level.getBlockState(base.above(dy)).is(Blocks.SNOW_BLOCK)) snowBlocks++;
+        BlockState topLayer = level.getBlockState(base.above(2));
+        log("snow stacking: layers added=%d (expected 24) snow blocks=%d (2) top=%s", added, snowBlocks, topLayer);
+        if (added != 24 || snowBlocks != 2 || !topLayer.is(Blocks.SNOW)) ok = false;
+        BlockPos glass = base.east(4);
+        level.setBlock(glass, Blocks.GLASS.defaultBlockState(), 3);
+        level.setBlock(glass.above(), Blocks.AIR.defaultBlockState(), 3);
+        boolean onGlass = com.ppcharcoal.arcticfox.world.WinterWeather.addLayer(level, glass);
+        log("snow settles on glass=%s (false)", onGlass);
+        if (onGlass) ok = false;
+
+        // --- crops: exposed surface farm never grows, sealed underground farm does
+        BlockPos field = level.getHeightmapPos(Heightmap.Types.WORLD_SURFACE, new BlockPos(-40, 0, -40)).above(2);
+        level.setBlock(field.below(), Blocks.FARMLAND.defaultBlockState().setValue(net.minecraft.world.level.block.FarmBlock.MOISTURE, 7), 3);
+        level.setBlock(field, Blocks.WHEAT.defaultBlockState(), 3);
+        var exposed = com.ppcharcoal.arcticfox.world.CropRules.check(level, field, level.getBlockState(field));
+        BlockPos cave = new BlockPos(-40, -30, -40);
+        for (BlockPos p : BlockPos.betweenClosed(cave.offset(-2, -2, -2), cave.offset(2, 3, 2))) level.setBlock(p, Blocks.STONE.defaultBlockState(), 3);
+        for (BlockPos p : BlockPos.betweenClosed(cave.offset(-1, 0, -1), cave.offset(1, 1, 1))) level.setBlock(p, Blocks.AIR.defaultBlockState(), 3);
+        level.setBlock(cave.below(), Blocks.FARMLAND.defaultBlockState().setValue(net.minecraft.world.level.block.FarmBlock.MOISTURE, 7), 3);
+        level.setBlock(cave, Blocks.WHEAT.defaultBlockState(), 3);
+        var underground = com.ppcharcoal.arcticfox.world.CropRules.check(level, cave, level.getBlockState(cave));
+        level.setBlock(cave.below(), Blocks.FARMLAND.defaultBlockState(), 3);
+        var dry = com.ppcharcoal.arcticfox.world.CropRules.check(level, cave, level.getBlockState(cave));
+        Double temp = com.ppcharcoal.arcticfox.compat.ColdSweatCompat.temperatureCelsius(level, field);
+        Double caveTemp = com.ppcharcoal.arcticfox.compat.ColdSweatCompat.temperatureCelsius(level, cave);
+        log("crops: open sky=%s (EXPOSED) sealed cave=%s (OK) dry farmland=%s (DRY) | cold sweat surface=%s C cave=%s C",
+                exposed, underground, dry, temp == null ? "n/a" : String.format(java.util.Locale.ROOT, "%.1f", temp),
+                caveTemp == null ? "n/a" : String.format(java.util.Locale.ROOT, "%.1f", caveTemp));
+        if (exposed != com.ppcharcoal.arcticfox.world.CropRules.Verdict.EXPOSED
+                || underground != com.ppcharcoal.arcticfox.world.CropRules.Verdict.OK
+                || dry != com.ppcharcoal.arcticfox.world.CropRules.Verdict.DRY) ok = false;
+        if (temp != null && (temp > -8 || temp < -22)) ok = false;
+
+        // --- spears
+        var spear = com.ppcharcoal.arcticfox.registry.ModItems.IRON_SPEAR.get().getDefaultInstance();
+        double reach = spear.getAttributeModifiers().modifiers().stream()
+                .filter(e -> e.attribute().is(net.minecraft.world.entity.ai.attributes.Attributes.ENTITY_INTERACTION_RANGE))
+                .mapToDouble(e -> e.modifier().amount()).sum();
+        boolean recipes = server.getRecipeManager().byKey(ArcticFox.id("iron_spear")).isPresent()
+                && server.getRecipeManager().byKey(ArcticFox.id("diamond_spear")).isPresent()
+                && server.getRecipeManager().byKey(ArcticFox.id("netherite_spear_smithing")).isPresent();
+        log("spears: reach bonus=%.1f (1.5) recipes=%s (true)", reach, recipes);
+        if (reach != 1.5 || !recipes) ok = false;
+
+        if (net.neoforged.fml.ModList.get().isLoaded("mowziesmobs")) {
+            var structures = level.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.STRUCTURE);
+            for (String id : List.of("frostmaw_spawn", "wrought_chamber", "umvuthana_grove", "monastery")) {
+                var holder = structures.getHolder(ResourceLocation.fromNamespaceAndPath("mowziesmobs", id));
+                if (holder.isEmpty()) { log("mowzie structure %s missing", id); ok = false; continue; }
+                var found = level.getChunkSource().getGenerator().findNearestMapStructure(level,
+                        net.minecraft.core.HolderSet.direct(holder.get()), BlockPos.ZERO, 64, false);
+                boolean expected = id.equals("frostmaw_spawn");
+                log("mowzie %s found within 64 chunks=%s (expected %s)", id, found != null, expected);
+                if ((found != null) != expected) ok = false;
+            }
         }
         return ok;
     }

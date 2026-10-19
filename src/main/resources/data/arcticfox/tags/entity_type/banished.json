@@ -10,6 +10,18 @@
     "minecraft:illusioner",
     "minecraft:ravager",
     "minecraft:vex",
-    "minecraft:witch"
+    "minecraft:witch",
+    {
+      "id": "mowziesmobs:ferrous_wroughtnaut",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:umvuthi",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:sculptor",
+      "required": false
+    }
   ]
 }

@@ -68,6 +68,11 @@ dependencies {
         runtimeOnly "maven.modrinth:glitchcore:${glitchcore_version}"
         runtimeOnly "maven.modrinth:slice-and-dice:${slice_and_dice_version}"
         runtimeOnly "maven.modrinth:ordsPcFz:${kotlin_for_forge_version}"
+        runtimeOnly "maven.modrinth:cold-sweat:${cold_sweat_version}"
+        runtimeOnly "maven.modrinth:snow-real-magic:${snow_real_magic_version}"
+        runtimeOnly "maven.modrinth:ufdDoWPd:${kiwi_version}"
+        runtimeOnly "maven.modrinth:mowzies-mobs:${mowzies_mobs_version}"
+        runtimeOnly "maven.modrinth:8BmcQJ2H:${geckolib_version}"
     }
 }
 

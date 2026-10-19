@@ -224,6 +224,22 @@
         ]
       },
       "trigger": "minecraft:location"
+    },
+    "arcticfox:frozen_wastes": {
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "biomes": "arcticfox:frozen_wastes"
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:location"
     }
   },
   "display": {
@@ -240,6 +256,9 @@
     }
   },
   "requirements": [
+    [
+      "arcticfox:frozen_wastes"
+    ],
     [
       "minecraft:snowy_plains"
     ],

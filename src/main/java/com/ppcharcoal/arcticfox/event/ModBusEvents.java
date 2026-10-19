@@ -44,6 +44,9 @@ public final class ModBusEvents {
             CreativeModeTab.TabVisibility parentOnly = CreativeModeTab.TabVisibility.PARENT_TAB_ONLY;
             event.insertAfter(new ItemStack(Items.STONE_SWORD), new ItemStack(ModItems.COPPER_SWORD.get()), both);
             event.insertAfter(new ItemStack(Items.STONE_AXE), new ItemStack(ModItems.COPPER_AXE.get()), parentOnly);
+            event.insertAfter(new ItemStack(Items.TRIDENT), new ItemStack(ModItems.IRON_SPEAR.get()), both);
+            event.insertAfter(new ItemStack(ModItems.IRON_SPEAR.get()), new ItemStack(ModItems.DIAMOND_SPEAR.get()), both);
+            event.insertAfter(new ItemStack(ModItems.DIAMOND_SPEAR.get()), new ItemStack(ModItems.NETHERITE_SPEAR.get()), both);
         } else if (event.getTabKey() == CreativeModeTabs.NATURAL_BLOCKS) {
             event.accept(ModItems.SCORIA.get());
         } else if (event.getTabKey() == CreativeModeTabs.SPAWN_EGGS) {

@@ -26,6 +26,9 @@ public final class ServerEvents {
         if (Config.DISABLE_WATER_SOURCES.get()) {
             rules.getRule(GameRules.RULE_WATER_SOURCE_CONVERSION).set(false, server);
         }
+        if (Config.SNOW_STACKING.get()) {
+            rules.getRule(GameRules.RULE_SNOW_ACCUMULATION_HEIGHT).set(8, server);
+        }
         if (Config.BANISH_ILLAGERS_AND_VILLAGERS.get()) {
             rules.getRule(GameRules.RULE_DO_PATROL_SPAWNING).set(false, server);
             rules.getRule(GameRules.RULE_DO_TRADER_SPAWNING).set(false, server);

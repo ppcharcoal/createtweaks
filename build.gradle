@@ -75,6 +75,7 @@ dependencies {
         runtimeOnly "maven.modrinth:ufdDoWPd:${kiwi_version}"
         runtimeOnly "maven.modrinth:mowzies-mobs:${mowzies_mobs_version}"
         runtimeOnly "maven.modrinth:8BmcQJ2H:${geckolib_version}"
+        runtimeOnly "maven.modrinth:farmers-delight:${farmers_delight_version}"
     }
 }
 

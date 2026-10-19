@@ -1,5 +1,4 @@
 {
-  "values": [
-    "arcticfox:frozen_wastes"
-  ]
+  "replace": true,
+  "values": []
 }

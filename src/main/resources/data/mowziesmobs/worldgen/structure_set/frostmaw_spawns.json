@@ -1,0 +1,21 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mowziesmobs"
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 23317578,
+    "separation": 40,
+    "spacing": 96,
+    "spread_type": "triangular"
+  },
+  "structures": [
+    {
+      "structure": "mowziesmobs:frostmaw_spawn",
+      "weight": 1
+    }
+  ]
+}

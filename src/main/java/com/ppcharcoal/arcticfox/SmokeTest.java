@@ -160,6 +160,7 @@ public final class SmokeTest {
 
             ok &= checkNewFeatures(server, level);
             ok &= checkWinter(server, level);
+            ok &= checkV12(server, level);
             ok &= checkCompat(server, level);
         } catch (Throwable t) {
             ArcticFox.LOGGER.error(P + "smoke test crashed", t);
@@ -382,6 +383,168 @@ public final class SmokeTest {
             }
         }
         return ok;
+    }
+
+    private static boolean checkV12(MinecraftServer server, ServerLevel level) {
+        boolean ok = true;
+        var mods = net.neoforged.fml.ModList.get();
+        // --- spawn near (a few) trees
+        BlockPos spawn = level.getSharedSpawnPos();
+        String spawnBiome = level.getBiome(spawn).unwrapKey().map(k -> k.location().toString()).orElse("?");
+        int trees = com.ppcharcoal.arcticfox.world.SpawnSelector.countLogs(level, spawn, 24);
+        log("world spawn %s in %s with %d tree trunks within 24 blocks (expected snowy_plains, 1..60)", spawn.toShortString(), spawnBiome, trees);
+        if (!spawnBiome.equals("minecraft:snowy_plains") || trees < 1 || trees > 60) ok = false;
+
+        // --- no ruined portals; new structures exist and are findable
+        BlockPos portal = level.findNearestMapStructure(StructureTags.RUINED_PORTAL, BlockPos.ZERO, 64, false);
+        log("nearest ruined portal within 64 chunks: %s (expected null)", portal);
+        if (portal != null) ok = false;
+        var structures = level.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.STRUCTURE);
+        List<String> ours = new java.util.ArrayList<>(List.of("buried_camp", "supply_cache", "cabin"));
+        if (mods.isLoaded("create")) { ours.add("train_station"); ours.add("metro_station"); }
+        for (String id : ours) {
+            var holder = structures.getHolder(ArcticFox.id(id));
+            var template = server.getStructureManager().get(ArcticFox.id(id));
+            if (holder.isEmpty() || template.isEmpty()) { log("structure %s missing (holder=%s template=%s)", id, holder.isPresent(), template.isPresent()); ok = false; continue; }
+            BlockPos found = level.getChunkSource().getGenerator().findNearestMapStructure(level,
+                    net.minecraft.core.HolderSet.direct(holder.get()), BlockPos.ZERO, 100, false) == null ? null
+                    : level.getChunkSource().getGenerator().findNearestMapStructure(level, net.minecraft.core.HolderSet.direct(holder.get()), BlockPos.ZERO, 100, false).getFirst();
+            // place a copy in the sky and check its chests carry loot tables
+            BlockPos at = new BlockPos(2000 + ours.indexOf(id) * 40, 200, 2000);
+            level.getChunk(at.getX() >> 4, at.getZ() >> 4);
+            var t = template.get();
+            t.placeInWorld(level, at, at, new net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings(), level.random, 2);
+            int lootChests = 0;
+            for (BlockPos p : BlockPos.betweenClosed(at, at.offset(t.getSize()).offset(-1, -1, -1))) {
+                if (level.getBlockEntity(p) instanceof net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity c && c.getLootTable() != null) lootChests++;
+            }
+            log("structure %s: size=%s nearest=%s loot chests=%d", id, t.getSize().toShortString(), found == null ? "none within 100 chunks" : found.toShortString(), lootChests);
+            if (found == null || lootChests == 0) ok = false;
+        }
+
+        // --- weather: sunny/snowy days, blizzard nights
+        long keep = level.getDayTime();
+        int snowy = 0, sunny = 0; boolean weatherOk = true;
+        for (int d = 0; d < 20; d++) {
+            level.setDayTime(d * 24000L + 6000);
+            com.ppcharcoal.arcticfox.world.WinterWeather.updateWeather(level);
+            boolean wantSnow = com.ppcharcoal.arcticfox.world.WinterWeather.isSnowyDay(level, d);
+            boolean raining = level.getLevelData().isRaining(), thunder = level.getLevelData().isThundering();
+            if (wantSnow) snowy++; else sunny++;
+            if (raining != wantSnow || thunder) weatherOk = false;
+            level.setDayTime(d * 24000L + 18000);
+            com.ppcharcoal.arcticfox.world.WinterWeather.updateWeather(level);
+            if (!level.getLevelData().isRaining() || !level.getLevelData().isThundering()) weatherOk = false;
+        }
+        level.setDayTime(keep);
+        log("weather over 20 days: %d snowy days, %d sunny days, every night a blizzard, applied correctly=%s", snowy, sunny, weatherOk);
+        if (!weatherOk || snowy == 0 || sunny == 0) ok = false;
+
+        // --- raw food
+        var fake = net.neoforged.neoforge.common.util.FakePlayerFactory.getMinecraft(level);
+        boolean sick = false;
+        for (int i = 0; i < 20 && !sick; i++) {
+            net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent.Finish(
+                    fake, Items.BEEF.getDefaultInstance(), 0, net.minecraft.world.item.ItemStack.EMPTY));
+            sick = fake.hasEffect(net.minecraft.world.effect.MobEffects.HUNGER);
+        }
+        fake.removeAllEffects();
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent.Finish(
+                fake, Items.COOKED_BEEF.getDefaultInstance(), 0, net.minecraft.world.item.ItemStack.EMPTY));
+        boolean cookedSick = fake.hasEffect(net.minecraft.world.effect.MobEffects.HUNGER);
+        log("raw beef makes you sick=%s (true) cooked beef=%s (false)", sick, cookedSick);
+        if (!sick || cookedSick) ok = false;
+
+        // --- fishing: natural water yes, a bucket pond / waterlogged pond no
+        BlockPos natural = null;
+        for (int x = -2000; x <= 2000 && natural == null; x += 64) {
+            for (int z = -2000; z <= 2000 && natural == null; z += 64) {
+                level.getChunk(x >> 4, z >> 4);
+                BlockPos top = level.getHeightmapPos(Heightmap.Types.WORLD_SURFACE, new BlockPos(x, 0, z)).below();
+                if (level.getFluidState(top).is(net.minecraft.tags.FluidTags.WATER)) natural = top;
+                else if (level.getBlockState(top).is(net.minecraft.tags.BlockTags.ICE) && level.getFluidState(top.below()).is(net.minecraft.tags.FluidTags.WATER)) natural = top.below();
+            }
+        }
+        BlockPos pond = new BlockPos(2300, 210, 2300);
+        level.getChunk(pond.getX() >> 4, pond.getZ() >> 4);
+        for (BlockPos p : BlockPos.betweenClosed(pond.offset(-2, -1, -2), pond.offset(2, 0, 2))) level.setBlock(p, Blocks.STONE.defaultBlockState(), 3);
+        for (BlockPos p : BlockPos.betweenClosed(pond.offset(-1, 0, -1), pond.offset(1, 0, 1))) level.setBlock(p, Blocks.WATER.defaultBlockState(), 3);
+        BlockPos slabs = pond.east(8);
+        for (BlockPos p : BlockPos.betweenClosed(slabs.offset(-1, 0, -1), slabs.offset(1, 0, 1))) level.setBlock(p.immutable(),
+                Blocks.STONE_SLAB.defaultBlockState().setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED, true), 3);
+        boolean naturalOk = natural != null && com.ppcharcoal.arcticfox.world.Fishing.isNaturalWater(level, natural);
+        boolean bucketPond = com.ppcharcoal.arcticfox.world.Fishing.isNaturalWater(level, pond);
+        boolean slabPond = com.ppcharcoal.arcticfox.world.Fishing.isNaturalWater(level, slabs);
+        log("fishing: natural water at %s=%s (true) bucket pond=%s (false) waterlogged pond=%s (false)",
+                natural == null ? "-" : natural.toShortString(), naturalOk, bucketPond, slabPond);
+        if (!naturalOk || bucketPond || slabPond) ok = false;
+
+        // --- serene seasons winter crops tag
+        var winterCrops = net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.BLOCK, ResourceLocation.parse("sereneseasons:winter_crops"));
+        log("carrots are a Serene Seasons winter crop=%s", Blocks.CARROTS.defaultBlockState().is(winterCrops));
+        if (!Blocks.CARROTS.defaultBlockState().is(winterCrops)) ok = false;
+
+        if (mods.isLoaded("mowziesmobs")) {
+            var set = level.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.STRUCTURE_SET).get(ResourceLocation.parse("mowziesmobs:frostmaw_spawns"));
+            int spacing = set != null && set.placement() instanceof net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement r ? r.spacing() : -1;
+            log("frostmaw spawn spacing=%d chunks (expected 96)", spacing);
+            if (spacing != 96) ok = false;
+        }
+        if (mods.isLoaded("farmersdelight")) {
+            var cabin = server.reloadableRegistries().getLootTable(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.LOOT_TABLE, ArcticFox.id("chests/cabin")));
+            boolean fdSeeds = false;
+            for (int i = 0; i < 60 && !fdSeeds; i++) {
+                var params = new net.minecraft.world.level.storage.loot.LootParams.Builder(level)
+                        .withParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.ORIGIN, net.minecraft.world.phys.Vec3.ZERO)
+                        .create(net.minecraft.world.level.storage.loot.parameters.LootContextParamSets.CHEST);
+                for (var stack : cabin.getRandomItems(params)) {
+                    if (BuiltInRegistries.ITEM.getKey(stack.getItem()).getNamespace().equals("farmersdelight")) fdSeeds = true;
+                }
+            }
+            log("farmer's delight seeds found in cabin loot=%s (true)", fdSeeds);
+            if (!fdSeeds) ok = false;
+        }
+        if (mods.isLoaded("create") && com.ppcharcoal.arcticfox.compat.ColdSweatCompat.loaded()) {
+            ok &= checkCreateHeat(level);
+        }
+        return ok;
+    }
+
+    private static boolean checkCreateHeat(ServerLevel level) {
+        boolean ok = true;
+        BlockPos base = new BlockPos(2600, 150, 2600);
+        level.getChunk(base.getX() >> 4, base.getZ() >> 4);
+        java.util.function.Function<BlockPos, Double> temp = p -> com.ppcharcoal.arcticfox.compat.ColdSweatCompat.temperatureCelsius(level, p, true);
+        String[][] cases = {{"blaze_burner", "seething"}, {"basin", "lava"}, {"fluid_tank", "lava"}};
+        int i = 0;
+        for (String[] c : cases) {
+            BlockPos at = base.offset(i++ * 40, 0, 0);
+            level.setBlock(at.below(), Blocks.STONE.defaultBlockState(), 3);
+            BlockPos probe = at.offset(2, 0, 0);
+            double before = temp.apply(probe);
+            var block = BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("create", c[0]));
+            BlockState state = block.defaultBlockState();
+            if (c[1].equals("seething")) {
+                for (var prop : state.getProperties()) if (prop.getName().equals("blaze")) state = cycleTo(state, prop, "seething");
+            }
+            level.setBlock(at, state, 3);
+            if (c[1].equals("lava")) {
+                var handler = level.getCapability(net.neoforged.neoforge.capabilities.Capabilities.FluidHandler.BLOCK, at, null);
+                int filled = handler == null ? 0 : handler.fill(new net.neoforged.neoforge.fluids.FluidStack(net.minecraft.world.level.material.Fluids.LAVA, 4000),
+                        net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction.EXECUTE);
+                if (filled == 0) log("could not fill %s with lava", c[0]);
+            }
+            double after = temp.apply(probe);
+            log("create heat: %s with %s raises the temperature 2 blocks away by %.1f C (%.1f -> %.1f, expected > 3)", c[0], c[1], after - before, before, after);
+            if (after - before <= 3) ok = false;
+        }
+        return ok;
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private static BlockState cycleTo(BlockState state, net.minecraft.world.level.block.state.properties.Property prop, String value) {
+        java.util.Optional parsed = prop.getValue(value);
+        return parsed.isPresent() ? state.setValue(prop, (Comparable) parsed.get()) : state;
     }
 
     private static boolean checkCompat(MinecraftServer server, ServerLevel level) {

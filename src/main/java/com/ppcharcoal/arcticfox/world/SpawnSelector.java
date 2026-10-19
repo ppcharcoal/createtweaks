@@ -56,11 +56,12 @@ public final class SpawnSelector {
             }
         }
         if (best == null) return;
-        level.setDefaultSpawnPos(best, 0.0F);
-        ArcticFox.LOGGER.info("World spawn set to {} ({} trees nearby)", best.toShortString(), bestTrees);
+        final BlockPos spawn = best;
+        level.setDefaultSpawnPos(spawn, 0.0F);
+        ArcticFox.LOGGER.info("World spawn set to {} ({} trees nearby)", spawn.toShortString(), bestTrees);
         if (level.getServer().getWorldData().worldGenOptions().generateBonusChest()) {
             level.registryAccess().registryOrThrow(Registries.CONFIGURED_FEATURE).getHolder(MiscOverworldFeatures.BONUS_CHEST)
-                    .ifPresent(feature -> feature.value().place(level, level.getChunkSource().getGenerator(), level.random, best));
+                    .ifPresent(feature -> feature.value().place(level, level.getChunkSource().getGenerator(), level.random, spawn));
         }
         event.setCanceled(true);
     }

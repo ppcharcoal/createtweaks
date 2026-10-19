@@ -33,11 +33,16 @@ public final class ColdSweatCompat {
 
     /** World temperature at a position in Celsius, or null if Cold Sweat is not installed. */
     public static Double temperatureCelsius(Level level, BlockPos pos) {
+        return temperatureCelsius(level, pos, false);
+    }
+
+    /** @param fresh bypass Cold Sweat's 10 second temperature cache */
+    public static Double temperatureCelsius(Level level, BlockPos pos, boolean fresh) {
         if (!loaded()) return null;
         try {
             init();
             if (roughTemperature == null) return null;
-            double mc = (double) roughTemperature.invoke(null, level, pos);
+            double mc = (double) roughTemperature.invoke(null, level, pos, fresh ? 2 : 0);
             return (double) convert.invoke(null, mc, unitsMc, unitsC, true);
         } catch (Throwable t) {
             ArcticFox.LOGGER.warn("Cold Sweat temperature lookup failed; falling back to heat-source rules", t);
@@ -50,7 +55,7 @@ public final class ColdSweatCompat {
         if (initialized) return;
         initialized = true;
         Class<?> worldHelper = Class.forName("com.momosoftworks.coldsweat.util.world.WorldHelper");
-        roughTemperature = worldHelper.getMethod("getRoughTemperatureAt", Level.class, BlockPos.class);
+        roughTemperature = worldHelper.getMethod("getRoughTemperatureAt", Level.class, BlockPos.class, int.class);
         Class<?> temperature = Class.forName("com.momosoftworks.coldsweat.api.util.Temperature");
         Class<?> units = Class.forName("com.momosoftworks.coldsweat.api.util.Temperature$Units");
         convert = temperature.getMethod("convert", double.class, units, units, boolean.class);

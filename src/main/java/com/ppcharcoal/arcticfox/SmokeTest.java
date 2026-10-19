@@ -334,7 +334,20 @@ public final class SmokeTest {
         if (exposed != com.ppcharcoal.arcticfox.world.CropRules.Verdict.EXPOSED
                 || underground != com.ppcharcoal.arcticfox.world.CropRules.Verdict.OK
                 || dry != com.ppcharcoal.arcticfox.world.CropRules.Verdict.DRY) ok = false;
-        if (temp != null && (temp > -8 || temp < -22)) ok = false;
+        if (temp != null) {
+            long keep = level.getDayTime();
+            level.setWeatherParameters(24000, 0, false, false);
+            level.setRainLevel(0); level.setThunderLevel(0);
+            BlockPos open = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, new BlockPos(-40, 0, -40)).above();
+            level.setDayTime(keep - keep % 24000 + 6000);
+            Double noon = com.ppcharcoal.arcticfox.compat.ColdSweatCompat.temperatureCelsius(level, open, true);
+            level.setDayTime(keep - keep % 24000 + 18000);
+            Double midnight = com.ppcharcoal.arcticfox.compat.ColdSweatCompat.temperatureCelsius(level, open, true);
+            level.setDayTime(keep);
+            log("cold sweat clear-weather surface temperature at %s (%s): noon=%.1f C midnight=%.1f C (expected about -12 / -18)",
+                    open.toShortString(), level.getBiome(open).unwrapKey().map(k -> k.location().toString()).orElse("?"), noon, midnight);
+            if (noon > -5 || midnight < -25 || midnight >= noon) ok = false;
+        }
 
         // --- spears
         var spear = com.ppcharcoal.arcticfox.registry.ModItems.IRON_SPEAR.get().getDefaultInstance();

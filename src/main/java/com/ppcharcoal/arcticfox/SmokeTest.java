@@ -516,27 +516,31 @@ public final class SmokeTest {
         level.getChunk(base.getX() >> 4, base.getZ() >> 4);
         java.util.function.Function<BlockPos, Double> temp = p -> com.ppcharcoal.arcticfox.compat.ColdSweatCompat.temperatureCelsius(level, p, true);
         String[][] cases = {{"blaze_burner", "seething"}, {"basin", "lava"}, {"fluid_tank", "lava"}};
-        int i = 0;
-        for (String[] c : cases) {
-            BlockPos at = base.offset(i++ * 40, 0, 0);
-            level.setBlock(at.below(), Blocks.STONE.defaultBlockState(), 3);
-            BlockPos probe = at.offset(2, 0, 0);
-            double before = temp.apply(probe);
-            var block = BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("create", c[0]));
+        // Cold Sweat caches the blocks it scanned for the current tick, so place everything first and
+        // compare each heat source against an identical control spot 20 blocks away.
+        BlockPos[] at = new BlockPos[cases.length];
+        for (int i = 0; i < cases.length; i++) {
+            at[i] = base.offset(i * 40, 0, 0);
+            level.setBlock(at[i].below(), Blocks.STONE.defaultBlockState(), 3);
+            level.setBlock(at[i].offset(0, -1, 20), Blocks.STONE.defaultBlockState(), 3);
+            var block = BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("create", cases[i][0]));
             BlockState state = block.defaultBlockState();
-            if (c[1].equals("seething")) {
+            if (cases[i][1].equals("seething")) {
                 for (var prop : state.getProperties()) if (prop.getName().equals("blaze")) state = cycleTo(state, prop, "seething");
             }
-            level.setBlock(at, state, 3);
-            if (c[1].equals("lava")) {
-                var handler = level.getCapability(net.neoforged.neoforge.capabilities.Capabilities.FluidHandler.BLOCK, at, null);
+            level.setBlock(at[i], state, 3);
+            if (cases[i][1].equals("lava")) {
+                var handler = level.getCapability(net.neoforged.neoforge.capabilities.Capabilities.FluidHandler.BLOCK, at[i], null);
                 int filled = handler == null ? 0 : handler.fill(new net.neoforged.neoforge.fluids.FluidStack(net.minecraft.world.level.material.Fluids.LAVA, 4000),
                         net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction.EXECUTE);
-                if (filled == 0) log("could not fill %s with lava", c[0]);
+                log("filled %s with %d mB lava", cases[i][0], filled);
             }
-            double after = temp.apply(probe);
-            log("create heat: %s with %s raises the temperature 2 blocks away by %.1f C (%.1f -> %.1f, expected > 3)", c[0], c[1], after - before, before, after);
-            if (after - before <= 3) ok = false;
+        }
+        for (int i = 0; i < cases.length; i++) {
+            double heated = temp.apply(at[i].offset(2, 0, 0));
+            double control = temp.apply(at[i].offset(2, 0, 20));
+            log("create heat: %s with %s: %.1f C two blocks away vs %.1f C without it (+%.1f, expected > 3)", cases[i][0], cases[i][1], heated, control, heated - control);
+            if (heated - control <= 3) ok = false;
         }
         return ok;
     }

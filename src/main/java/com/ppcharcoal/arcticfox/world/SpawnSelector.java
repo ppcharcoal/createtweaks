@@ -41,8 +41,8 @@ public final class SpawnSelector {
         BlockPos best = null;
         int bestTrees = -1;
         // look around the biome hit for dry land with the most trees in view
-        for (int dx = -64; dx <= 64 && bestTrees < 6; dx += 16) {
-            for (int dz = -64; dz <= 64; dz += 16) {
+        for (int dx = -160; dx <= 160 && bestTrees < 8; dx += 32) {
+            for (int dz = -160; dz <= 160; dz += 32) {
                 BlockPos column = center.offset(dx, 0, dz);
                 if (!level.getBiome(column.atY(80)).is(SPAWN_BIOMES)) continue;
                 level.getChunk(column.getX() >> 4, column.getZ() >> 4); // heightmaps need the chunk generated
@@ -58,6 +58,7 @@ public final class SpawnSelector {
         }
         if (best == null) return;
         final BlockPos spawn = best;
+        if (bestTrees < 4) plantTrees(level, spawn, 4 - bestTrees);
         level.setDefaultSpawnPos(spawn, 0.0F);
         ArcticFox.LOGGER.info("World spawn set to {} ({} trees nearby)", spawn.toShortString(), bestTrees);
         if (level.getServer().getWorldData().worldGenOptions().generateBonusChest()) {
@@ -67,15 +68,38 @@ public final class SpawnSelector {
         event.setCanceled(true);
     }
 
+    /** Grows a few spruces around the spawn so the first wood is always in sight. */
+    private static void plantTrees(ServerLevel level, BlockPos spawn, int count) {
+        var spruce = level.registryAccess().registryOrThrow(Registries.CONFIGURED_FEATURE)
+                .getHolder(net.minecraft.data.worldgen.features.TreeFeatures.SPRUCE);
+        if (spruce.isEmpty()) return;
+        int planted = 0;
+        for (int attempt = 0; attempt < 40 && planted < count; attempt++) {
+            double angle = level.random.nextDouble() * Math.PI * 2;
+            int dist = 6 + level.random.nextInt(10);
+            BlockPos column = spawn.offset((int) (Math.cos(angle) * dist), 0, (int) (Math.sin(angle) * dist));
+            level.getChunk(column.getX() >> 4, column.getZ() >> 4);
+            BlockPos top = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, column);
+            BlockState ground = level.getBlockState(top.below());
+            if (!ground.is(BlockTags.DIRT)) {
+                if (!ground.isFaceSturdy(level, top.below(), net.minecraft.core.Direction.UP) || !ground.getFluidState().isEmpty()) continue;
+                level.setBlock(top.below(), net.minecraft.world.level.block.Blocks.DIRT.defaultBlockState(), 3);
+            }
+            if (level.getBlockState(top).is(net.minecraft.world.level.block.Blocks.SNOW)) level.removeBlock(top, false);
+            if (spruce.get().value().place(level, level.getChunkSource().getGenerator(), level.random, top)) planted++;
+        }
+        ArcticFox.LOGGER.info("Planted {} spruce trees near spawn", planted);
+    }
+
     /** Number of distinct tree trunks (log columns touching the ground) around a position. */
     public static int countLogs(ServerLevel level, BlockPos center, int radius) {
         int trunks = 0;
-        for (int x = -radius; x <= radius; x += 2) {
-            for (int z = -radius; z <= radius; z += 2) {
+        for (int x = -radius; x <= radius; x++) {
+            for (int z = -radius; z <= radius; z++) {
                 BlockPos column = center.offset(x, 0, z);
                 level.getChunk(column.getX() >> 4, column.getZ() >> 4);
                 BlockPos top = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, column);
-                if (level.getBlockState(top.below()).is(BlockTags.LOGS)) trunks++;
+                if (level.getBlockState(top.below()).is(BlockTags.LOGS)) trunks++; // one column per (1x1) trunk
             }
         }
         return trunks;

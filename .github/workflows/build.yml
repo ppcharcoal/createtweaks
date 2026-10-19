@@ -65,6 +65,7 @@ jobs:
           mkdir -p /tmp/ci-logs
           cp build.log smoke.log compat.log /tmp/ci-logs/ 2>/dev/null || true
           cp run-smoke/logs/latest.log /tmp/ci-logs/server.log 2>/dev/null || true
+          cp build/libs/*.jar /tmp/ci-logs/ 2>/dev/null || true
           cd /tmp/ci-logs
           git init -q -b ci-logs
           git config user.name "github-actions"

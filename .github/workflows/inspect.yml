@@ -1,0 +1,23 @@
+name: Inspect mod jars
+on: push
+permissions:
+  contents: write
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download and unpack
+        run: |
+          set -x
+          mkdir -p out && cd out
+          get() { url=$(curl -s "https://api.modrinth.com/v2/version/$2" | jq -r '.files[0].url'); curl -sL "$url" -o "$1.jar"; mkdir -p "$1"; (cd "$1" && unzip -q -o "../$1.jar" -x '*.class' 'assets/*/textures/*' 'assets/*/sounds/*' 'assets/*/geo/*' 'assets/*/animations/*' 'assets/*/models/*' || true); unzip -l "$1.jar" > "$1.filelist.txt"; rm "$1.jar"; }
+          get mowziesmobs xgAXTl17
+          # class-name list is enough to see config / entity structure
+          ls -la
+      - name: Push dump
+        run: |
+          cd out
+          git init -q -b mod-dumps
+          git config user.name "github-actions"; git config user.email "github-actions@users.noreply.github.com"
+          git add -A && git commit -q -m dump
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" mod-dumps

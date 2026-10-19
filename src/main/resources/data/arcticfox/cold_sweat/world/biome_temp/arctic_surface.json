@@ -2,7 +2,7 @@
   "biomes": [
     "#arcticfox:snowy_surface"
   ],
-  "min_temp": 4.0,
-  "max_temp": 7.5,
+  "min_temp": -9.5,
+  "max_temp": -1.0,
   "units": "c"
 }

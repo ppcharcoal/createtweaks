@@ -1,0 +1,162 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.14.3/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :
+Creating Minecraft artifacts without recompilation.
+
+> Task :createMinecraftArtifacts UP-TO-DATE
+> Task :compileJava UP-TO-DATE
+> Task :generateModMetadata UP-TO-DATE
+> Task :processResources UP-TO-DATE
+> Task :classes UP-TO-DATE
+
+> Task :downloadAssets
+Loaded 131 artifacts from /home/runner/work/createtweaks/createtweaks/build/tmp/downloadAssets/nfrt_artifact_manifest.properties
+Downloading asset index 17
+Using Minecraft asset root: /home/runner/.gradle/caches/neoformruntime/assets
+  ↓ https://piston-meta.mojang.com/v1/packages/15200809663f45954c2c9a33ce88849e61aaaecc/17.json
+
+> Task :writeSmokeTestLegacyClasspath
+> Task :prepareSmokeTestRun
+
+> Task :runSmokeTest
+WARN StatusConsoleListener Advanced terminal features are not available in this environment
+[15:13:02] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeserverdev, --gameDir, ., --fml.fmlVersion, 4.0.45, --fml.mcVersion, 1.21.1, --fml.neoForgeVersion, 21.1.262, --fml.neoFormVersion, 20240808.144430, --nogui]
+[15:13:02] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: JVM identified as Eclipse Adoptium OpenJDK 64-Bit Server VM 21.0.12.1+1-LTS
+[15:13:02] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher 11.0.5+main.901c6ea8 starting: java version 21.0.12.1 by Eclipse Adoptium; OS Linux arch amd64 version 7.0.0-1017-azure
+[15:13:02] [main/INFO] [ne.ne.fm.lo.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgeserverdev
+[15:13:02] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=union:/home/runner/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.16.4+mixin.0.8.7/26d01f0567ab46e9ca0d2ed89d0ecc11aadbd433/sponge-mixin-0.16.4+mixin.0.8.7.jar%2394!/ Service=ModLauncher Env=SERVER
+[15:13:02] [main/INFO] [ne.ne.fm.lo.mo.lo.JarInJarDependencyLocator/]: Found 2 dependencies adding them to mods collection
+[15:13:02] [main/INFO] [ne.ne.fm.lo.mo.ModDiscoverer/]: 
+     Mod List:
+		Name Version (Mod Id)
+
+		Arctic Fox : Create Tweaks 1.6.1 (arcticfox)
+		Minecraft 1.21.1 (minecraft)
+		NeoForge 21.1.262 (neoforge)
+[15:13:03] [main/INFO] [mixin/]: Compatibility level set to JAVA_21
+[15:13:03] [main/INFO] [cp.mo.mo.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeserverdev' with arguments [--gameDir, ., --nogui]
+[15:13:04] [main/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.5).
+[15:13:08] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[15:13:08] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[15:13:08] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[15:13:08] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[15:13:08] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[15:13:08] [modloading-worker-0/INFO] [ne.ne.ne.co.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 21.1.262, for MC 1.21.1
+[15:13:08] [main/INFO] [mojang/YggdrasilAuthenticationService]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[15:13:08] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/home/runner/work/createtweaks/createtweaks/build/moddev/artifacts/neoforge-21.1.262.jar%23125!/assets/.mcassetsroot' uses unexpected schema
+[15:13:08] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/home/runner/work/createtweaks/createtweaks/build/moddev/artifacts/neoforge-21.1.262.jar%23125!/data/.mcassetsroot' uses unexpected schema
+[15:13:09] [main/INFO] [minecraft/Main]: No existing world data, creating new world
+[15:13:09] [main/INFO] [minecraft/RecipeManager]: Loaded 1295 recipes
+[15:13:09] [main/INFO] [minecraft/AdvancementTree]: Loaded 1328 advancements
+[15:13:10] [Server thread/INFO] [minecraft/DedicatedServer]: Starting minecraft server version 1.21.1
+[15:13:10] [Server thread/INFO] [minecraft/DedicatedServer]: Loading properties
+[15:13:10] [Server thread/INFO] [minecraft/DedicatedServer]: Default game type: SURVIVAL
+[15:13:10] [Server thread/INFO] [minecraft/MinecraftServer]: Generating keypair
+[15:13:10] [Server thread/INFO] [minecraft/DedicatedServer]: Starting Minecraft server on *:25565
+[15:13:10] [Server thread/INFO] [minecraft/ServerConnectionListener]: Using epoll channel type
+[15:13:10] [Server thread/WARN] [minecraft/DedicatedServer]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[15:13:10] [Server thread/WARN] [minecraft/DedicatedServer]: The server will make no attempt to authenticate usernames. Beware.
+[15:13:10] [Server thread/WARN] [minecraft/DedicatedServer]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[15:13:10] [Server thread/WARN] [minecraft/DedicatedServer]: To change this, set "online-mode" to "true" in the server.properties file.
+[15:13:10] [Server thread/INFO] [minecraft/DedicatedServer]: Preparing level "world"
+[15:13:29] [Server thread/INFO] [co.pp.ar.ArcticFox/]: World spawn set to 1408, 63, 1216 (18 trees nearby)
+[15:13:29] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing start region for dimension minecraft:overworld
+[15:13:29] [worldgen/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 100%
+[15:13:29] [worldgen/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 100%
+[15:13:29] [Server thread/INFO] [minecraft/LoggerChunkProgressListener]: Time elapsed: 625 ms
+[15:13:29] [Server thread/INFO] [minecraft/DedicatedServer]: Done (19.323s)! For help, type "help"
+[15:13:29] [Server thread/INFO] [ne.ne.ne.ga.GameTestHooks/]: Enabled Gametest Namespaces: []
+[15:13:29] [Server thread/INFO] [ne.ne.ne.se.pe.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
+[15:13:29] [Server thread/WARN] [ne.ne.ne.co.TagConventionLogWarning/]: 
+   Dev warning - Legacy Tags detected. Please migrate your 'forge' namespace tags to the 'c' namespace! See net.neoforged.neoforge.common.Tags.java for all tags.
+   NOTE: Many tags have been moved around or renamed. Some new ones were added so please review the new tags.
+    And make sure you follow tag conventions for new tags! The convention is `c` with nouns generally being plural and adjectives being singular.
+   You can disable this message in NeoForge's common config by setting `logLegacyTagWarnings` to "SILENCED" or see individual tags with "DEV_VERBOSE".
+
+[15:13:29] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] generator=NoiseBasedChunkGenerator biomeSource=com.ppcharcoal.arcticfox.world.ArcticBiomeSource seaLevel=63
+[15:14:06] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] samples=16641 oceanBiomes=14.9% terrainBelowSea=30.4% nonSnowyLandSurface=8
+[15:14:06] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] height mean=67.4 sd=16.2 min=-2 max=214 lowlandWithinSea+24=64.2%
+[15:14:06] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE]   biome arcticfox:frozen_wastes           63.4%
+[15:14:06] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE]   biome minecraft:deep_frozen_ocean        3.4%
+[15:14:06] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE]   biome minecraft:dripstone_caves          0.0%
+[15:14:06] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE]   biome minecraft:frozen_ocean            11.5%
+[15:14:06] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE]   biome minecraft:frozen_peaks             0.4%
+[15:14:06] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE]   biome minecraft:frozen_river             8.4%
+[15:14:06] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE]   biome minecraft:grove                    0.7%
+[15:14:06] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE]   biome minecraft:ice_spikes               0.5%
+[15:14:06] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE]   biome minecraft:jagged_peaks             0.1%
+[15:14:06] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE]   biome minecraft:lush_caves               0.0%
+[15:14:06] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE]   biome minecraft:snowy_beach              2.8%
+[15:14:06] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE]   biome minecraft:snowy_plains             3.9%
+[15:14:06] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE]   biome minecraft:snowy_slopes             1.2%
+[15:14:06] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE]   biome minecraft:snowy_taiga              3.6%
+[15:14:06] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] forest biomes=4.3% (expected < 12%) frozen wastes=63.4% (expected > 35%)
+[15:14:16] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] overhang/floating columns: 17 of 4225 (0.40%)
+[15:14:16] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] advancement minecraft:nether/root present=false (expected false)
+[15:14:16] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] advancement minecraft:end/root present=false (expected false)
+[15:14:16] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] advancement minecraft:story/enter_the_nether present=false (expected false)
+[15:14:16] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] advancement minecraft:adventure/trade present=false (expected false)
+[15:14:16] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] advancement minecraft:husbandry/balanced_diet present=false (expected false)
+[15:14:16] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] advancement minecraft:story/upgrade_tools present=true (expected true)
+[15:14:16] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] advancement minecraft:adventure/adventuring_time present=true (expected true)
+[15:14:16] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] advancements loaded: 1328
+[15:14:16] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] recipes: wooden_pickaxe=false (false) flint/stone_pickaxe=true (true) copper_pickaxe=true (true)
+[15:14:16] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] mining: flint->iron=false (false) flint->copper=true (true) copper->iron=true (true) copper->diamond=false (false)
+[15:14:16] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] cobblestone in fluid_generator_outputs=true (true)
+[15:14:16] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] nearest village within 64 chunks: null (expected null)
+[15:14:16] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] structure registry size: 40, biome registry has 65 entries
+[15:14:16] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] waterSourceConversion=false doPatrolSpawning=false doTraderSpawning=false
+[15:14:16] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] scoria block registered: true
+[15:14:17] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] lava+water in world produces: arcticfox:scoria (expected arcticfox:scoria)
+[15:14:19] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] ores in 36 chunks: 919, exposed to air/fluid: 55.2% (expected > 50%), raw ore vein blocks: 0 (expected 0)
+[15:14:19] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] evaporation: water source scheduled=true (true) waterlogged grate scheduled=false (false)
+[15:14:19] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] nearest stronghold within 100 chunks: null (expected null)
+[15:14:19] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] smoker rotten flesh -> leather recipe present=true (true)
+[15:14:19] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] snowy plains spawns winter cow=true winter sheep=true (true/true)
+[15:14:19] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] winter sheep entity creatable=true
+[15:14:45] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] frozen wastes ground under the snow: {coal_ore=1, coarse_dirt=21, dirt=20, granite=1, grass_block=1, gravel=8, ice=6, sand=1, stone=2}
+[15:14:45] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] night snowstorm=true (true) cleared at dawn=true (true)
+[15:14:46] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] snow stacking: layers added=16 (expected 16) snow blocks=1 (1) top=Block{minecraft:snow}[layers=8]
+[15:14:46] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] snow settles on glass=false (false)
+[15:14:46] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] crops: open sky=EXPOSED (EXPOSED) sealed cave=OK (OK) dry farmland=DRY (DRY) | cold sweat surface=n/a C cave=n/a C
+[15:14:46] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] world spawn 1408, 63, 1216 in minecraft:snowy_plains with 18 tree trunks within 24 blocks (expected snowy_plains, 1..60)
+[15:14:46] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] nearest ruined portal within 64 chunks: null (expected null)
+[15:14:47] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] structure buried_camp: size=9, 6, 9 nearest=224, 0, 80 on dry land=true loot chests=2 create tracks=0 S&R tracks=0 vanilla rails=0 lamps=0
+[15:14:47] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] structure supply_cache: size=5, 4, 5 nearest=-480, 0, -384 on dry land=true loot chests=3 create tracks=0 S&R tracks=0 vanilla rails=0 lamps=0
+[15:14:48] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] structure cabin: size=11, 9, 11 nearest=-512, 0, -592 on dry land=true loot chests=2 create tracks=0 S&R tracks=0 vanilla rails=0 lamps=0
+[15:14:49] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] cabin stove found=true fuel=48000 ticks (expected 48000) lit=true
+[15:14:49] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] weather over 20 days: 9 snowy days, 11 sunny days, every night a blizzard, applied correctly=true
+[15:14:49] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] raw beef makes you sick=true (true) cooked beef=false (false)
+[15:14:50] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] fishing: natural water at -2000, 61, -2000=true (true) bucket pond=false (false) waterlogged pond=false (false)
+[15:14:50] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] carrots are a Serene Seasons winter crop=true
+[15:14:52] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] snow melt: cast-iron stove sources=1 melted nearby=true far snow kept=true new snow blocked nearby=true settles far away=true (all true)
+[15:14:56] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] wendigo: max health=100 (100 = 5x zombie) attack=9
+[15:14:56] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] wendigo watched: moved 0.00 blocks, state=1 (expected < 0.3, 1)
+[15:14:56] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] wendigo unwatched: distance 20.0 -> 14.9, state=0 (expected closer, 0)
+[15:14:56] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] wendigo approached: state=4 then hidden=true invisible=true (expected 4, true, true)
+[15:14:56] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] wendigo returns: hidden=false 32 blocks away horizontally, 164 degrees from where it vanished (expected false, 26-35, >= 100)
+[15:14:56] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] wendigo with 2 players, prey looking away, friend watching: moved 0.00, state=1 (expected < 0.3, 1)
+[15:14:56] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] wendigo light: prey lit=true, other player lit=false, switched to the player in the dark=true (expected true, false, true)
+[15:14:56] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] wendigo light: everyone lit -> hidden=true, a minute later still not stalking anyone lit (state=0, expected hidden or fleeing)
+[15:14:56] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] wendigo strikes: state 2 -> 3, claw attacks=4 (expected 2 -> 3, > 0)
+[15:14:56] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] wendigo after killing its prey: removed=true (expected true)
+[15:14:56] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] wendigo underground: hunting=true, prey underground=true, prey still a spawn candidate=false, -> state=4, attacks after=0, hidden=true (expected true, true, false, 4, 0, true)
+[15:15:01] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] wendigo spawner: first tonight=true at 40 blocks, second tonight=false (expected true, 34-42, false)
+[15:15:01] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] item audit written to item_audit.txt (1295 recipes, 635 items not produced)
+[15:15:01] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] items hidden from recipe viewers: 43 (expected > 200 with Alex's Mobs + Mowzie's, > 30 without)
+[15:15:01] [Server thread/INFO] [co.pp.ar.ArcticFox/]: [ArcticFox/SMOKE] ARCTICFOX SMOKETEST PASS
+[15:15:01] [Server thread/INFO] [minecraft/MinecraftServer]: Stopping server
+[15:15:01] [Server thread/INFO] [minecraft/MinecraftServer]: Saving players
+[15:15:01] [Server thread/INFO] [minecraft/MinecraftServer]: Saving worlds
+[15:15:05] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+[15:15:11] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_end
+[15:15:11] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_nether
+[15:15:11] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[15:15:11] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[15:15:11] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[15:15:11] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage: All dimensions are saved
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_2-1792509178143.json
+
+BUILD SUCCESSFUL in 2m 16s
+8 actionable tasks: 4 executed, 4 up-to-date

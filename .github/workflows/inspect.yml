@@ -8,21 +8,27 @@ jobs:
     steps:
       - name: Download and unpack
         run: |
-          set -x
           mkdir -p out && cd out
-          get() { url=$(curl -s "https://api.modrinth.com/v2/version/$2" | jq -r '.files[0].url'); curl -sL "$url" -o "$1.jar"; mkdir -p "$1"; (cd "$1" && unzip -q -o "../$1.jar" -x '*.class' 'assets/*/textures/*' 'assets/*/sounds/*' 'assets/*/geo/*' 'assets/*/animations/*' 'assets/*/models/*' || true); unzip -l "$1.jar" > "$1.filelist.txt"; rm "$1.jar"; }
-          get mowziesmobs xgAXTl17
-          url=$(curl -s "https://api.modrinth.com/v2/version/xgAXTl17" | jq -r '.files[0].url'); curl -sL "$url" -o m.jar
-          mkdir -p cls && (cd cls && unzip -q -o ../m.jar 'com/bobmowzie/mowziesmobs/server/config/*' 'com/bobmowzie/mowziesmobs/server/world/*' || true)
-          find cls -name '*.class' | while read c; do echo "=== $c"; strings -n 3 "$c" | grep -i -E 'snow|cold|frost|biome|is_|tag|dimension|minecraft:|c:' ; done > mowzie_config_strings.txt || true
-          rm -rf cls m.jar
-          # class-name list is enough to see config / entity structure
-          ls -la
+          get() {
+            url=$(curl -s "https://api.modrinth.com/v2/version/$2" | jq -r '.files[0].url'); curl -sL "$url" -o "$1.jar"
+            curl -s "https://api.modrinth.com/v2/version/$2" | jq '.dependencies' > "$1.deps.json"
+            mkdir -p "$1"; (cd "$1" && unzip -q -o "../$1.jar" -x '*.class' '*.png' '*.ogg' 'assets/*/models/*' 'assets/*/geo/*' 'assets/*/animations/*' 'assets/*/blockstates/*' || true)
+            unzip -l "$1.jar" | awk '{print $4}' > "$1.filelist.txt"
+            mkdir -p cls && (cd cls && unzip -q -o "../$1.jar" '*onfig*.class' '*Spoil*.class' '*Heat*.class' '*Heater*.class' '*Temperature*.class' || true)
+            find cls -name '*.class' | while read c; do echo "=== $c"; strings -n 3 "$c" | head -400; done > "$1.strings.txt" || true
+            rm -rf cls "$1.jar"
+          }
+          get alexsmobs K4GsS9Si
+          get spoiled ATkEvOWh
+          get cei L6VSDdC4
+          get newage IwtuwMZy
+          get createdeco qrcMVoBD
+          for p in 6oyMM4yX dzb1a5WV; do curl -s "https://api.modrinth.com/v2/project/$p" | jq '{slug,title}' > "dep_$p.json"; curl -s "https://api.modrinth.com/v2/project/$p/version?game_versions=%5B%221.21.1%22%5D&loaders=%5B%22neoforge%22%5D" | jq '[.[0] | {version_number,id}]' >> "dep_$p.json"; done
+          du -sh .
       - name: Push dump
         run: |
           cd out
           git init -q -b mod-dumps
           git config user.name "github-actions"; git config user.email "github-actions@users.noreply.github.com"
-          ls -la; du -sh .
           git add -A && git commit -q -m dump || true
           git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" mod-dumps

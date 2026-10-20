@@ -801,8 +801,8 @@ public final class SmokeTest {
             w.endHideNow();
             double after = Math.atan2(w.getZ() - fake.getZ(), w.getX() - fake.getX());
             double diff = Math.abs(Mth.wrapDegrees((float) Math.toDegrees(after - before)));
-            log("wendigo returns: hidden=%s %.0f blocks away, %.0f degrees from where it vanished (expected false, 26-40, >= 100)",
-                    w.isHidden(), w.distanceTo(fake), diff);
+            log("wendigo returns: hidden=%s %.0f blocks away horizontally, %.0f degrees from where it vanished (expected false, 26-35, >= 100)",
+                    w.isHidden(), Math.hypot(w.getX() - fake.getX(), w.getZ() - fake.getZ()), diff);
             if (w.isHidden() || w.isInvisible() || diff < 100) ok = false;
 
             // careless: it gets within reach unseen -> scream, then attack

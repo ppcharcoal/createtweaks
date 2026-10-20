@@ -316,6 +316,7 @@ public class Wendigo extends Monster {
             BlockPos top = level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, new BlockPos(x, 0, z));
             BlockState ground = level().getBlockState(top.below());
             if (!level().getFluidState(top.below()).isEmpty()) continue;
+            if (attempt < 18 && Math.abs(top.getY() - prey.getY()) > 16) continue; // stay on the prey's level
             if (attempt < 18 && !ground.isFaceSturdy(level(), top.below(), net.minecraft.core.Direction.UP)
                     && !ground.is(net.minecraft.world.level.block.Blocks.SNOW)) continue;
             Vec3 spot = new Vec3(x + 0.5, top.getY(), z + 0.5);

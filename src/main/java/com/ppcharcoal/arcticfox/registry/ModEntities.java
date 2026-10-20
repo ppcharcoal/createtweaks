@@ -1,6 +1,7 @@
 package com.ppcharcoal.arcticfox.registry;
 
 import com.ppcharcoal.arcticfox.ArcticFox;
+import com.ppcharcoal.arcticfox.entity.Wendigo;
 import com.ppcharcoal.arcticfox.entity.WinterCow;
 import com.ppcharcoal.arcticfox.entity.WinterSheep;
 import net.minecraft.core.BlockPos;
@@ -41,6 +42,11 @@ public final class ModEntities {
                     .sized(0.9F, 1.3F).eyeHeight(1.235F).passengerAttachments(1.2375F).clientTrackingRange(10)
                     .build(ArcticFox.id("winter_sheep").toString()));
 
+    public static final DeferredHolder<EntityType<?>, EntityType<Wendigo>> WENDIGO = ENTITY_TYPES.register("wendigo",
+            () -> EntityType.Builder.<Wendigo>of(Wendigo::new, MobCategory.MONSTER)
+                    .sized(0.9F, 2.5F).eyeHeight(2.2F).clientTrackingRange(10).updateInterval(2)
+                    .build(ArcticFox.id("wendigo").toString()));
+
     private ModEntities() {
     }
 
@@ -48,6 +54,7 @@ public final class ModEntities {
     public static void onAttributes(EntityAttributeCreationEvent event) {
         event.put(WINTER_COW.get(), Cow.createAttributes().build());
         event.put(WINTER_SHEEP.get(), Sheep.createAttributes().build());
+        event.put(WENDIGO.get(), Wendigo.createAttributes().build());
     }
 
     @SubscribeEvent
@@ -56,6 +63,8 @@ public final class ModEntities {
                 ModEntities::canWinterAnimalSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(WINTER_SHEEP.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 ModEntities::canWinterAnimalSpawn, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(WENDIGO.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                net.minecraft.world.entity.monster.Monster::checkMonsterSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
     }
 
     /** Like vanilla animal spawning, but also allowed on snow (vanilla only allows grass blocks). */

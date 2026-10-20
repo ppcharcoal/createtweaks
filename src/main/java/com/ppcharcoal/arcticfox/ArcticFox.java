@@ -29,6 +29,7 @@ public final class ArcticFox {
         ModWorldgen.PROCESSORS.register(modBus);
         com.ppcharcoal.arcticfox.registry.ModBlockEntities.BLOCK_ENTITIES.register(modBus);
         ModConditions.CONDITIONS.register(modBus);
+        com.ppcharcoal.arcticfox.registry.ModSounds.SOUNDS.register(modBus);
 
         container.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 

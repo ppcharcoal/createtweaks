@@ -77,6 +77,22 @@ public final class Config {
             .comment("Columns per player per tick that receive snow while it snows (doubled during snowstorms). ~6 gives roughly 1 block per snowstorm night.")
             .defineInRange("snow.attemptsPerTick", 6, 0, 256);
 
+    public static final ModConfigSpec.BooleanValue HEAT_MELTS_SNOW = BUILDER
+            .comment("Working heat sources (Create blaze burners, steam engines, hot fluid pipes/tanks/basins, New Age heaters, stoves, lit furnaces, campfires) melt the snow around them and keep new snow from settling.")
+            .define("snow.heatMeltsSnow", true);
+
+    public static final ModConfigSpec.BooleanValue WENDIGO = BUILDER
+            .comment("The Wendigo stalks lone players outdoors at night.")
+            .define("wendigo.enabled", true);
+
+    public static final ModConfigSpec.DoubleValue WENDIGO_CHANCE = BUILDER
+            .comment("Chance, checked every 10 seconds at night for each player outdoors, that a Wendigo starts stalking them.")
+            .defineInRange("wendigo.spawnChance", 0.02, 0.0, 1.0);
+
+    public static final ModConfigSpec.IntValue WENDIGO_FIRST_NIGHT = BUILDER
+            .comment("First night (counting from 0) on which a Wendigo can appear.")
+            .defineInRange("wendigo.firstNight", 2, 0, 1000);
+
     public static final ModConfigSpec.BooleanValue CROP_RULES = BUILDER
             .comment("Crops only grow when sheltered (roof above), warm (above crops.minTemperature) and watered (moist farmland).")
             .define("crops.enabled", true);

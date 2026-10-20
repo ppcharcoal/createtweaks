@@ -1,0 +1,90 @@
+{
+  "entity.wendigo.breath": {
+    "subtitle": "subtitles.arcticfox.entity.wendigo.breath",
+    "sounds": [
+      {
+        "name": "arcticfox:entity/wendigo/breath1",
+        "attenuation_distance": 40,
+        "volume": 0.45
+      },
+      {
+        "name": "arcticfox:entity/wendigo/breath2",
+        "attenuation_distance": 40,
+        "volume": 0.45
+      }
+    ]
+  },
+  "entity.wendigo.click": {
+    "subtitle": "subtitles.arcticfox.entity.wendigo.click",
+    "sounds": [
+      {
+        "name": "arcticfox:entity/wendigo/click1",
+        "attenuation_distance": 36,
+        "volume": 0.4
+      },
+      {
+        "name": "arcticfox:entity/wendigo/click2",
+        "attenuation_distance": 36,
+        "volume": 0.4
+      }
+    ]
+  },
+  "entity.wendigo.step": {
+    "subtitle": "subtitles.arcticfox.entity.wendigo.step",
+    "sounds": [
+      {
+        "name": "arcticfox:entity/wendigo/step1",
+        "attenuation_distance": 20
+      },
+      {
+        "name": "arcticfox:entity/wendigo/step2",
+        "attenuation_distance": 20
+      },
+      {
+        "name": "arcticfox:entity/wendigo/step3",
+        "attenuation_distance": 20
+      }
+    ]
+  },
+  "entity.wendigo.scream": {
+    "subtitle": "subtitles.arcticfox.entity.wendigo.scream",
+    "sounds": [
+      {
+        "name": "arcticfox:entity/wendigo/scream",
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "entity.wendigo.vanish": {
+    "subtitle": "subtitles.arcticfox.entity.wendigo.vanish",
+    "sounds": [
+      {
+        "name": "arcticfox:entity/wendigo/vanish",
+        "attenuation_distance": 32,
+        "volume": 0.7
+      }
+    ]
+  },
+  "entity.wendigo.hurt": {
+    "subtitle": "subtitles.arcticfox.entity.wendigo.hurt",
+    "sounds": [
+      {
+        "name": "arcticfox:entity/wendigo/hurt1",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "arcticfox:entity/wendigo/hurt2",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "entity.wendigo.death": {
+    "subtitle": "subtitles.arcticfox.entity.wendigo.death",
+    "sounds": [
+      {
+        "name": "arcticfox:entity/wendigo/death",
+        "attenuation_distance": 48
+      }
+    ]
+  }
+}

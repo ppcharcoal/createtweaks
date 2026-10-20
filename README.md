@@ -27,6 +27,19 @@ Mod id: `arcticfox` · Requires NeoForge 21.1+ · Server **and** client.
 - **Blizzard fog**: outdoors in a blizzard, thick white fog closes in to about 20 blocks. Under a roof it clears.
 - **Snow piles up**, up to **2 blocks deep**: layers grow to a full block, then become snow blocks with new layers on top. It builds about a block per stormy night. Snow never settles on glass, ice, campfires or magma, or next to bright light (torches), so greenhouse roofs and lit paths stay clear. Works on its own and alongside Snow! Real Magic.
 
+- **Heat melts snow**: working heat sources clear the snow around them and keep new snow from settling there, so an outdoor factory doesn't get buried. Blaze burners (2-6 blocks, wider the hotter they burn), steam engines on a running boiler (5), pipes, pumps, tanks and basins carrying lava or other hot fluids (2-3), Create: New Age heaters and heat pipes (3), the cast-iron stove (4), lit furnaces and campfires (2).
+
+### The Wendigo
+Something follows you through the blizzard. From the third night on, a **Wendigo** may start stalking a player who is out in the open at night.
+- It appears far behind you in the fog. You won't see its gaunt body, only **two glowing blue eyes** that shine straight through the blizzard.
+- **Look at it and it freezes**, staring back, head slowly tilting.
+- **Walk towards it while looking** and it bolts into the fog and is gone, only to return **30 seconds later from a different direction**.
+- **Look away and it creeps closer.** Breathing, clicking bones and soft footsteps carry faintly through the storm.
+- If it reaches you unseen, or you turn around and it is already within a few blocks, it **screams** (you are briefly slowed and your vision darkens) and **attacks until you are dead**.
+- 100 health (5x a zombie), 9 damage, hard to knock back. Wounding it while it stalks drives it off for a while. It is gone at dawn unless it is already hunting.
+- Drops bones, leather and sometimes a skull. Killing one earns the **Hunger Satisfied** challenge.
+- Config: `wendigo.enabled`, `wendigo.spawnChance`, `wendigo.firstNight`.
+
 ### Points of interest
 Rare structures reward exploring the wastes:
 - All surface structures only generate on **dry, fairly flat land**, never on lakes, frozen or not.

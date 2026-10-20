@@ -21,6 +21,11 @@ public final class ClientEvents {
     }
 
     @SubscribeEvent
+    public static void onRegisterLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(WendigoModel.LAYER, WendigoModel::createBodyLayer);
+    }
+
+    @SubscribeEvent
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.WINTER_COW.get(), context -> new CowRenderer(context) {
             @Override
@@ -28,6 +33,7 @@ public final class ClientEvents {
                 return WINTER_COW;
             }
         });
+        event.registerEntityRenderer(ModEntities.WENDIGO.get(), WendigoRenderer::new);
         event.registerEntityRenderer(ModEntities.WINTER_SHEEP.get(), context -> new SheepRenderer(context) {
             @Override
             public ResourceLocation getTextureLocation(Sheep entity) {

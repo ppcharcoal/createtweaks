@@ -25,5 +25,16 @@
   "item.arcticfox.incomplete_mending_book": "Incomplete Mending Book",
   "block.arcticfox.cabin_stove": "Cast-Iron Stove",
   "block.arcticfox.flickering_lamp": "Flickering Lamp",
-  "message.arcticfox.stove_full": "The stove is already full"
+  "message.arcticfox.stove_full": "The stove is already full",
+  "entity.arcticfox.wendigo": "Wendigo",
+  "item.arcticfox.wendigo_spawn_egg": "Wendigo Spawn Egg",
+  "subtitles.arcticfox.entity.wendigo.breath": "Something breathes",
+  "subtitles.arcticfox.entity.wendigo.click": "Bones click",
+  "subtitles.arcticfox.entity.wendigo.step": "Footsteps in the snow",
+  "subtitles.arcticfox.entity.wendigo.scream": "Wendigo screams",
+  "subtitles.arcticfox.entity.wendigo.vanish": "Wind rushes",
+  "subtitles.arcticfox.entity.wendigo.hurt": "Wendigo hurts",
+  "subtitles.arcticfox.entity.wendigo.death": "Wendigo dies",
+  "advancements.arcticfox.kill_wendigo.title": "Hunger Satisfied",
+  "advancements.arcticfox.kill_wendigo.description": "Kill the Wendigo that stalks you through the blizzard"
 }

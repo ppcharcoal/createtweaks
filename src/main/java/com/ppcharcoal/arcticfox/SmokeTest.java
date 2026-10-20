@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BiomeTags;
+import net.minecraft.util.Mth;
 import net.minecraft.tags.StructureTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
@@ -163,6 +164,8 @@ public final class SmokeTest {
             ok &= checkV12(server, level);
             ok &= checkV13(server, level);
             ok &= checkCompat(server, level);
+            ok &= checkSnowMelt(level);
+            ok &= checkWendigo(level);
             ItemAudit.run(server, level);
             int hiddenCount = 0;
             for (var h : BuiltInRegistries.ITEM.getTagOrEmpty(net.neoforged.neoforge.common.Tags.Items.HIDDEN_FROM_RECIPE_VIEWERS)) hiddenCount++;
@@ -690,6 +693,148 @@ public final class SmokeTest {
             double control = temp.apply(at[i].offset(2, 0, 20));
             log("create heat: %s with %s: %.1f C two blocks away vs %.1f C without it (+%.1f, expected > 3)", cases[i][0], cases[i][1], heated, control, heated - control);
             if (heated - control <= 3) ok = false;
+        }
+        return ok;
+    }
+
+    private static void loadArea(ServerLevel level, BlockPos center, int chunkRadius) {
+        for (int dx = -chunkRadius; dx <= chunkRadius; dx++) {
+            for (int dz = -chunkRadius; dz <= chunkRadius; dz++) {
+                level.getChunk((center.getX() >> 4) + dx, (center.getZ() >> 4) + dz);
+            }
+        }
+    }
+
+    /** Heat sources melt the snow piled around them and stop new snow from settling there. */
+    private static boolean checkSnowMelt(ServerLevel level) {
+        boolean ok = true;
+        java.util.List<Object[]> cases = new java.util.ArrayList<>();
+        cases.add(new Object[]{"cast-iron stove", com.ppcharcoal.arcticfox.registry.ModBlocks.CABIN_STOVE.get().defaultBlockState()
+                .setValue(com.ppcharcoal.arcticfox.block.CabinStoveBlock.LIT, true), 4});
+        var burner = BuiltInRegistries.BLOCK.getOptional(ResourceLocation.fromNamespaceAndPath("create", "blaze_burner"));
+        if (burner.isPresent()) {
+            BlockState st = burner.get().defaultBlockState();
+            for (var prop : st.getProperties()) if (prop.getName().equals("blaze")) st = cycleTo(st, prop, "kindled");
+            cases.add(new Object[]{"kindled blaze burner", st, 4});
+        }
+        int i = 0;
+        for (Object[] c : cases) {
+            BlockPos base = new BlockPos(-3000 - 40 * i++, 240, -3000);
+            loadArea(level, base, 1);
+            for (BlockPos p : BlockPos.betweenClosed(base.offset(-8, 0, -8), base.offset(8, 0, 8))) level.setBlock(p, Blocks.STONE.defaultBlockState(), 2);
+            for (BlockPos p : BlockPos.betweenClosed(base.offset(-8, 1, -8), base.offset(8, 6, 8))) level.setBlock(p, Blocks.AIR.defaultBlockState(), 2);
+            BlockPos heat = base.above();
+            level.setBlock(heat, (BlockState) c[1], 3);
+            BlockPos near = base.offset(2, 1, 0), far = base.offset(7, 1, 0);
+            level.setBlock(near, Blocks.SNOW_BLOCK.defaultBlockState(), 2);
+            level.setBlock(near.above(), Blocks.SNOW.defaultBlockState().setValue(net.minecraft.world.level.block.SnowLayerBlock.LAYERS, 4), 2);
+            level.setBlock(base.offset(0, 1, -3), Blocks.SNOW.defaultBlockState().setValue(net.minecraft.world.level.block.SnowLayerBlock.LAYERS, 8), 2);
+            level.setBlock(far, Blocks.SNOW.defaultBlockState().setValue(net.minecraft.world.level.block.SnowLayerBlock.LAYERS, 6), 2);
+            java.util.Map<Long, java.util.List<long[]>> found = new java.util.HashMap<>();
+            int sources = 0;
+            for (int pass = 0; pass < 6; pass++) {
+                found.clear();
+                sources = com.ppcharcoal.arcticfox.world.SnowMelt.scanChunk(level, heat.getX() >> 4, heat.getZ() >> 4, found);
+            }
+            com.ppcharcoal.arcticfox.world.SnowMelt.remember(level, found);
+            boolean melted = isAir(level.getBlockState(near)) && isAir(level.getBlockState(near.above())) && isAir(level.getBlockState(base.offset(0, 1, -3)));
+            boolean farKept = level.getBlockState(far).is(Blocks.SNOW);
+            boolean blocked = !com.ppcharcoal.arcticfox.world.WinterWeather.addLayer(level, base.offset(1, 0, 1));
+            boolean farSettles = com.ppcharcoal.arcticfox.world.WinterWeather.addLayer(level, base.offset(-7, 0, -7));
+            log("snow melt: %s sources=%d melted nearby=%s far snow kept=%s new snow blocked nearby=%s settles far away=%s (all true)",
+                    c[0], sources, melted, farKept, blocked, farSettles);
+            if (sources < 1 || !melted || !farKept || !blocked || !farSettles) ok = false;
+        }
+        com.ppcharcoal.arcticfox.world.SnowMelt.remember(level, new java.util.HashMap<>());
+        return ok;
+    }
+
+    /** The Wendigo: 100 hp, freezes while watched, flees when approached, returns from elsewhere, screams and attacks. */
+    private static boolean checkWendigo(ServerLevel level) {
+        boolean ok = true;
+        long keepTime = level.getDayTime();
+        level.setDayTime(keepTime - keepTime % 24000 + 18000);
+        try {
+            BlockPos base = new BlockPos(4000, 240, 4000);
+            loadArea(level, base, 4);
+            for (BlockPos p : BlockPos.betweenClosed(base.offset(-10, 0, -6), base.offset(44, 0, 6))) level.setBlock(p, Blocks.STONE.defaultBlockState(), 2);
+            for (BlockPos p : BlockPos.betweenClosed(base.offset(-10, 1, -6), base.offset(44, 5, 6))) level.setBlock(p, Blocks.AIR.defaultBlockState(), 2);
+            var fake = net.neoforged.neoforge.common.util.FakePlayerFactory.get(level,
+                    new com.mojang.authlib.GameProfile(java.util.UUID.fromString("7d1c9a3e-1f62-4b5e-9a10-5e2f0c0ffee1"), "[ArcticFoxWendigoTest]"));
+            fake.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+            fake.moveTo(base.getX() + 0.5, base.getY() + 1, base.getZ() + 0.5, -90, 0); // facing +X
+            fake.setYHeadRot(-90);
+            var w = com.ppcharcoal.arcticfox.registry.ModEntities.WENDIGO.get().create(level);
+            w.moveTo(base.getX() + 20.5, base.getY() + 1, base.getZ() + 0.5, 90, 0);
+            level.addFreshEntity(w);
+            w.setPrey(fake);
+            log("wendigo: max health=%.0f (100 = 5x zombie) attack=%.0f", w.getMaxHealth(), w.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE));
+            if (w.getMaxHealth() != 100) ok = false;
+
+            // watched: holds still
+            double x0 = w.getX();
+            for (int i = 0; i < 60; i++) w.tick();
+            log("wendigo watched: moved %.2f blocks, state=%d (expected < 0.3, %d)", Math.abs(w.getX() - x0), w.getState(), com.ppcharcoal.arcticfox.entity.Wendigo.WATCHED);
+            if (Math.abs(w.getX() - x0) > 0.3 || w.getState() != com.ppcharcoal.arcticfox.entity.Wendigo.WATCHED) ok = false;
+
+            // looking away: it creeps closer
+            fake.setYRot(90); fake.setYHeadRot(90);
+            double d0 = w.distanceTo(fake);
+            for (int i = 0; i < 60; i++) w.tick();
+            double d1 = w.distanceTo(fake);
+            log("wendigo unwatched: distance %.1f -> %.1f, state=%d (expected closer, %d)", d0, d1, w.getState(), com.ppcharcoal.arcticfox.entity.Wendigo.STALK);
+            if (d1 > d0 - 2 || w.getState() == com.ppcharcoal.arcticfox.entity.Wendigo.HUNT) ok = false;
+
+            // walking towards it while looking: it bolts and vanishes
+            if (w.distanceTo(fake) < 8) w.moveTo(base.getX() + 16.5, base.getY() + 1, base.getZ() + 0.5);
+            fake.setYRot(-90); fake.setYHeadRot(-90);
+            for (int i = 0; i < 5; i++) w.tick();
+            fake.moveTo(fake.getX() + 4, fake.getY(), fake.getZ(), -90, 0);
+            for (int i = 0; i < 3; i++) w.tick();
+            int fled = w.getState();
+            for (int i = 0; i < 40; i++) w.tick();
+            log("wendigo approached: state=%d then hidden=%s invisible=%s (expected %d, true, true)", fled, w.isHidden(), w.isInvisible(), com.ppcharcoal.arcticfox.entity.Wendigo.FLEE);
+            if (fled != com.ppcharcoal.arcticfox.entity.Wendigo.FLEE || !w.isHidden() || !w.isInvisible()) ok = false;
+
+            // 30 seconds later it returns from another direction
+            double before = w.lastBearing();
+            w.endHideNow();
+            double after = Math.atan2(w.getZ() - fake.getZ(), w.getX() - fake.getX());
+            double diff = Math.abs(Mth.wrapDegrees((float) Math.toDegrees(after - before)));
+            log("wendigo returns: hidden=%s %.0f blocks away, %.0f degrees from where it vanished (expected false, 26-40, >= 100)",
+                    w.isHidden(), w.distanceTo(fake), diff);
+            if (w.isHidden() || w.isInvisible() || diff < 100) ok = false;
+
+            // careless: it gets within reach unseen -> scream, then attack
+            w.moveTo(fake.getX() + 2.5, fake.getY(), fake.getZ());
+            fake.setYRot(90); fake.setYHeadRot(90);
+            w.tick();
+            int s1 = w.getState();
+            for (int i = 0; i < 45; i++) w.tick();
+            int s2 = w.getState();
+            for (int i = 0; i < 40; i++) w.tick();
+            log("wendigo strikes: state %d -> %d, claw attacks=%d (expected %d -> %d, > 0)", s1, s2, w.strikes,
+                    com.ppcharcoal.arcticfox.entity.Wendigo.SCREAM, com.ppcharcoal.arcticfox.entity.Wendigo.HUNT);
+            if (s1 != com.ppcharcoal.arcticfox.entity.Wendigo.SCREAM || s2 != com.ppcharcoal.arcticfox.entity.Wendigo.HUNT || w.strikes == 0) ok = false;
+            w.discard();
+
+            // the spawner finds a spot behind a player out on the open ground
+            com.ppcharcoal.arcticfox.entity.Wendigo spawned = null;
+            for (int attempt = 0; attempt < 8 && spawned == null; attempt++) {
+                BlockPos g = new BlockPos(1200 + attempt * 300, 0, 900);
+                loadArea(level, g, 4);
+                BlockPos top = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, g);
+                if (!level.getFluidState(top.below()).isEmpty()) continue;
+                fake.moveTo(top.getX() + 0.5, top.getY(), top.getZ() + 0.5, 0, 0);
+                spawned = com.ppcharcoal.arcticfox.world.WendigoSpawner.spawnFor(level, fake);
+            }
+            log("wendigo spawner: spawned=%s distance=%.0f (expected true, 34-42)", spawned != null, spawned == null ? 0 : spawned.distanceTo(fake));
+            if (spawned == null) ok = false; else spawned.discard();
+        } catch (Throwable t) {
+            ArcticFox.LOGGER.error(P + "wendigo check failed", t);
+            ok = false;
+        } finally {
+            level.setDayTime(keepTime);
         }
         return ok;
     }

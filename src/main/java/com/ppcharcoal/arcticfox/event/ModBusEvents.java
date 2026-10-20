@@ -55,6 +55,7 @@ public final class ModBusEvents {
         } else if (event.getTabKey() == CreativeModeTabs.SPAWN_EGGS) {
             event.accept(ModItems.WINTER_COW_SPAWN_EGG.get());
             event.accept(ModItems.WINTER_SHEEP_SPAWN_EGG.get());
+            event.accept(ModItems.WENDIGO_SPAWN_EGG.get());
         }
     }
 }

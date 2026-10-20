@@ -139,6 +139,7 @@ public final class WinterWeather {
     /** Adds a snow layer at/above {@code top} respecting the depth limit. Visible for tests. */
     public static boolean addLayer(ServerLevel level, BlockPos top) {
         int maxLayers = Config.SNOW_MAX_DEPTH.get() * 8;
+        if (Config.HEAT_MELTS_SNOW.get() && SnowMelt.nearHeat(level, top.above())) return false;
         BlockState state = level.getBlockState(top);
         BlockPos above = top.above();
         if (state.is(Blocks.SNOW)) {

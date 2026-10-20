@@ -80,6 +80,9 @@ public final class ModItems {
     public static final DeferredItem<DeferredSpawnEggItem> WINTER_SHEEP_SPAWN_EGG = ITEMS.register("winter_sheep_spawn_egg",
             () -> new DeferredSpawnEggItem(ModEntities.WINTER_SHEEP, 0xF2F4F7, 0x2E2A30, new Item.Properties()));
 
+    public static final DeferredItem<DeferredSpawnEggItem> WENDIGO_SPAWN_EGG = ITEMS.register("wendigo_spawn_egg",
+            () -> new DeferredSpawnEggItem(ModEntities.WENDIGO, 0x4A3A2E, 0x7FD8FF, new Item.Properties()));
+
     public static final DeferredItem<SpearItem> IRON_SPEAR = ITEMS.register("iron_spear",
             () -> new SpearItem(Tiers.IRON, 5.0F, new Item.Properties()));
     public static final DeferredItem<SpearItem> DIAMOND_SPEAR = ITEMS.register("diamond_spear",

@@ -24,7 +24,7 @@ Mod id: `arcticfox` · Requires NeoForge 21.1+ · Server **and** client.
 
 ### Blizzards and deep snow
 - **Night blizzards are dark**: the storm fog turns a deep blue-grey at night instead of glowing white (snow-white by day), and a torch or lantern faintly lights the snow around you.
-- **Wind-driven snow**: during a blizzard the snow falls about ten times faster than normal and streaks sideways in gusts, in two layers. Calm snowy days keep the gentle vanilla snowfall.
+- **Wind-driven snow**: during a blizzard the snow falls much faster than normal and is blown in one direction by a gusting wind from the north-west, in two layers. Calm snowy days keep the gentle vanilla snowfall.
 - **Blizzards bite** (Cold Sweat): out in the open during a blizzard it is another **10 °C colder** (about -25 °C instead of -15 °C). Any roof over your head removes the wind chill. Config: `weather.blizzardChill`.
 - **Arctic Fox runs the weather**: each day is either **sunny** or **snowy** (about 50/50, rolled per day from the world seed), and **every night is a blizzard**. Natural lightning is suppressed, so blizzards aren't thunderstorms (Trident Channeling still works).
 - **Blizzard fog**: outdoors in a blizzard, thick white fog closes in to about 20 blocks. Under a roof it clears.
@@ -49,7 +49,7 @@ Something follows you through the blizzard. From the third night on, a **Wendigo
 ### Points of interest
 Rare structures reward exploring the wastes:
 - All surface structures only generate on **dry, fairly flat land**, never on lakes, frozen or not.
-- **Buried Camp**: a half-buried tent with a cold campfire, bedroll and supplies (food, coal, flint, leather, sometimes a spear).
+- **Buried Camp**: a half-buried tent with a cold campfire, bedroll and supplies (food, coal, flint, leather).
 - **Frozen Supply Cache**: chests and barrels sealed inside packed ice, marked by a lantern pole. Seeds, ingots, coal, bone meal.
 - **Trapper's Cabin**: a low, sealed log cabin with a shallow slab roof, a stone footing, glass windows, a fireplace and a **Cast-Iron Stove** stocked with 2 days of fuel. Inside it's about +11 °C on a -18 °C night.
 - With Create: **Abandoned Train Station**, a copper-roofed platform with **Create tracks**, a ticket booth and flickering roof lights. Loot is food, coal, torches, rails and a few Create parts.
@@ -98,12 +98,6 @@ So farms belong in heated glass greenhouses or underground, watered by Create. S
 ### Only frozen monsters on the surface
 - Monsters spawning naturally where they can see the sky are cancelled unless they are in `#arcticfox:surface_monsters` (default: strays, plus phantoms so membranes stay obtainable).
 - Stray spawns are boosted in all snowy biomes. Caves and the deep dark spawn normally.
-
-### Spears (1.21.11 backport)
-- **Iron, Diamond and Netherite spears** (netherite via smithing upgrade). Recipe: ingot (top right), stick (center), stick (bottom left).
-- **Jab** (attack): a fast stab with +1.5 blocks of reach.
-- **Charge** (hold right-click while moving): everything in front of the tip gets struck, with damage scaling with your speed (or your horse's). A full gallop hits about 3x as hard as a jab and can knock riders off their mounts. Each target can be hit once per second; a charge lasts up to 5 seconds.
-- Takes Sharpness, Smite, Bane, Fire Aspect, Knockback, Looting, Unbreaking and Mending.
 
 ### Tool progression
 - **Wooden tools removed**: no recipes, hidden from the creative menu and JEI; the bonus chest gives flint tools instead.

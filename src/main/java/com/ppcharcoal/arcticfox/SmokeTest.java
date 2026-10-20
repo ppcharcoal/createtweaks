@@ -371,16 +371,6 @@ public final class SmokeTest {
             if (n == 0 || noonAvg > -9 || noonAvg < -15 || nightAvg > -15 || nightAvg < -21) ok = false;
         }
 
-        // --- spears
-        var spear = com.ppcharcoal.arcticfox.registry.ModItems.IRON_SPEAR.get().getDefaultInstance();
-        double reach = spear.getAttributeModifiers().modifiers().stream()
-                .filter(e -> e.attribute().is(net.minecraft.world.entity.ai.attributes.Attributes.ENTITY_INTERACTION_RANGE))
-                .mapToDouble(e -> e.modifier().amount()).sum();
-        boolean recipes = server.getRecipeManager().byKey(ArcticFox.id("iron_spear")).isPresent()
-                && server.getRecipeManager().byKey(ArcticFox.id("diamond_spear")).isPresent()
-                && server.getRecipeManager().byKey(ArcticFox.id("netherite_spear_smithing")).isPresent();
-        log("spears: reach bonus=%.1f (1.5) recipes=%s (true)", reach, recipes);
-        if (reach != 1.5 || !recipes) ok = false;
 
         if (net.neoforged.fml.ModList.get().isLoaded("mowziesmobs")) {
             var structures = level.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.STRUCTURE);

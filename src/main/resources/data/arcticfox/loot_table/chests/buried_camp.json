@@ -242,11 +242,6 @@
           "type": "minecraft:item",
           "name": "minecraft:compass",
           "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "arcticfox:iron_spear",
-          "weight": 1
         }
       ]
     }

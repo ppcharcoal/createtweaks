@@ -28,7 +28,7 @@ import net.neoforged.neoforge.client.event.RegisterDimensionSpecialEffectsEvent;
 
 /**
  * Blizzard snowfall: during a snowstorm the snow is driven by the wind - it falls about ten times faster than
- * vanilla snow and streaks sideways in gusts, in two layers. Calm snowy days keep the vanilla snowfall.
+ * vanilla snow and is blown in one direction by the wind (gusting, always the same way), in two layers. Calm snowy days keep the vanilla snowfall.
  */
 @EventBusSubscriber(modid = ArcticFox.MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public final class BlizzardSnow {
@@ -75,8 +75,12 @@ public final class BlizzardSnow {
             int cx = Mth.floor(camX), cy = Mth.floor(camY), cz = Mth.floor(camZ);
             int range = Minecraft.useFancyGraphics() ? 10 : 5;
             float time = ticks + partialTick;
-            // gusts: the wind strength swells and drops over a few seconds
-            float gust = 0.75F + 0.25F * Mth.sin(time * 0.045F) + 0.15F * Mth.sin(time * 0.13F + 1.7F);
+            // one wind for every storm: a fixed direction in the world (from the north-west), with gusts that change
+            // its strength, never its direction. The distance it has carried the snow is integrated in double
+            // precision, so the snow never jumps or reverses.
+            double t = ticks + (double) partialTick;
+            double windTravel = 0.8 * t - 0.2 / 0.045 * Math.cos(0.045 * t) - 0.1 / 0.13 * Math.cos(0.13 * t + 1.7);
+            final float windX = 0.6F, windZ = 0.8F;
             RenderSystem.disableCull();
             RenderSystem.enableBlend();
             RenderSystem.enableDepthTest();
@@ -107,12 +111,15 @@ public final class BlizzardSnow {
                     int light = LevelRenderer.getLightColor(level, pos);
                     int sky = light >> 16 & 65535, block = light & 65535;
                     int skyL = (sky * 3 + 240) / 4, blockL = (block * 3 + 240) / 4;
-                    // two layers: a dense fast one and a lighter, faster, more slanted one
+                    // the sheet faces the camera; its horizontal axis is (sizeX, sizeZ). Scroll the texture along it by
+                    // the wind's component on that axis, so every sheet carries the snow the same way across the world.
+                    float along = (float) (windX * sizeX[idx] + windZ * sizeZ[idx]);
+                    // two layers in the same wind: a dense one and a lighter, slightly faster one
                     for (int layer = 0; layer < 2; layer++) {
-                        float fall = layer == 0 ? 36.0F : 26.0F;              // ticks per texture repeat (vanilla: 512)
+                        float fall = layer == 0 ? 30.0F : 24.0F;              // ticks per texture repeat (vanilla: 512)
                         float v = -((time + random.nextFloat() * fall) % fall) / fall;
-                        float drift = (layer == 0 ? 0.035F : 0.06F) * storm * gust;
-                        float u = random.nextFloat() + time * drift;
+                        double speed = layer == 0 ? 0.11 : 0.15; // blocks per tick at full wind
+                        float u = random.nextFloat() - (float) ((windTravel * speed * along) % 1.0);
                         float wobble = (float) (random.nextGaussian() * 0.02);
                         float a = alpha * (layer == 0 ? 1.0F : 0.6F) * Math.min(1.0F, storm * 1.5F);
                         float off = layer * 0.37F;

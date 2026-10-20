@@ -75,8 +75,11 @@ final class ItemAudit {
 
             Map<EntityType<?>, Set<String>> spawns = new HashMap<>();
             var biomes = level.registryAccess().registryOrThrow(Registries.BIOME);
+            Set<Biome> possible = new HashSet<>();
+            level.getChunkSource().getGenerator().getBiomeSource().possibleBiomes().forEach(h -> possible.add(h.value()));
             for (var entry : biomes.entrySet()) {
                 Biome biome = entry.getValue();
+                if (!possible.contains(biome)) continue;
                 for (MobCategory cat : MobCategory.values()) {
                     for (var data : biome.getMobSettings().getMobs(cat).unwrap()) {
                         spawns.computeIfAbsent(data.type, k -> new TreeSet<>()).add(entry.getKey().location().getPath());
@@ -92,7 +95,7 @@ final class ItemAudit {
                 StringBuilder line = new StringBuilder("ITEM ").append(id);
                 line.append(" | inRecipes=").append(mentioned.getOrDefault(item, 0));
                 List<String> tables = loot.getOrDefault(item, List.of());
-                line.append(" | loot=").append(tables.size() > 6 ? tables.subList(0, 6) + "+" + (tables.size() - 6) : tables);
+                line.append(" | loot=").append(tables.size() > 12 ? tables.subList(0, 12) + "+" + (tables.size() - 12) : tables);
                 if (item instanceof SpawnEggItem egg) {
                     EntityType<?> type = egg.getType(new ItemStack(item));
                     line.append(" | egg=").append(EntityType.getKey(type)).append(" spawnsIn=").append(spawns.getOrDefault(type, Set.of()).size());
@@ -105,7 +108,7 @@ final class ItemAudit {
                 String tags = type.builtInRegistryHolder().tags().map(t -> t.location().toString())
                         .filter(t -> t.startsWith("arcticfox:")).toList().toString();
                 byMod.computeIfAbsent(id.getNamespace(), k -> new ArrayList<>()).add("ENTITY " + id + " | " + type.getCategory()
-                        + " | spawnsIn=" + where.size() + " " + (where.size() > 5 ? new ArrayList<>(where).subList(0, 5) + "..." : where) + " | tags=" + tags);
+                        + " | spawnsIn=" + where.size() + " " + where + " | tags=" + tags);
             }
             byMod.forEach((mod, lines) -> {
                 out.append("##### ").append(mod).append('\n');

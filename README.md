@@ -32,7 +32,7 @@ Rare structures reward exploring the wastes:
 - All surface structures only generate on **dry, fairly flat land**, never on lakes, frozen or not.
 - **Buried Camp**: a half-buried tent with a cold campfire, bedroll and supplies (food, coal, flint, leather, sometimes a spear).
 - **Frozen Supply Cache**: chests and barrels sealed inside packed ice, marked by a lantern pole. Seeds, ingots, coal, bone meal.
-- **Trapper's Cabin**: a sealed log cabin with a stone footing, glass windows, a fireplace and a **Cast-Iron Stove** stocked with 2 days of fuel. Inside it's about +11 °C on a -18 °C night.
+- **Trapper's Cabin**: a low, sealed log cabin with a shallow slab roof, a stone footing, glass windows, a fireplace and a **Cast-Iron Stove** stocked with 2 days of fuel. Inside it's about +11 °C on a -18 °C night.
 - With Create: **Abandoned Train Station**, a copper-roofed platform with **Create tracks**, a ticket booth and flickering roof lights. Loot is food, coal, torches, rails and a few Create parts.
 - With Create: **Abandoned Metro Station** (underground, y -24 to 16), a sealed platform hall with Create tracks and **flickering ceiling lamps**.
 - With **Steam 'n' Rails**: station tracks become spruce S&R tracks and platform edges get hazard stripes.
@@ -125,6 +125,9 @@ With the End sealed, both are built on a **Mechanical Crafter** grid (Create req
 - **Adventuring Time** is rewritten to require the 14 biomes that actually generate.
 - **Hidden in the Depths** (crying obsidian) moves to the Story tab - ruined portals still generate.
 - If a Nether-resource mod such as **Create: Netherless** is installed, the blaze rod, Local Brewery, ancient debris, netherite armor, lodestone and netherite hoe advancements are kept and re-parented into the Overworld tabs; without it they are removed.
+
+### Recipe viewers only show what you can get
+JEI (and EMI/REI, through the shared `c:hidden_from_recipe_viewers` tag) hides about 220 items that can no longer be obtained: drops and crafts of the removed Alex's Mobs species (crocodile chestplate, roadrunner boots, kangaroo items, tarantula hawk elytra, void worm gear...), the removed Mowzie's Mobs bosses and their structures (wrought axe and helm, masks, sol visage, geomancer set, earthrend gauntlet...), Cold Sweat's hoglin and chameleon armor and the Thermolith, the Steam 'n' Rails conductor whistle, the totem of undying, bells, trims from removed structures and spawn eggs of mobs that never spawn. Wooden tools stay hidden too. The list was worked out from every recipe and loot table in the full modpack.
 
 ## Compatibility notes
 | Mod | Notes |

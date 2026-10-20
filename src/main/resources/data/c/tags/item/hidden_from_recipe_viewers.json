@@ -1,0 +1,767 @@
+{
+  "values": [
+    {
+      "id": "alexsmobs:banana",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:banner_pattern_australia_0",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:banner_pattern_australia_1",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:banner_pattern_new_mexico",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:blobfish",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:blood_sac",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:blood_sprayer",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:boiled_emu_egg",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:bone_serpent_tooth",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:cockroach_wing",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:cockroach_wing_fragment",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:cooked_catfish",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:cooked_kangaroo_meat",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:cosmic_cod",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:crocodile_chestplate",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:crocodile_scute",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:dimensional_carver",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:dropbear_claw",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:emu_egg",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:emu_feather",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:emu_leggings",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:falconry_hood",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:farseer_arm",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:fedora",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:fish_oil",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:flying_fish",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:flying_fish_boots",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:frontier_cap",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:gazelle_horn",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:guster_eye",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:gustmaker",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:hemolymph_blaster",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:hemolymph_sac",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:kangaroo_burger",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:kangaroo_hide",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:kangaroo_meat",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:maraca",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:mosquito_larva",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:mosquito_proboscis",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:novelty_hat",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:pocket_sand",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:raccoon_tail",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:rattlesnake_rattle",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:raw_catfish",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:roadrunner_boots",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:roadrunner_feather",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:sculk_boomer",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:skelewag_sword",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:skreecher_soul",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:sombrero",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:soul_heart",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_alligator_snapping_turtle",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_anaconda",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_anteater",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_banana_slug",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_blobfish",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_bone_serpent",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_bunfungus",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_caiman",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_capuchin_monkey",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_catfish",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_cockroach",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_cosmaw",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_cosmic_cod",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_crimson_mosquito",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_crocodile",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_devils_hole_pupfish",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_dropbear",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_elephant",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_emu",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_endergrade",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_enderiophage",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_farseer",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_fly",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_flying_fish",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_frilled_shark",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_gazelle",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_gelada_monkey",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_giant_squid",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_gorilla",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_guster",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_hammerhead_shark",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_hummingbird",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_jerboa",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_kangaroo",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_komodo_dragon",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_laviathan",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_leafcutter_ant",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_maned_wolf",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_mantis_shrimp",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_mimic_octopus",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_mimicube",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_mudskipper",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_mungus",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_platypus",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_potoo",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_raccoon",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_rain_frog",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_rattlesnake",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_rhinoceros",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_roadrunner",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_shoebill",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_skelewag",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_skreecher",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_skunk",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_soul_vulture",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_spectre",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_straddler",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_stradpole",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_sunbird",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_tarantula_hawk",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_tasmanian_devil",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_terrapin",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_tiger",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_toucan",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_triops",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_underminer",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_void_worm",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_warped_mosco",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:spawn_egg_warped_toad",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:tarantula_hawk_elytra",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:tarantula_hawk_wing",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:tarantula_hawk_wing_fragment",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:tendon_whip",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:transmutation_table",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:void_worm_beak",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:void_worm_effigy",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:void_worm_eye",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:void_worm_mandible",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:warped_muscle",
+      "required": false
+    },
+    {
+      "id": "cold_sweat:chameleon_boots",
+      "required": false
+    },
+    {
+      "id": "cold_sweat:chameleon_chestplate",
+      "required": false
+    },
+    {
+      "id": "cold_sweat:chameleon_helmet",
+      "required": false
+    },
+    {
+      "id": "cold_sweat:chameleon_leggings",
+      "required": false
+    },
+    {
+      "id": "cold_sweat:chameleon_molt",
+      "required": false
+    },
+    {
+      "id": "cold_sweat:chameleon_spawn_egg",
+      "required": false
+    },
+    {
+      "id": "cold_sweat:hoglin_boots",
+      "required": false
+    },
+    {
+      "id": "cold_sweat:hoglin_chestplate",
+      "required": false
+    },
+    {
+      "id": "cold_sweat:hoglin_helmet",
+      "required": false
+    },
+    {
+      "id": "cold_sweat:hoglin_hide",
+      "required": false
+    },
+    {
+      "id": "cold_sweat:hoglin_leggings",
+      "required": false
+    },
+    {
+      "id": "cold_sweat:thermolith",
+      "required": false
+    },
+    "minecraft:allay_spawn_egg",
+    "minecraft:armadillo_spawn_egg",
+    "minecraft:bee_spawn_egg",
+    "minecraft:bell",
+    "minecraft:blaze_spawn_egg",
+    "minecraft:camel_spawn_egg",
+    "minecraft:dragon_egg",
+    "minecraft:dragon_head",
+    "minecraft:dune_armor_trim_smithing_template",
+    "minecraft:ender_dragon_spawn_egg",
+    "minecraft:evoker_spawn_egg",
+    "minecraft:eye_armor_trim_smithing_template",
+    "minecraft:frog_spawn_egg",
+    "minecraft:ghast_spawn_egg",
+    "minecraft:hoglin_spawn_egg",
+    "minecraft:magma_cube_spawn_egg",
+    "minecraft:mooshroom_spawn_egg",
+    "minecraft:ocelot_spawn_egg",
+    "minecraft:panda_spawn_egg",
+    "minecraft:parrot_spawn_egg",
+    "minecraft:piglin_brute_spawn_egg",
+    "minecraft:piglin_spawn_egg",
+    "minecraft:pillager_spawn_egg",
+    "minecraft:ravager_spawn_egg",
+    "minecraft:rib_armor_trim_smithing_template",
+    "minecraft:sentry_armor_trim_smithing_template",
+    "minecraft:shulker_spawn_egg",
+    "minecraft:snout_armor_trim_smithing_template",
+    "minecraft:spire_armor_trim_smithing_template",
+    "minecraft:strider_spawn_egg",
+    "minecraft:tadpole_spawn_egg",
+    "minecraft:totem_of_undying",
+    "minecraft:trader_llama_spawn_egg",
+    "minecraft:vex_armor_trim_smithing_template",
+    "minecraft:vex_spawn_egg",
+    "minecraft:villager_spawn_egg",
+    "minecraft:vindicator_spawn_egg",
+    "minecraft:wandering_trader_spawn_egg",
+    "minecraft:wild_armor_trim_smithing_template",
+    "minecraft:witch_spawn_egg",
+    "minecraft:wither_skeleton_spawn_egg",
+    "minecraft:zoglin_spawn_egg",
+    "minecraft:zombie_villager_spawn_egg",
+    {
+      "id": "mowziesmobs:bluff_rod",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:bluff_spawn_egg",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:dart",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:earthrend_gauntlet",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:elokosa_howler_spawn_egg",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:elokosa_spawn_egg",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:foliaath_seed",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:foliaath_spawn_egg",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:geomancer_beads",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:geomancer_belt",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:geomancer_robe",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:geomancer_sandals",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:glowing_jelly",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:grant_suns_blessing",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:lantern_spawn_egg",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:logo",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:mob_remover",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:naga_fang",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:naga_fang_dagger",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:naga_spawn_egg",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:sand_rake",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:sculptor_spawn_egg",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:sculptor_staff",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:sol_visage",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:umvuthana_crane_spawn_egg",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:umvuthana_mask_bliss",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:umvuthana_mask_faith",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:umvuthana_mask_fear",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:umvuthana_mask_fury",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:umvuthana_mask_misery",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:umvuthana_mask_rage",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:umvuthana_raptor_spawn_egg",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:umvuthana_spawn_egg",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:umvuthi_spawn_egg",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:wrought_axe",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:wrought_helmet",
+      "required": false
+    },
+    {
+      "id": "mowziesmobs:wroughtnaut_spawn_egg",
+      "required": false
+    },
+    {
+      "id": "railways:conductor_whistle",
+      "required": false
+    }
+  ]
+}

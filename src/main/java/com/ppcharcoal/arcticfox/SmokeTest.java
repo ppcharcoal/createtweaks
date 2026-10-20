@@ -164,6 +164,11 @@ public final class SmokeTest {
             ok &= checkV13(server, level);
             ok &= checkCompat(server, level);
             ItemAudit.run(server, level);
+            int hiddenCount = 0;
+            for (var h : BuiltInRegistries.ITEM.getTagOrEmpty(net.neoforged.neoforge.common.Tags.Items.HIDDEN_FROM_RECIPE_VIEWERS)) hiddenCount++;
+            boolean bigMods = net.neoforged.fml.ModList.get().isLoaded("alexsmobs") && net.neoforged.fml.ModList.get().isLoaded("mowziesmobs");
+            log("items hidden from recipe viewers: %d (expected > 200 with Alex's Mobs + Mowzie's, > 30 without)", hiddenCount);
+            if (hiddenCount < (bigMods ? 200 : 30)) ok = false;
         } catch (Throwable t) {
             ArcticFox.LOGGER.error(P + "smoke test crashed", t);
             ok = false;

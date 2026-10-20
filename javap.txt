@@ -1,0 +1,161 @@
+=== com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier
+Compiled from "TempModifier.java"
+public abstract class com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier {
+  private net.minecraft.nbt.CompoundTag nbt;
+  private int expireTicks;
+  private int ticksExisted;
+  private int tickRate;
+  private final java.lang.Double[] lastInput;
+  private final java.lang.Double[] lastOutput;
+  private final java.util.function.Function<java.lang.Double, java.lang.Double>[] function;
+  private boolean changed;
+  public static final com.mojang.serialization.Codec<com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier> CODEC;
+  public com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier();
+  public final <T extends com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier> T tickRate(int);
+  public final <T extends com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier> T expires(int);
+  protected abstract java.util.function.Function<java.lang.Double, java.lang.Double> calculate(net.minecraft.world.entity.LivingEntity, com.momosoftworks.coldsweat.api.util.Temperature$Trait);
+  public void tick(net.minecraft.world.entity.LivingEntity);
+  public final double update(double, net.minecraft.world.entity.LivingEntity, com.momosoftworks.coldsweat.api.util.Temperature$Trait);
+  public double apply(com.momosoftworks.coldsweat.api.util.Temperature$Trait, double);
+  public void onAdded(net.minecraft.world.entity.LivingEntity, com.momosoftworks.coldsweat.api.util.Temperature$Trait);
+  public void onRemoved(net.minecraft.world.entity.LivingEntity, com.momosoftworks.coldsweat.api.util.Temperature$Trait);
+  public void onSiblingAdded(net.minecraft.world.entity.LivingEntity, com.momosoftworks.coldsweat.api.util.Temperature$Trait, com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier);
+  public void onSiblingRemoved(net.minecraft.world.entity.LivingEntity, com.momosoftworks.coldsweat.api.util.Temperature$Trait, com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier);
+  public final int getExpireTime();
+  public final int getTicksExisted();
+  public final int setTicksExisted(int);
+  public final int getTickRate();
+  public final java.util.function.Function<java.lang.Double, java.lang.Double> getFunction(com.momosoftworks.coldsweat.api.util.Temperature$Trait);
+  protected final void setFunction(com.momosoftworks.coldsweat.api.util.Temperature$Trait, java.util.function.Function<java.lang.Double, java.lang.Double>);
+  public final double getLastInput(com.momosoftworks.coldsweat.api.util.Temperature$Trait);
+  protected final void setLastInput(com.momosoftworks.coldsweat.api.util.Temperature$Trait, double);
+  public final double getLastOutput(com.momosoftworks.coldsweat.api.util.Temperature$Trait);
+  protected final void setLastOutput(com.momosoftworks.coldsweat.api.util.Temperature$Trait, double);
+  public final net.minecraft.nbt.CompoundTag getNBT();
+  public void setNBT(net.minecraft.nbt.CompoundTag);
+  public void markDirty();
+  public boolean isDirty();
+  public void markClean();
+  public net.minecraft.resources.ResourceLocation getID();
+  public boolean equals(java.lang.Object);
+  public java.lang.String toString();
+  private static java.lang.Double lambda$getFunction$2(java.lang.Double);
+  private static com.mojang.datafixers.kinds.App lambda$static$1(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  private static com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier lambda$static$0(net.minecraft.resources.ResourceLocation, net.minecraft.nbt.CompoundTag, java.lang.Integer, java.lang.Integer, java.lang.Integer, java.lang.Integer);
+  static {};
+}
+=== com.momosoftworks.coldsweat.api.event.core.init.GatherDefaultTempModifiersEvent
+Compiled from "GatherDefaultTempModifiersEvent.java"
+public class com.momosoftworks.coldsweat.api.event.core.init.GatherDefaultTempModifiersEvent extends net.neoforged.bus.api.Event {
+  private final java.util.List<com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier> modifiers;
+  private final net.minecraft.world.entity.LivingEntity entity;
+  private final com.momosoftworks.coldsweat.api.util.Temperature$Trait trait;
+  public com.momosoftworks.coldsweat.api.event.core.init.GatherDefaultTempModifiersEvent(net.minecraft.world.entity.LivingEntity, java.util.List<com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier>, com.momosoftworks.coldsweat.api.util.Temperature$Trait);
+  public java.util.List<com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier> getModifiers();
+  public net.minecraft.world.entity.LivingEntity getEntity();
+  public com.momosoftworks.coldsweat.api.util.Temperature$Trait getTrait();
+  public void addModifier(com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier);
+  public void addModifiers(java.util.List<com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier>);
+  public void addModifier(com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier, com.momosoftworks.coldsweat.api.util.placement.Matcher, com.momosoftworks.coldsweat.api.util.placement.Placement);
+  public void addModifiers(java.util.List<com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier>, com.momosoftworks.coldsweat.api.util.placement.Matcher, com.momosoftworks.coldsweat.api.util.placement.Placement);
+  public void addModifierById(net.minecraft.resources.ResourceLocation, java.util.function.Consumer<com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier>, com.momosoftworks.coldsweat.api.util.placement.Matcher, com.momosoftworks.coldsweat.api.util.placement.Placement);
+  public void removeModifiers(com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier, com.momosoftworks.coldsweat.api.util.placement.Matcher);
+  private static boolean lambda$removeModifiers$0(com.momosoftworks.coldsweat.api.util.placement.Matcher, com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier, com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier);
+}
+=== com.momosoftworks.coldsweat.api.event.core.init.DefaultTempModifiersEvent
+Compiled from "DefaultTempModifiersEvent.java"
+public class com.momosoftworks.coldsweat.api.event.core.init.DefaultTempModifiersEvent extends net.neoforged.bus.api.Event {
+  private final java.util.Map<com.momosoftworks.coldsweat.api.util.Temperature$Trait, java.util.List<com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier>> modifiers;
+  private final net.minecraft.world.entity.LivingEntity entity;
+  public com.momosoftworks.coldsweat.api.event.core.init.DefaultTempModifiersEvent(net.minecraft.world.entity.LivingEntity);
+  public java.util.Map<com.momosoftworks.coldsweat.api.util.Temperature$Trait, java.util.List<com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier>> getModifiers();
+  public java.util.List<com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier> getModifiers(com.momosoftworks.coldsweat.api.util.Temperature$Trait);
+  public net.minecraft.world.entity.LivingEntity getEntity();
+  public void addModifier(com.momosoftworks.coldsweat.api.util.Temperature$Trait, com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier);
+  public void addModifiers(com.momosoftworks.coldsweat.api.util.Temperature$Trait, java.util.List<com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier>);
+  public void addModifier(com.momosoftworks.coldsweat.api.util.Temperature$Trait, com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier, com.momosoftworks.coldsweat.api.util.placement.Placement);
+  public void addModifier(java.util.List<com.momosoftworks.coldsweat.api.util.Temperature$Trait>, com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier, com.momosoftworks.coldsweat.api.util.placement.Placement);
+  public void addModifiers(com.momosoftworks.coldsweat.api.util.Temperature$Trait, java.util.List<com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier>, com.momosoftworks.coldsweat.api.util.placement.Placement);
+  public void addModifierById(com.momosoftworks.coldsweat.api.util.Temperature$Trait, net.minecraft.resources.ResourceLocation, java.util.function.Consumer<com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier>, com.momosoftworks.coldsweat.api.util.placement.Placement);
+  public void addModifierById(java.util.List<com.momosoftworks.coldsweat.api.util.Temperature$Trait>, net.minecraft.resources.ResourceLocation, java.util.function.Consumer<com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier>, com.momosoftworks.coldsweat.api.util.placement.Placement);
+  public void removeModifiers(com.momosoftworks.coldsweat.api.util.Temperature$Trait, java.util.function.Predicate<com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier>);
+  private static java.util.List lambda$getModifiers$0(com.momosoftworks.coldsweat.api.util.Temperature$Trait);
+}
+=== com.momosoftworks.coldsweat.api.util.placement.Placement
+Compiled from "Placement.java"
+public class com.momosoftworks.coldsweat.api.util.placement.Placement {
+  private final com.momosoftworks.coldsweat.api.util.placement.Mode mode;
+  private final com.momosoftworks.coldsweat.api.util.placement.Order order;
+  private final java.util.function.Predicate<com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier> predicate;
+  private com.momosoftworks.coldsweat.api.util.placement.Matcher matcher;
+  private int maxDuplicates;
+  private com.momosoftworks.coldsweat.api.util.placement.Placement fallback;
+  public static final com.momosoftworks.coldsweat.api.util.placement.Placement FIRST;
+  public static final com.momosoftworks.coldsweat.api.util.placement.Placement LAST;
+  com.momosoftworks.coldsweat.api.util.placement.Placement(com.momosoftworks.coldsweat.api.util.placement.Mode, com.momosoftworks.coldsweat.api.util.placement.Order, java.util.function.Predicate<com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier>);
+  public static com.momosoftworks.coldsweat.api.util.placement.Placement of(com.momosoftworks.coldsweat.api.util.placement.Mode, com.momosoftworks.coldsweat.api.util.placement.Order, java.util.function.Predicate<com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier>);
+  public com.momosoftworks.coldsweat.api.util.placement.Placement limitDuplicates(com.momosoftworks.coldsweat.api.util.placement.Matcher, int);
+  public com.momosoftworks.coldsweat.api.util.placement.Placement noDuplicates(com.momosoftworks.coldsweat.api.util.placement.Matcher);
+  public com.momosoftworks.coldsweat.api.util.placement.Mode mode();
+  public com.momosoftworks.coldsweat.api.util.placement.Order order();
+  public java.util.function.Predicate<com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier> predicate();
+  public com.momosoftworks.coldsweat.api.util.placement.Placement fallback();
+  public com.momosoftworks.coldsweat.api.util.placement.Matcher duplicates();
+  public int maxDuplicates();
+  public com.momosoftworks.coldsweat.api.util.placement.Placement orElse(com.momosoftworks.coldsweat.api.util.placement.Placement);
+  private static boolean lambda$static$1(com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier);
+  private static boolean lambda$static$0(com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier);
+  static {};
+}
+=== com.momosoftworks.coldsweat.api.util.placement.Placement$Mode
+Error: class not found: com.momosoftworks.coldsweat.api.util.placement.Placement$Mode
+=== com.momosoftworks.coldsweat.api.util.placement.Placement$Order
+Error: class not found: com.momosoftworks.coldsweat.api.util.placement.Placement$Order
+=== com.momosoftworks.coldsweat.api.util.placement.Matcher
+Compiled from "Matcher.java"
+public final class com.momosoftworks.coldsweat.api.util.placement.Matcher extends java.lang.Enum<com.momosoftworks.coldsweat.api.util.placement.Matcher> implements net.minecraft.util.StringRepresentable {
+  public static final com.momosoftworks.coldsweat.api.util.placement.Matcher IGNORE;
+  public static final com.momosoftworks.coldsweat.api.util.placement.Matcher SAME_CLASS;
+  public static final com.momosoftworks.coldsweat.api.util.placement.Matcher SUBCLASS;
+  public static final com.momosoftworks.coldsweat.api.util.placement.Matcher EQUALS;
+  private final java.util.function.BiPredicate<com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier, com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier> predicate;
+  private final java.lang.String name;
+  private static final com.momosoftworks.coldsweat.api.util.placement.Matcher[] $VALUES;
+  public static com.momosoftworks.coldsweat.api.util.placement.Matcher[] values();
+  public static com.momosoftworks.coldsweat.api.util.placement.Matcher valueOf(java.lang.String);
+  private com.momosoftworks.coldsweat.api.util.placement.Matcher(java.lang.String, java.util.function.BiPredicate<com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier, com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier>);
+  public boolean check(com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier, com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier);
+  public java.lang.String getSerializedName();
+  public static com.momosoftworks.coldsweat.api.util.placement.Matcher byName(java.lang.String);
+  private static boolean lambda$static$2(com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier, com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier);
+  private static boolean lambda$static$1(com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier, com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier);
+  private static boolean lambda$static$0(com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier, com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier);
+  private static com.momosoftworks.coldsweat.api.util.placement.Matcher[] $values();
+  static {};
+}
+=== com.momosoftworks.coldsweat.api.util.placement.Duplicates
+Error: class not found: com.momosoftworks.coldsweat.api.util.placement.Duplicates
+=== com.momosoftworks.coldsweat.api.temperature.modifier.compat.StormTempModifier
+Compiled from "StormTempModifier.java"
+public class com.momosoftworks.coldsweat.api.temperature.modifier.compat.StormTempModifier extends com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier {
+  public com.momosoftworks.coldsweat.api.temperature.modifier.compat.StormTempModifier();
+  protected java.util.function.Function<java.lang.Double, java.lang.Double> calculate(net.minecraft.world.entity.LivingEntity, com.momosoftworks.coldsweat.api.util.Temperature$Trait);
+  private static java.lang.Double lambda$calculate$1(java.lang.Double);
+  private static java.lang.Double lambda$calculate$0(double, float, java.lang.Double);
+}
+=== com.momosoftworks.coldsweat.api.temperature.modifier.BiomeTempModifier
+Compiled from "BiomeTempModifier.java"
+public class com.momosoftworks.coldsweat.api.temperature.modifier.BiomeTempModifier extends com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier {
+  public com.momosoftworks.coldsweat.api.temperature.modifier.BiomeTempModifier();
+  public com.momosoftworks.coldsweat.api.temperature.modifier.BiomeTempModifier(int);
+  public java.util.function.Function<java.lang.Double, java.lang.Double> calculate(net.minecraft.world.entity.LivingEntity, com.momosoftworks.coldsweat.api.util.Temperature$Trait);
+  public static com.mojang.datafixers.util.Pair<java.lang.Double, java.lang.Double> getStructureTemp(net.minecraft.world.level.Level, net.minecraft.core.BlockPos);
+  private static java.lang.Double lambda$calculate$2(double, double, java.lang.Double);
+  private static java.lang.Double lambda$calculate$1(com.momosoftworks.coldsweat.data.codec.configuration.DimensionTempData, double, java.lang.Double);
+  private static java.lang.Double lambda$calculate$0(com.mojang.datafixers.util.Pair, java.lang.Double);
+}
+com/momosoftworks/coldsweat/api/util/placement/
+com/momosoftworks/coldsweat/api/util/placement/Matcher.class
+com/momosoftworks/coldsweat/api/util/placement/Mode.class
+com/momosoftworks/coldsweat/api/util/placement/Order.class
+com/momosoftworks/coldsweat/api/util/placement/Placement.class

@@ -24,7 +24,7 @@ jobs:
               doLast {
                   def f = configurations.compileClasspath.files.find { it.name.contains('cold-sweat') }
                   println "CSJAR=" + f
-                  new File(buildDir, 'csjar.txt').text = f.toString()
+                  def out = layout.buildDirectory.file('csjar.txt').get().asFile; out.parentFile.mkdirs(); out.text = f.toString()
               }
           }
           G

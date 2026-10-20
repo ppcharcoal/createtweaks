@@ -58,14 +58,14 @@ side = "BOTH"
 modId = "cold_sweat"
 type = "optional"
 versionRange = "*"
-ordering = "AFTER"
+ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
 modId = "snowrealmagic"
 type = "optional"
 versionRange = "*"
-ordering = "AFTER"
+ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
@@ -79,42 +79,42 @@ side = "BOTH"
 modId = "createdeco"
 type = "optional"
 versionRange = "*"
-ordering = "AFTER"
+ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
 modId = "create_new_age"
 type = "optional"
 versionRange = "*"
-ordering = "AFTER"
+ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
 modId = "alexsmobs"
 type = "optional"
 versionRange = "*"
-ordering = "AFTER"
+ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
 modId = "create_enchantment_industry"
 type = "optional"
 versionRange = "*"
-ordering = "AFTER"
+ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
 modId = "farmersdelight"
 type = "optional"
 versionRange = "*"
-ordering = "AFTER"
+ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
 modId = "sliceanddice"
 type = "optional"
 versionRange = "*"
-ordering = "AFTER"
+ordering = "NONE"
 side = "BOTH"
 
 [[mixins]]

@@ -170,7 +170,9 @@ public class Wendigo extends Monster {
     public Player watcher() {
         Player best = null;
         double bestDist = Double.MAX_VALUE;
-        for (Player p : WendigoRules.players(level())) {
+        java.util.List<Player> players = WendigoRules.players(level());
+        if (preyRef != null && !players.contains(preyRef) && preyRef.level() == level()) players.add(preyRef);
+        for (Player p : players) {
             if (!p.isAlive() || p.distanceToSqr(this) > 128 * 128 || !isLookedAtBy(p)) continue;
             double d = p.distanceToSqr(this);
             if (d < bestDist) {

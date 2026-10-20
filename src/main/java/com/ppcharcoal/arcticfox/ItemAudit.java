@@ -43,6 +43,7 @@ final class ItemAudit {
             var access = server.registryAccess();
             RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, access);
 
+            StringBuilder recipesOut = new StringBuilder();
             Set<Item> produced = new HashSet<>();
             Map<Item, Integer> mentioned = new HashMap<>();
             for (var holder : server.getRecipeManager().getRecipes()) {
@@ -53,6 +54,11 @@ final class ItemAudit {
                 }
                 try {
                     String json = Recipe.CODEC.encodeStart(ops, recipe).getOrThrow().toString();
+                    var line = new com.google.gson.JsonObject();
+                    line.addProperty("id", holder.id().toString());
+                    line.addProperty("result", BuiltInRegistries.ITEM.getKey(recipe.getResultItem(access).getItem()).toString());
+                    line.add("recipe", com.google.gson.JsonParser.parseString(json));
+                    recipesOut.append(line).append('\n');
                     for (String id : itemIds(json)) {
                         BuiltInRegistries.ITEM.getOptional(ResourceLocation.tryParse(id)).ifPresent(i -> mentioned.merge(i, 1, Integer::sum));
                     }
@@ -114,6 +120,7 @@ final class ItemAudit {
                 out.append("##### ").append(mod).append('\n');
                 lines.forEach(l -> out.append(l).append('\n'));
             });
+            Files.writeString(server.getServerDirectory().resolve("recipes.jsonl"), recipesOut.toString());
             Path file = server.getServerDirectory().resolve("item_audit.txt");
             Files.writeString(file, out.toString());
             ArcticFox.LOGGER.info("[ArcticFox/SMOKE] item audit written to {} ({} recipes, {} items not produced)", file,

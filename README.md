@@ -36,6 +36,7 @@ Something follows you through the blizzard. From the third night on, a **Wendigo
 - **Walk towards it while looking** and it bolts into the fog and is gone, only to return **30 seconds later from a different direction**.
 - **Look away and it creeps closer.** Breathing, clicking bones and soft footsteps carry faintly through the storm.
 - If it reaches you unseen, or you turn around and it is already within a few blocks, it **screams** (you are briefly slowed and your vision darkens) and **attacks until you are dead**.
+- **Only on the surface.** It never comes for someone underground (caves, mines, tunnels with more than 6 blocks overhead; a house still counts as the surface). If its prey goes underground, even mid-attack, it breaks off and waits up top.
 - **Light keeps it away.** It never picks a player standing in light (about 4 blocks from a torch, 5 from a lantern or campfire). If its prey steps into the light it switches to someone still in the dark, or slinks off and waits until they leave it. Once it has screamed, light won't save you.
 - **Multiplayer:** any player's gaze freezes it, not just its prey's, so friends can watch each other's backs. If its prey logs off, it goes after the nearest player in the dark. Once it has killed its prey it is gone for the night.
 - 100 health (5x a zombie), 9 damage, hard to knock back. Wounding it while it stalks drives it off for a while. It is gone at dawn unless it is already hunting.

@@ -211,8 +211,8 @@ public class Wendigo extends Monster {
             setDeltaMovement(0, getDeltaMovement().y, 0);
             if (--hiddenTicks == 0) {
                 Player p = getPrey();
-                if (p != null && WendigoRules.isInLight(p) && retarget(p) == null) {
-                    hiddenTicks = 100; // its prey is standing in the light: wait in the dark
+                if (p != null && !WendigoRules.canStalk(p) && retarget(p) == null) {
+                    hiddenTicks = 100; // its prey is in the light or underground: wait out on the surface
                 } else {
                     reappear();
                 }
@@ -235,6 +235,19 @@ public class Wendigo extends Monster {
             vanishForGood(); // gone with the dawn
             return;
         }
+        if (state != FLEE && (WendigoRules.isUnderground(this) || WendigoRules.isUnderground(prey))) {
+            // it only hunts on the surface: never follows anyone below ground
+            Player other = retarget(prey);
+            if (other == null || WendigoRules.isUnderground(this)) {
+                setTarget(null);
+                startFlee();
+                return;
+            }
+            setTarget(null);
+            if (state == HUNT || state == SCREAM) setState(STALK);
+            prey = other;
+            state = getState();
+        }
         double dist = distanceTo(prey);
         switch (state) {
             case SCREAM -> {
@@ -249,7 +262,7 @@ public class Wendigo extends Monster {
                 if (--fleeTicks <= 0 || dist > 30) hide(prey);
             }
             default -> {
-                if (WendigoRules.isInLight(prey)) {
+                if (!WendigoRules.canStalk(prey)) {
                     // light keeps it away: switch to someone in the dark, or slink off and wait
                     Player other = retarget(prey);
                     if (other == null) {

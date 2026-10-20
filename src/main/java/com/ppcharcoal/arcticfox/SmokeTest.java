@@ -876,6 +876,30 @@ public final class SmokeTest {
             fake.setHealth(keepHealth > 0 ? keepHealth : 20);
             w.discard();
 
+            // surface only: once its prey goes underground it stops the attack and backs off
+            var w2 = com.ppcharcoal.arcticfox.registry.ModEntities.WENDIGO.get().create(level);
+            w2.moveTo(fake.getX() + 2.5, fake.getY(), fake.getZ(), 90, 0);
+            level.addFreshEntity(w2);
+            w2.setPrey(fake);
+            fake.setYRot(90); fake.setYHeadRot(90);
+            for (int i = 0; i < 45; i++) w2.tick();
+            int huntState = w2.getState();
+            BlockPos roof = fake.blockPosition().above(9);
+            for (BlockPos p : BlockPos.betweenClosed(roof.offset(-1, 0, -1), roof.offset(1, 0, 1))) level.setBlock(p, Blocks.STONE.defaultBlockState(), 2);
+            boolean under = com.ppcharcoal.arcticfox.entity.WendigoRules.isUnderground(fake);
+            boolean candidate = com.ppcharcoal.arcticfox.world.WendigoSpawner.candidates(level).contains(fake);
+            int strikesBefore = w2.strikes;
+            for (int i = 0; i < 2; i++) w2.tick();
+            int afterState = w2.getState();
+            for (int i = 0; i < 40; i++) w2.tick();
+            log("wendigo underground: hunting=%s, prey underground=%s, prey still a spawn candidate=%s, -> state=%d, attacks after=%d, hidden=%s (expected true, true, false, %d, 0, true)",
+                    huntState == com.ppcharcoal.arcticfox.entity.Wendigo.HUNT, under, candidate, afterState, w2.strikes - strikesBefore, w2.isHidden(),
+                    com.ppcharcoal.arcticfox.entity.Wendigo.FLEE);
+            if (huntState != com.ppcharcoal.arcticfox.entity.Wendigo.HUNT || !under || candidate
+                    || afterState != com.ppcharcoal.arcticfox.entity.Wendigo.FLEE || w2.strikes - strikesBefore > 1 || !w2.isHidden()) ok = false;
+            for (BlockPos p : BlockPos.betweenClosed(roof.offset(-1, 0, -1), roof.offset(1, 0, 1))) level.setBlock(p, Blocks.AIR.defaultBlockState(), 2);
+            w2.discard();
+
             // one a night: tonight's Wendigo comes once, whatever the number of players
             level.setDayTime(5 * 24000L + 18000);
             var nights = com.ppcharcoal.arcticfox.world.WendigoSpawner.Nights.get(level);

@@ -304,14 +304,14 @@ public class WendigoModel extends HierarchicalModel<Wendigo> {
             e = e * e * (3 - 2 * e);
             float tremble = Mth.sin(t * 2.7F) * 0.06F * e;
             torso.xRot -= 0.45F * e;
-            neck.xRot -= 0.35F * e;
-            head.xRot -= 0.75F * e + tremble;
+            neck.xRot -= 0.2F * e;
+            head.xRot -= 0.4F * e + tremble;
             head.zRot += tremble;
             jaw.xRot += 1.0F * e;
             leftArm.zRot -= 0.95F * e;
             rightArm.zRot += 0.95F * e;
-            leftArm.xRot -= 0.5F * e;
-            rightArm.xRot -= 0.5F * e;
+            leftArm.xRot -= 0.2F * e;
+            rightArm.xRot -= 0.2F * e;
             leftForearm.xRot -= 0.4F * e + tremble;
             rightForearm.xRot -= 0.4F * e - tremble;
             for (ModelPart claw : new ModelPart[]{leftClaw0, leftClaw1, leftClaw2, rightClaw0, rightClaw1, rightClaw2}) {

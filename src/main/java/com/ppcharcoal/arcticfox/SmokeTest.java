@@ -562,8 +562,8 @@ public final class SmokeTest {
             double in = com.ppcharcoal.arcticfox.compat.ColdSweatCompat.temperatureCelsius(level, inside, true);
             double out = com.ppcharcoal.arcticfox.compat.ColdSweatCompat.temperatureCelsius(level, outside, true);
             level.setDayTime(keep);
-            log("cabin at midnight: %.1f C inside vs %.1f C outside (expected inside > 5)", in, out);
-            if (in <= 5) ok = false;
+            log("cabin at midnight: %.1f C inside vs %.1f C outside (expected inside > 10)", in, out);
+            if (in <= 10) ok = false;
         }
         return ok;
     }

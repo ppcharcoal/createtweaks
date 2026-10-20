@@ -62,7 +62,7 @@ public final class CreateHeat {
     }
 
     private static void onRegister(BlockTempRegisterEvent event) {
-        // Arctic Fox's own cast-iron stove: +24 C while burning (range 8)
+        // Arctic Fox's own cast-iron stove: +32 C while burning (range 8)
         event.register(new StoveTemp(com.ppcharcoal.arcticfox.registry.ModBlocks.CABIN_STOVE.get()));
         if (!com.ppcharcoal.arcticfox.Config.CREATE_HEAT.get()) return;
         Block[] burners = blocks("blaze_burner");
@@ -86,7 +86,7 @@ public final class CreateHeat {
 
     static class StoveTemp extends SimpleHeat {
         StoveTemp(Block... blocks) {
-            super(24 * C, 8, 32 * C, blocks);
+            super(32 * C, 8, 40 * C, blocks);
         }
 
         @Override

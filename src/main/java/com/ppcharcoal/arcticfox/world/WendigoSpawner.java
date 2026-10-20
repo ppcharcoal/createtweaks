@@ -3,25 +3,34 @@ package com.ppcharcoal.arcticfox.world;
 import com.ppcharcoal.arcticfox.ArcticFox;
 import com.ppcharcoal.arcticfox.Config;
 import com.ppcharcoal.arcticfox.entity.Wendigo;
+import com.ppcharcoal.arcticfox.entity.WendigoRules;
 import com.ppcharcoal.arcticfox.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.phys.AABB;
+import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import org.jetbrains.annotations.Nullable;
 
-/** At night, a Wendigo may start stalking a player who is out in the open, appearing behind them in the fog. */
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * At most one Wendigo per night for the whole world. Every 10 seconds at night there is a chance that it picks one of
+ * the players who are out in the open and not standing in the light, and starts stalking them from behind.
+ */
 @EventBusSubscriber(modid = ArcticFox.MOD_ID)
 public final class WendigoSpawner {
     private WendigoSpawner() {
@@ -31,21 +40,46 @@ public final class WendigoSpawner {
     public static void onLevelTick(LevelTickEvent.Post event) {
         if (!(event.getLevel() instanceof ServerLevel level) || level.dimension() != Level.OVERWORLD) return;
         if (level.getGameTime() % 200 != 13 || !Config.WENDIGO.get() || level.getDifficulty() == Difficulty.PEACEFUL) return;
-        if (!WinterWeather.isNight(level) || WinterWeather.dayIndex(level.getDayTime()) < Config.WENDIGO_FIRST_NIGHT.get()) return;
         if (!level.getGameRules().getBoolean(net.minecraft.world.level.GameRules.RULE_DOMOBSPAWNING)) return;
-        RandomSource random = level.getRandom();
-        for (ServerPlayer player : level.players()) {
-            if (player.isCreative() || player.isSpectator()) continue;
-            if (!level.canSeeSky(player.blockPosition().above())) continue; // only out in the open
-            if (!level.getEntitiesOfClass(Wendigo.class, new AABB(player.blockPosition()).inflate(160)).isEmpty()) continue;
-            if (random.nextDouble() >= Config.WENDIGO_CHANCE.get()) continue;
-            spawnFor(level, player);
+        if (level.getRandom().nextDouble() >= Config.WENDIGO_CHANCE.get()) return;
+        trySpawnTonight(level);
+    }
+
+    /** The night number (counting from 0), or -1 during the day. */
+    public static long nightIndex(ServerLevel level) {
+        return WinterWeather.isNight(level) ? WinterWeather.dayIndex(level.getDayTime()) : -1;
+    }
+
+    /** Players a Wendigo could start stalking: out in the open, in the dark, survival or adventure. */
+    public static List<Player> candidates(ServerLevel level) {
+        List<Player> list = new ArrayList<>();
+        for (Player p : WendigoRules.players(level)) {
+            if (WendigoRules.canStalk(p) && level.canSeeSky(p.blockPosition().above())) list.add(p);
         }
+        return list;
+    }
+
+    /** Spawns tonight's Wendigo if there hasn't been one yet tonight. Returns it, or null. */
+    @Nullable
+    public static Wendigo trySpawnTonight(ServerLevel level) {
+        long night = nightIndex(level);
+        if (night < Config.WENDIGO_FIRST_NIGHT.get()) return null;
+        Nights nights = Nights.get(level);
+        if (nights.lastNight == night) return null; // only one a night
+        List<Player> players = candidates(level);
+        if (players.isEmpty()) return null;
+        Player prey = players.get(level.getRandom().nextInt(players.size()));
+        Wendigo wendigo = spawnFor(level, prey);
+        if (wendigo != null) {
+            nights.lastNight = night;
+            nights.setDirty();
+        }
+        return wendigo;
     }
 
     /** Spawns a Wendigo 34-42 blocks behind the player, on open ground. Returns null if no spot was found. */
     @Nullable
-    public static Wendigo spawnFor(ServerLevel level, net.minecraft.world.entity.player.Player player) {
+    public static Wendigo spawnFor(ServerLevel level, Player player) {
         RandomSource random = level.getRandom();
         Vec3 look = player.getViewVector(1.0F);
         double behind = Math.atan2(-look.z, -look.x);
@@ -71,5 +105,27 @@ public final class WendigoSpawner {
             return wendigo;
         }
         return null;
+    }
+
+    /** Remembers the last night a Wendigo came, so restarts and multiple players still mean one a night. */
+    public static final class Nights extends SavedData {
+        private static final String NAME = "arcticfox_wendigo";
+        public long lastNight = -1;
+
+        public static Nights get(ServerLevel level) {
+            return level.getDataStorage().computeIfAbsent(new SavedData.Factory<>(Nights::new, Nights::load, null), NAME);
+        }
+
+        private static Nights load(CompoundTag tag, HolderLookup.Provider registries) {
+            Nights n = new Nights();
+            n.lastNight = tag.getLong("LastNight");
+            return n;
+        }
+
+        @Override
+        public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
+            tag.putLong("LastNight", lastNight);
+            return tag;
+        }
     }
 }

@@ -30,15 +30,17 @@ Mod id: `arcticfox` · Requires NeoForge 21.1+ · Server **and** client.
 - **Heat melts snow**: working heat sources clear the snow around them and keep new snow from settling there, so an outdoor factory doesn't get buried. Blaze burners (2-6 blocks, wider the hotter they burn), steam engines on a running boiler (5), pipes, pumps, tanks and basins carrying lava or other hot fluids (2-3), Create: New Age heaters and heat pipes (3), the cast-iron stove (4), lit furnaces and campfires (2).
 
 ### The Wendigo
-Something follows you through the blizzard. From the third night on, a **Wendigo** may start stalking a player who is out in the open at night.
+Something follows you through the blizzard. From the third night on, a **Wendigo** may start stalking a player who is out in the open at night. There is **at most one a night** for the whole world, however many players are online.
 - It appears far behind you in the fog. You won't see its gaunt body, only **two glowing blue eyes** that shine straight through the blizzard.
 - **Look at it and it freezes**, staring back, head slowly tilting.
 - **Walk towards it while looking** and it bolts into the fog and is gone, only to return **30 seconds later from a different direction**.
 - **Look away and it creeps closer.** Breathing, clicking bones and soft footsteps carry faintly through the storm.
 - If it reaches you unseen, or you turn around and it is already within a few blocks, it **screams** (you are briefly slowed and your vision darkens) and **attacks until you are dead**.
+- **Light keeps it away.** It never picks a player standing in light (about 4 blocks from a torch, 5 from a lantern or campfire). If its prey steps into the light it switches to someone still in the dark, or slinks off and waits until they leave it. Once it has screamed, light won't save you.
+- **Multiplayer:** any player's gaze freezes it, not just its prey's, so friends can watch each other's backs. If its prey logs off, it goes after the nearest player in the dark. Once it has killed its prey it is gone for the night.
 - 100 health (5x a zombie), 9 damage, hard to knock back. Wounding it while it stalks drives it off for a while. It is gone at dawn unless it is already hunting.
 - Drops bones, leather and sometimes a skull. Killing one earns the **Hunger Satisfied** challenge.
-- Config: `wendigo.enabled`, `wendigo.spawnChance`, `wendigo.firstNight`.
+- Config: `wendigo.enabled`, `wendigo.spawnChance`, `wendigo.firstNight`, `wendigo.safeLight`.
 
 ### Points of interest
 Rare structures reward exploring the wastes:

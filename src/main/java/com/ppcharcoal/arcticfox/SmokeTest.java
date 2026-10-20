@@ -805,7 +805,58 @@ public final class SmokeTest {
                     w.isHidden(), Math.hypot(w.getX() - fake.getX(), w.getZ() - fake.getZ()), diff);
             if (w.isHidden() || w.isInvisible() || diff < 100) ok = false;
 
+            // a second player watching freezes it too, even while its prey looks away
+            var friend = net.neoforged.neoforge.common.util.FakePlayerFactory.get(level,
+                    new com.mojang.authlib.GameProfile(java.util.UUID.fromString("7d1c9a3e-1f62-4b5e-9a10-5e2f0c0ffee2"), "[ArcticFoxWendigoFriend]"));
+            friend.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+            com.ppcharcoal.arcticfox.entity.WendigoRules.EXTRA_PLAYERS.clear();
+            com.ppcharcoal.arcticfox.entity.WendigoRules.EXTRA_PLAYERS.add(fake);
+            com.ppcharcoal.arcticfox.entity.WendigoRules.EXTRA_PLAYERS.add(friend);
+            com.ppcharcoal.arcticfox.entity.WendigoRules.clearCache();
+            fake.moveTo(base.getX() + 0.5, base.getY() + 1, base.getZ() + 0.5, 90, 0); fake.setYHeadRot(90); // looking away
+            friend.moveTo(base.getX() + 0.5, base.getY() + 1, base.getZ() + 3.5, -90, 0); friend.setYHeadRot(-90);
+            w.moveTo(base.getX() + 18.5, base.getY() + 1, base.getZ() + 1.5);
+            w.setPrey(fake);
+            double xw = w.getX();
+            for (int i = 0; i < 40; i++) w.tick();
+            log("wendigo with 2 players, prey looking away, friend watching: moved %.2f, state=%d (expected < 0.3, %d)",
+                    Math.abs(w.getX() - xw), w.getState(), com.ppcharcoal.arcticfox.entity.Wendigo.WATCHED);
+            if (Math.abs(w.getX() - xw) > 0.3 || w.getState() != com.ppcharcoal.arcticfox.entity.Wendigo.WATCHED) ok = false;
+            friend.moveTo(friend.getX(), friend.getY(), friend.getZ(), 90, 0); friend.setYHeadRot(90);
+
+            // light: its prey steps next to a lantern -> it backs off, switches to the player in the dark
+            BlockPos lamp = fake.blockPosition().offset(1, 0, -1);
+            level.setBlock(lamp, Blocks.LANTERN.defaultBlockState(), 3);
+            com.ppcharcoal.arcticfox.entity.WendigoRules.clearCache();
+            boolean lit = com.ppcharcoal.arcticfox.entity.WendigoRules.isInLight(fake);
+            boolean friendLit = com.ppcharcoal.arcticfox.entity.WendigoRules.isInLight(friend);
+            friend.moveTo(base.getX() + 0.5, base.getY() + 1, base.getZ() - 5.5, 90, 0); friend.setYHeadRot(90);
+            com.ppcharcoal.arcticfox.entity.WendigoRules.clearCache();
+            for (int i = 0; i < 3; i++) w.tick();
+            var newPrey = w.getPrey();
+            log("wendigo light: prey lit=%s, other player lit=%s, switched to the player in the dark=%s (expected true, false, true)",
+                    lit, com.ppcharcoal.arcticfox.entity.WendigoRules.isInLight(friend), newPrey == friend);
+            if (!lit || newPrey != friend) ok = false;
+            // now both in the light -> it slinks off and hides, and waits while they stay lit
+            BlockPos lamp2 = friend.blockPosition().offset(1, 0, 1);
+            level.setBlock(lamp2, Blocks.LANTERN.defaultBlockState(), 3);
+            com.ppcharcoal.arcticfox.entity.WendigoRules.clearCache();
+            for (int i = 0; i < 40; i++) w.tick();
+            boolean hidAway = w.isHidden();
+            w.endHideNow();
+            for (int i = 0; i < 2; i++) w.tick();
+            log("wendigo light: everyone lit -> hidden=%s, a minute later still not stalking anyone lit (state=%d, expected hidden or fleeing)",
+                    hidAway, w.getState());
+            if (!hidAway) ok = false;
+            level.setBlock(lamp, Blocks.AIR.defaultBlockState(), 3);
+            level.setBlock(lamp2, Blocks.AIR.defaultBlockState(), 3);
+            com.ppcharcoal.arcticfox.entity.WendigoRules.clearCache();
+            w.endHideNow();
+            com.ppcharcoal.arcticfox.entity.WendigoRules.EXTRA_PLAYERS.remove(friend);
+
             // careless: it gets within reach unseen -> scream, then attack
+            w.calm();
+            w.setPrey(fake);
             w.moveTo(fake.getX() + 2.5, fake.getY(), fake.getZ());
             fake.setYRot(90); fake.setYHeadRot(90);
             w.tick();
@@ -816,20 +867,42 @@ public final class SmokeTest {
             log("wendigo strikes: state %d -> %d, claw attacks=%d (expected %d -> %d, > 0)", s1, s2, w.strikes,
                     com.ppcharcoal.arcticfox.entity.Wendigo.SCREAM, com.ppcharcoal.arcticfox.entity.Wendigo.HUNT);
             if (s1 != com.ppcharcoal.arcticfox.entity.Wendigo.SCREAM || s2 != com.ppcharcoal.arcticfox.entity.Wendigo.HUNT || w.strikes == 0) ok = false;
+            // its prey dies -> it leaves for the night
+            float keepHealth = fake.getHealth();
+            fake.setHealth(0);
+            for (int i = 0; i < 3; i++) w.tick();
+            log("wendigo after killing its prey: removed=%s (expected true)", w.isRemoved());
+            if (!w.isRemoved()) ok = false;
+            fake.setHealth(keepHealth > 0 ? keepHealth : 20);
             w.discard();
 
-            // the spawner finds a spot behind a player out on the open ground
-            com.ppcharcoal.arcticfox.entity.Wendigo spawned = null;
-            for (int attempt = 0; attempt < 8 && spawned == null; attempt++) {
+            // one a night: tonight's Wendigo comes once, whatever the number of players
+            level.setDayTime(5 * 24000L + 18000);
+            var nights = com.ppcharcoal.arcticfox.world.WendigoSpawner.Nights.get(level);
+            long keepNight = nights.lastNight;
+            nights.lastNight = -1;
+            com.ppcharcoal.arcticfox.entity.Wendigo first = null, second = null;
+            for (int attempt = 0; attempt < 8 && first == null; attempt++) {
                 BlockPos g = new BlockPos(1200 + attempt * 300, 0, 900);
                 loadArea(level, g, 4);
                 BlockPos top = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, g);
                 if (!level.getFluidState(top.below()).isEmpty()) continue;
                 fake.moveTo(top.getX() + 0.5, top.getY(), top.getZ() + 0.5, 0, 0);
-                spawned = com.ppcharcoal.arcticfox.world.WendigoSpawner.spawnFor(level, fake);
+                com.ppcharcoal.arcticfox.entity.WendigoRules.clearCache();
+                first = com.ppcharcoal.arcticfox.world.WendigoSpawner.trySpawnTonight(level);
             }
-            log("wendigo spawner: spawned=%s distance=%.0f (expected true, 34-42)", spawned != null, spawned == null ? 0 : spawned.distanceTo(fake));
-            if (spawned == null) ok = false; else spawned.discard();
+            if (first != null) {
+                second = com.ppcharcoal.arcticfox.world.WendigoSpawner.trySpawnTonight(level);
+                log("wendigo spawner: first tonight=%s at %.0f blocks, second tonight=%s (expected true, 34-42, false)",
+                        true, first.distanceTo(fake), second != null);
+                first.discard();
+            } else {
+                log("wendigo spawner: no Wendigo could spawn (expected one)");
+            }
+            if (first == null || second != null) ok = false;
+            if (second != null) second.discard();
+            nights.lastNight = keepNight;
+            com.ppcharcoal.arcticfox.entity.WendigoRules.EXTRA_PLAYERS.clear();
         } catch (Throwable t) {
             ArcticFox.LOGGER.error(P + "wendigo check failed", t);
             ok = false;

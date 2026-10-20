@@ -86,12 +86,16 @@ public final class Config {
             .define("wendigo.enabled", true);
 
     public static final ModConfigSpec.DoubleValue WENDIGO_CHANCE = BUILDER
-            .comment("Chance, checked every 10 seconds at night for each player outdoors, that a Wendigo starts stalking them.")
+            .comment("Chance, checked every 10 seconds at night, that tonight's Wendigo (at most one per night for the whole world) starts stalking one of the players out in the dark.")
             .defineInRange("wendigo.spawnChance", 0.02, 0.0, 1.0);
 
     public static final ModConfigSpec.IntValue WENDIGO_FIRST_NIGHT = BUILDER
             .comment("First night (counting from 0) on which a Wendigo can appear.")
             .defineInRange("wendigo.firstNight", 2, 0, 1000);
+
+    public static final ModConfigSpec.IntValue WENDIGO_SAFE_LIGHT = BUILDER
+            .comment("Players standing in at least this much block light (torches, lanterns, campfires...) are never stalked; a Wendigo backs off until they leave it. 0 disables.")
+            .defineInRange("wendigo.safeLight", 10, 0, 15);
 
     public static final ModConfigSpec.BooleanValue CROP_RULES = BUILDER
             .comment("Crops only grow when sheltered (roof above), warm (above crops.minTemperature) and watered (moist farmland).")

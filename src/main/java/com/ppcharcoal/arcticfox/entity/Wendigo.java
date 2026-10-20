@@ -61,6 +61,7 @@ public class Wendigo extends Monster {
     private double watchStartDist = -1;
     private double lastBearing;
     private int swings;
+    private boolean fed;
     /** Counts claw attacks (for tests). */
     public int strikes;
 
@@ -135,14 +136,49 @@ public class Wendigo extends Monster {
         Player p = preyRef;
         if (p == null || p.isRemoved() || p.level() != level()) {
             p = preyId == null ? null : level().getPlayerByUUID(preyId);
+            if (p == null) for (Player extra : WendigoRules.EXTRA_PLAYERS) if (extra.getUUID().equals(preyId)) p = extra;
         }
-        if (p != null && (!p.isAlive() || p.isSpectator() || p.isCreative() || p.distanceToSqr(this) > 160 * 160)) p = null;
-        if (p == null) {
-            p = level().getNearestPlayer(getX(), getY(), getZ(), 64, e -> e instanceof Player pl && !pl.isCreative() && !pl.isSpectator());
-            if (p != null) setPrey(p);
+        if (p != null && !p.isAlive() && (getState() == HUNT || getState() == SCREAM)) {
+            fed = true; // it got what it came for
+            return null;
         }
+        if (p != null && (!p.isAlive() || p.isSpectator() || p.isCreative() || p.level() != level() || p.distanceToSqr(this) > 160 * 160)) p = null;
+        if (p == null) p = retarget(null);
         preyRef = p;
         return p;
+    }
+
+    /** Picks the nearest other player it could stalk (not in the light), within 96 blocks. */
+    @Nullable
+    private Player retarget(@Nullable Player except) {
+        Player best = null;
+        double bestDist = 96 * 96;
+        for (Player p : WendigoRules.players(level())) {
+            if (p == except || !WendigoRules.canStalk(p)) continue;
+            double d = p.distanceToSqr(this);
+            if (d < bestDist) {
+                bestDist = d;
+                best = p;
+            }
+        }
+        if (best != null) setPrey(best);
+        return best;
+    }
+
+    /** The closest player currently looking at it, if any. Any player's gaze freezes it, not only its prey's. */
+    @Nullable
+    public Player watcher() {
+        Player best = null;
+        double bestDist = Double.MAX_VALUE;
+        for (Player p : WendigoRules.players(level())) {
+            if (!p.isAlive() || p.distanceToSqr(this) > 128 * 128 || !isLookedAtBy(p)) continue;
+            double d = p.distanceToSqr(this);
+            if (d < bestDist) {
+                bestDist = d;
+                best = p;
+            }
+        }
+        return best;
     }
 
     private double bearingFrom(Player player) {
@@ -171,11 +207,22 @@ public class Wendigo extends Monster {
         if (hiddenTicks > 0) {
             getNavigation().stop();
             setDeltaMovement(0, getDeltaMovement().y, 0);
-            if (--hiddenTicks == 0) reappear();
+            if (--hiddenTicks == 0) {
+                Player p = getPrey();
+                if (p != null && WendigoRules.isInLight(p) && retarget(p) == null) {
+                    hiddenTicks = 100; // its prey is standing in the light: wait in the dark
+                } else {
+                    reappear();
+                }
+            }
             return;
         }
         Player prey = getPrey();
         int state = getState();
+        if (fed) {
+            vanishForGood(); // its prey is dead; it leaves for the night
+            return;
+        }
         if (prey == null) {
             getNavigation().stop();
             if (++lostTicks > 200) vanishForGood();
@@ -199,17 +246,33 @@ public class Wendigo extends Monster {
                 getNavigation().moveTo(away.x, away.y, away.z, 1.9);
                 if (--fleeTicks <= 0 || dist > 30) hide(prey);
             }
-            default -> stalk(prey, dist);
+            default -> {
+                if (WendigoRules.isInLight(prey)) {
+                    // light keeps it away: switch to someone in the dark, or slink off and wait
+                    Player other = retarget(prey);
+                    if (other == null) {
+                        startFlee();
+                        return;
+                    }
+                    prey = other;
+                    dist = distanceTo(prey);
+                }
+                stalk(prey, dist);
+            }
         }
         stalkSounds(prey);
     }
 
-    private void stalk(Player prey, double dist) {
-        if (isLookedAtBy(prey)) {
-            if (dist <= SPOTTED_CLOSE) {
-                startScream(prey);
+    private void stalk(Player prey, double preyDist) {
+        Player watcher = watcher();
+        if (watcher != null) {
+            double dist = distanceTo(watcher);
+            if (dist <= SPOTTED_CLOSE && WendigoRules.canStalk(watcher)) {
+                setPrey(watcher); // caught in the open, far too close
+                startScream(watcher);
                 return;
             }
+            prey = watcher;
             if (getState() != WATCHED) {
                 setState(WATCHED);
                 watchStartDist = dist;
@@ -225,6 +288,7 @@ public class Wendigo extends Monster {
             watchStartDist = Math.max(watchStartDist, dist);
             return;
         }
+        double dist = preyDist;
         setState(STALK);
         watchStartDist = dist;
         if (dist <= STRIKE_RANGE) {
@@ -292,6 +356,16 @@ public class Wendigo extends Monster {
             hiddenTicks = 0;
             reappear();
         }
+    }
+
+    /** Back to plain stalking, visible (tests). */
+    public void calm() {
+        hiddenTicks = 0;
+        fleeTicks = 0;
+        setInvisible(false);
+        setInvulnerable(false);
+        setSilent(false);
+        setState(STALK);
     }
 
     public double lastBearing() {

@@ -1,0 +1,20 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "spoiled"
+    },
+    {
+      "type": "spoiled:initialize_spoiling"
+    }
+  ],
+  "type": "spoiled:spoil_recipe",
+  "ingredient": {
+    "tag": "spoiled:foods"
+  },
+  "result": {
+    "count": 1,
+    "id": "minecraft:rotten_flesh"
+  },
+  "spoiltime": 120
+}

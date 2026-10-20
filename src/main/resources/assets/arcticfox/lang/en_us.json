@@ -21,5 +21,6 @@
   "structure.arcticfox.supply_cache": "Frozen Supply Cache",
   "structure.arcticfox.cabin": "Trapper's Cabin",
   "structure.arcticfox.train_station": "Abandoned Train Station",
-  "structure.arcticfox.metro_station": "Abandoned Metro Station"
+  "structure.arcticfox.metro_station": "Abandoned Metro Station",
+  "item.arcticfox.incomplete_mending_book": "Incomplete Mending Book"
 }

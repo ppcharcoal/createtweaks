@@ -49,6 +49,12 @@ public final class CreateHeat {
         NeoForge.EVENT_BUS.addListener(CreateHeat::onRegister);
     }
 
+    private static Block[] blocksOf(String namespace, String... ids) {
+        return Arrays.stream(ids)
+                .map(id -> BuiltInRegistries.BLOCK.getOptional(ResourceLocation.fromNamespaceAndPath(namespace, id)).orElse(null))
+                .filter(Objects::nonNull).filter(b -> b != Blocks.AIR).toArray(Block[]::new);
+    }
+
     private static Block[] blocks(String... ids) {
         return Arrays.stream(ids)
                 .map(id -> BuiltInRegistries.BLOCK.getOptional(ResourceLocation.fromNamespaceAndPath("create", id)).orElse(null))
@@ -65,6 +71,14 @@ public final class CreateHeat {
         // Register first so these win over Cold Sweat's own (weaker, plain-pipe-only) fluid pipe temperature
         event.registerFirst(new FluidHolderTemp(blocks("fluid_pipe", "encased_fluid_pipe", "glass_fluid_pipe",
                 "smart_fluid_pipe", "mechanical_pump", "fluid_valve", "basin", "item_drain", "spout")));
+        // Create: New Age heat network (heaters, heat pipes/pumps, Stirling engines, solar plates, reactor vents)
+        Block[] newAgeHeat = blocksOf("create_new_age", "heater", "heat_pipe", "heat_pump", "stirling_engine",
+                "basic_solar_heating_plate", "advanced_solar_heating_plate", "reactor_heat_vent", "reactor_rod");
+        if (newAgeHeat.length > 0) {
+            event.register(new NewAgeHeatTemp(newAgeHeat));
+            event.register(new SimpleHeat(25 * C, 8, 40 * C, blocksOf("create_new_age", "corium")));
+            event.register(new SimpleHeat(6 * C, 5, 12 * C, blocksOf("create_new_age", "solid_corium")));
+        }
         ArcticFox.LOGGER.info("Registered Create heat sources for Cold Sweat");
     }
 
@@ -171,6 +185,73 @@ public final class CreateHeat {
         @Override
         public double getMaxEffect(@Nullable LivingEntity entity, Level level, BlockPos pos, BlockState state) {
             return 20 * C;
+        }
+
+        @Override
+        public boolean isLogarithmic(@Nullable LivingEntity entity, Level level, BlockPos pos, BlockState state) {
+            return true;
+        }
+    }
+
+    /**
+     * Create: New Age stores heat in its block entities (HeatBlockEntity#getHeat / #maxHeat). A full block gives +12 C;
+     * a heater (which has a blaze-burner style heat level) uses that level instead.
+     */
+    static class NewAgeHeatTemp extends BlockTemp {
+        private static Method getHeat, maxHeat;
+        private static boolean init;
+
+        NewAgeHeatTemp(Block... blocks) {
+            super(blocks);
+        }
+
+        private static synchronized void init() {
+            if (init) return;
+            init = true;
+            try {
+                Class<?> heat = Class.forName("org.antarcticgardens.cna.content.heat.HeatBlockEntity");
+                getHeat = heat.getMethod("getHeat");
+                maxHeat = heat.getMethod("maxHeat");
+            } catch (ReflectiveOperationException e) {
+                ArcticFox.LOGGER.warn("Create: New Age heat reading disabled", e);
+            }
+        }
+
+        @Override
+        public double getTemperature(Level level, @Nullable LivingEntity entity, BlockState state, BlockPos pos, double distance) {
+            for (Property<?> property : state.getProperties()) {
+                if (property.getValue("seething").isPresent() || property.getName().equals("blaze")) {
+                    String heat = state.getValue(property).toString().toLowerCase(java.util.Locale.ROOT);
+                    switch (heat) {
+                        case "smouldering": return 3 * C;
+                        case "fading": return 5 * C;
+                        case "kindled": return 10 * C;
+                        case "seething": return 20 * C;
+                        default: break;
+                    }
+                }
+            }
+            init();
+            BlockEntity be = level.getBlockEntity(pos);
+            if (getHeat == null || be == null || !getHeat.getDeclaringClass().isInstance(be)) return 0;
+            try {
+                double heat = ((Number) getHeat.invoke(be)).doubleValue();
+                double max = ((Number) maxHeat.invoke(be)).doubleValue();
+                if (heat <= 0 || max <= 0) return 0;
+                return Math.min(1.0, heat / max) * 12 * C;
+            } catch (ReflectiveOperationException e) {
+                return 0;
+            }
+        }
+
+        @Override
+        public double getRange(@Nullable LivingEntity entity, Level level, BlockPos pos, BlockState state) {
+            return 7;
+        }
+
+        @Override
+        public double getMaxEffect(@Nullable LivingEntity entity, Level level, BlockPos pos, BlockState state) {
+            return 24 * C;
         }
 
         @Override

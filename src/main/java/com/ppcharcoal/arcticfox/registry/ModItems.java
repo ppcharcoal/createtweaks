@@ -85,6 +85,10 @@ public final class ModItems {
     public static final DeferredItem<SpearItem> NETHERITE_SPEAR = ITEMS.register("netherite_spear",
             () -> new SpearItem(Tiers.NETHERITE, 7.0F, new Item.Properties().fireResistant()));
 
+    /** Transitional item of the emerald + experience Mending book sequenced assembly (Create). */
+    public static final DeferredItem<Item> INCOMPLETE_MENDING_BOOK = ITEMS.registerSimpleItem("incomplete_mending_book",
+            new Item.Properties().stacksTo(1));
+
     private ModItems() {
     }
 }

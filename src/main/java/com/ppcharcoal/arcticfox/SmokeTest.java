@@ -161,6 +161,7 @@ public final class SmokeTest {
             ok &= checkNewFeatures(server, level);
             ok &= checkWinter(server, level);
             ok &= checkV12(server, level);
+            ok &= checkV13(server, level);
             ok &= checkCompat(server, level);
         } catch (Throwable t) {
             ArcticFox.LOGGER.error(P + "smoke test crashed", t);
@@ -401,7 +402,8 @@ public final class SmokeTest {
         if (portal != null) ok = false;
         var structures = level.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.STRUCTURE);
         List<String> ours = new java.util.ArrayList<>(List.of("buried_camp", "supply_cache", "cabin"));
-        if (mods.isLoaded("create")) { ours.add("train_station"); ours.add("metro_station"); }
+        String deco = mods.isLoaded("createdeco") ? "_deco" : "";
+        if (mods.isLoaded("create")) { ours.add("train_station" + deco); ours.add("metro_station" + deco); }
         for (String id : ours) {
             var holder = structures.getHolder(ArcticFox.id(id));
             var template = server.getStructureManager().get(ArcticFox.id(id));
@@ -507,6 +509,82 @@ public final class SmokeTest {
         if (mods.isLoaded("create") && com.ppcharcoal.arcticfox.compat.ColdSweatCompat.loaded()) {
             ok &= checkCreateHeat(level);
         }
+        return ok;
+    }
+
+    private static boolean checkV13(MinecraftServer server, ServerLevel level) {
+        boolean ok = true;
+        var mods = net.neoforged.fml.ModList.get();
+        var recipes = server.getRecipeManager();
+        java.util.function.Predicate<String> has = id -> recipes.byKey(ResourceLocation.parse(id)).isPresent();
+        if (mods.isLoaded("create")) {
+            boolean totem = has.test("arcticfox:mechanical_crafting/totem_of_undying");
+            boolean mending = has.test(mods.isLoaded("create_enchantment_industry") ? "arcticfox:sequenced_assembly/mending_book" : "arcticfox:sequenced_assembly/mending_book_nuggets");
+            boolean postmortal = server.getAdvancements().get(ResourceLocation.parse("minecraft:adventure/totem_of_undying")) != null;
+            log("emeralds: totem recipe=%s mending book recipe=%s bell recipe=%s 'Postmortal' advancement=%s (all true)", totem, mending, has.test("arcticfox:bell"), postmortal);
+            if (!totem || !mending || !has.test("arcticfox:bell") || !postmortal) ok = false;
+            recipes.byKey(ResourceLocation.parse(mods.isLoaded("create_enchantment_industry") ? "arcticfox:sequenced_assembly/mending_book" : "arcticfox:sequenced_assembly/mending_book_nuggets"))
+                    .ifPresent(h -> log("  mending book result: %s", h.value().getResultItem(level.registryAccess()).getComponents()));
+        }
+        if (mods.isLoaded("create_enchantment_industry")) {
+            boolean grind = has.test("arcticfox:grinding/emerald");
+            log("CEI: emerald grinds into liquid experience=%s (true)", grind);
+            if (!grind) ok = false;
+        }
+        if (mods.isLoaded("spoiled")) {
+            try {
+                var recipe = recipes.byKey(ResourceLocation.parse("spoiled:spoiling/initial_to_rotten_flesh")).orElseThrow().value();
+                java.lang.reflect.Field timeField = recipe.getClass().getDeclaredField("spoilTime");
+                timeField.setAccessible(true);
+                int spoilTime = timeField.getInt(recipe);
+                Class<?> cfg = Class.forName("com.mrbysco.spoiled.config.SpoiledConfig");
+                Object common = cfg.getField("COMMON").get(null);
+                Object rateValue = common.getClass().getField("spoilRate").get(common);
+                int rate = ((Number) rateValue.getClass().getMethod("get").invoke(rateValue)).intValue();
+                double days = spoilTime * (double) rate / 1200.0;
+                log("spoiled: %d updates every %d s = food rots after %.2f in-game days (expected 3)", spoilTime, rate, days);
+                if (Math.abs(days - 3) > 0.01) ok = false;
+            } catch (Throwable t) {
+                ArcticFox.LOGGER.error(P + "spoiled check failed", t);
+                ok = false;
+            }
+        }
+        if (mods.isLoaded("alexsmobs")) {
+            var biomes = level.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.BIOME);
+            java.util.Set<String> all = new java.util.TreeSet<>();
+            for (String b : List.of("arcticfox:frozen_wastes", "minecraft:snowy_plains", "minecraft:snowy_taiga", "minecraft:grove",
+                    "minecraft:snowy_slopes", "minecraft:ice_spikes", "minecraft:snowy_beach", "minecraft:frozen_ocean", "minecraft:frozen_river")) {
+                var holder = biomes.getHolder(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.BIOME, ResourceLocation.parse(b)));
+                if (holder.isEmpty()) continue;
+                List<String> found = new java.util.ArrayList<>();
+                for (var category : net.minecraft.world.entity.MobCategory.values()) {
+                    for (var data : holder.get().value().getMobSettings().getMobs(category).unwrap()) {
+                        var key = BuiltInRegistries.ENTITY_TYPE.getKey(data.type);
+                        if (!key.getNamespace().equals("alexsmobs")) continue;
+                        boolean blocked = category == net.minecraft.world.entity.MobCategory.MONSTER && !data.type.is(ModTags.SURFACE_MONSTERS);
+                        found.add(key.getPath() + "(" + category.getName() + (blocked ? ", BLOCKED on surface" : "") + ")");
+                        all.add(key.getPath());
+                    }
+                }
+                log("alex's mobs in %s: %s", b, found);
+            }
+            log("alex's mobs that can spawn in the frozen world: %d species", all.size());
+            if (all.isEmpty()) ok = false;
+        }
+        if (mods.isLoaded("create_new_age") && com.ppcharcoal.arcticfox.compat.ColdSweatCompat.loaded()) {
+            BlockPos at = new BlockPos(2900, 150, 2600), control = at.offset(0, 0, 20);
+            level.getChunk(at.getX() >> 4, at.getZ() >> 4);
+            level.setBlock(at.below(), Blocks.STONE.defaultBlockState(), 3);
+            level.setBlock(control.below(), Blocks.STONE.defaultBlockState(), 3);
+            var corium = BuiltInRegistries.BLOCK.get(ResourceLocation.parse("create_new_age:corium"));
+            level.setBlock(at, corium.defaultBlockState(), 3);
+            double hot = com.ppcharcoal.arcticfox.compat.ColdSweatCompat.temperatureCelsius(level, at.offset(2, 0, 0), true);
+            double cold = com.ppcharcoal.arcticfox.compat.ColdSweatCompat.temperatureCelsius(level, control.offset(2, 0, 0), true);
+            log("create new age: corium %.1f C two blocks away vs %.1f C without it (+%.1f, expected > 3)", hot, cold, hot - cold);
+            if (hot - cold <= 3) ok = false;
+        }
+        List<String> sophisticated = mods.getMods().stream().map(m -> m.getModId()).filter(id -> id.startsWith("sophisticated")).sorted().toList();
+        if (!sophisticated.isEmpty()) log("sophisticated mods loaded alongside: %s", sophisticated);
         return ok;
     }
 

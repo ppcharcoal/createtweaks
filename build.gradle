@@ -76,6 +76,18 @@ dependencies {
         runtimeOnly "maven.modrinth:mowzies-mobs:${mowzies_mobs_version}"
         runtimeOnly "maven.modrinth:8BmcQJ2H:${geckolib_version}"
         runtimeOnly "maven.modrinth:farmers-delight:${farmers_delight_version}"
+        runtimeOnly "maven.modrinth:kYIaHHfw:${alexsmobs_version}"
+        runtimeOnly "maven.modrinth:6oyMM4yX:${codxlib_version}"
+        runtimeOnly "maven.modrinth:FsHyEZFS:${spoiled_version}"
+        runtimeOnly "maven.modrinth:JWGBpFUP:${cei_version}"
+        runtimeOnly "maven.modrinth:dzb1a5WV:${dragons_plus_version}"
+        runtimeOnly "maven.modrinth:FTeXqI9v:${new_age_version}"
+        runtimeOnly "maven.modrinth:sMvUb4Rb:${create_deco_version}"
+        runtimeOnly "maven.modrinth:nmoqTijg:${soph_core_version}"
+        runtimeOnly "maven.modrinth:TyCTlI4b:${soph_backpacks_version}"
+        runtimeOnly "maven.modrinth:hMlaZH8f:${soph_storage_version}"
+        runtimeOnly "maven.modrinth:s85zLEDe:${soph_backpacks_create_version}"
+        runtimeOnly "maven.modrinth:MJ0hdevs:${soph_storage_create_version}"
     }
 }
 

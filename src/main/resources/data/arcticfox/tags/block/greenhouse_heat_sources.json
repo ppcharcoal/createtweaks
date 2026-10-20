@@ -23,6 +23,22 @@
     {
       "id": "cold_sweat:boiler",
       "required": false
+    },
+    {
+      "id": "create_new_age:heater",
+      "required": false
+    },
+    {
+      "id": "create_new_age:heat_pipe",
+      "required": false
+    },
+    {
+      "id": "create_new_age:corium",
+      "required": false
+    },
+    {
+      "id": "create_new_age:reactor_heat_vent",
+      "required": false
     }
   ]
 }

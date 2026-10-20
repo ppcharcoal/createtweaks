@@ -34,21 +34,21 @@ jobs:
           echo "JAR=$JAR" 
           unzip -l "$JAR" | grep -E "api/|temperature|modifier|Weather|weather" > /tmp/out/listing.txt || true
           for c in com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier \
-                   com.momosoftworks.coldsweat.api.util.Temperature \
-                   com.momosoftworks.coldsweat.api.util.Temperature\$Trait \
-                   com.momosoftworks.coldsweat.api.util.Placement \
-                   com.momosoftworks.coldsweat.api.util.Placement\$Duplicates \
-                   com.momosoftworks.coldsweat.api.event.core.registry.TempModifierRegisterEvent \
-                   com.momosoftworks.coldsweat.api.event.common.temperautre.DefaultTempModifiersEvent \
-                   com.momosoftworks.coldsweat.common.capability.temperature.AbstractTempCap ; do
+                   com.momosoftworks.coldsweat.api.event.core.init.GatherDefaultTempModifiersEvent \
+                   com.momosoftworks.coldsweat.api.event.core.init.DefaultTempModifiersEvent \
+                   com.momosoftworks.coldsweat.api.util.placement.Placement \
+                   com.momosoftworks.coldsweat.api.util.placement.Placement\$Mode \
+                   com.momosoftworks.coldsweat.api.util.placement.Placement\$Order \
+                   com.momosoftworks.coldsweat.api.util.placement.Matcher \
+                   com.momosoftworks.coldsweat.api.util.placement.Duplicates \
+                   com.momosoftworks.coldsweat.api.temperature.modifier.compat.StormTempModifier \
+                   com.momosoftworks.coldsweat.api.temperature.modifier.BiomeTempModifier ; do
             echo "=== $c" >> /tmp/out/javap.txt
-            javap -cp "$JAR" -public "$c" >> /tmp/out/javap.txt 2>&1 || true
+            javap -cp "$JAR" -p "$c" >> /tmp/out/javap.txt 2>&1 || true
           done
+          unzip -l "$JAR" | grep -E "util/placement/" | awk '{print $4}' >> /tmp/out/javap.txt
           unzip -l "$JAR" | grep -iE "modifier/.*\.class" | awk '{print $4}' > /tmp/out/modifiers.txt
           unzip -l "$JAR" | grep -iE "event/.*\.class" | awk '{print $4}' > /tmp/out/events.txt
-          for c in $(grep -iE "temp/modifier/(Weather|Biome|Elevation|Depth)" /tmp/out/modifiers.txt | sed 's/\.class$//; s#/#.#g'); do
-            echo "=== $c" >> /tmp/out/javap.txt; javap -cp "$JAR" -p "$c" >> /tmp/out/javap.txt 2>&1 || true
-          done
           cp /tmp/run.log /tmp/out/ || true
           cd /tmp/out && git init -q -b mod-dumps && git config user.name gha && git config user.email gha@users.noreply.github.com
           git add -A && git commit -qm "cold sweat dump" && git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" mod-dumps

@@ -16,6 +16,8 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
       - name: Dump Cold Sweat API
         run: |
+          set +e
+          exec > >(tee /tmp/run.log) 2>&1
           chmod +x gradlew
           cat >> build.gradle <<'G'
           tasks.register('dumpCs') {
@@ -26,9 +28,10 @@ jobs:
               }
           }
           G
-          ./gradlew dumpCs -q
-          JAR=$(cat build/csjar.txt)
           mkdir -p /tmp/out
+          ./gradlew dumpCs --stacktrace
+          JAR=$(cat build/csjar.txt)
+          echo "JAR=$JAR" 
           unzip -l "$JAR" | grep -E "api/|temperature|modifier|Weather|weather" > /tmp/out/listing.txt || true
           for c in com.momosoftworks.coldsweat.api.temperature.modifier.TempModifier \
                    com.momosoftworks.coldsweat.api.util.Temperature \
@@ -46,5 +49,6 @@ jobs:
           for c in $(grep -iE "temp/modifier/(Weather|Biome|Elevation|Depth)" /tmp/out/modifiers.txt | sed 's/\.class$//; s#/#.#g'); do
             echo "=== $c" >> /tmp/out/javap.txt; javap -cp "$JAR" -p "$c" >> /tmp/out/javap.txt 2>&1 || true
           done
+          cp /tmp/run.log /tmp/out/ || true
           cd /tmp/out && git init -q -b mod-dumps && git config user.name gha && git config user.email gha@users.noreply.github.com
           git add -A && git commit -qm "cold sweat dump" && git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" mod-dumps

@@ -163,6 +163,7 @@ public final class SmokeTest {
             ok &= checkV12(server, level);
             ok &= checkV13(server, level);
             ok &= checkCompat(server, level);
+            ItemAudit.run(server, level);
         } catch (Throwable t) {
             ArcticFox.LOGGER.error(P + "smoke test crashed", t);
             ok = false;

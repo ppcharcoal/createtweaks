@@ -3,9 +3,6 @@
     {
       "type": "neoforge:mod_loaded",
       "modid": "spoiled"
-    },
-    {
-      "type": "spoiled:initialize_spoiling"
     }
   ],
   "type": "spoiled:spoil_recipe",

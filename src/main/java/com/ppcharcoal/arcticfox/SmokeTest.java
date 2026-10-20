@@ -446,7 +446,13 @@ public final class SmokeTest {
             if (found == null || lootChests == 0 || !dry || vanillaRails > 0) ok = false;
             if ((id.startsWith("train") || id.startsWith("metro")) && (createTracks + railwaysTracks == 0 || lamps == 0)) ok = false;
             if (mods.isLoaded("railways") && createTracks > 0) ok = false;
-            if (id.equals("cabin")) ok &= checkCabinWarmth(level, at, t.getSize());
+            if (id.equals("cabin")) {
+                // warmth test on real ground (the sky copy above is at high altitude, which Cold Sweat makes colder)
+                level.getChunk(2400 >> 4, 2400 >> 4);
+                BlockPos ground = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, new BlockPos(2400, 0, 2400)).below();
+                t.placeInWorld(level, ground, ground, new net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings(), level.random, 2);
+                ok &= checkCabinWarmth(level, ground, t.getSize());
+            }
         }
 
         // --- weather: sunny/snowy days, blizzard nights

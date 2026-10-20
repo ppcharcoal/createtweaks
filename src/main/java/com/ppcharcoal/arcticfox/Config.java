@@ -57,6 +57,10 @@ public final class Config {
             .comment("Chance that a day is snowy instead of sunny (nights are always blizzards).")
             .defineInRange("weather.snowyDayChance", 0.5, 0.0, 1.0);
 
+    public static final ModConfigSpec.DoubleValue BLIZZARD_CHILL = BUILDER
+            .comment("Cold Sweat: degrees Celsius colder for anyone out in the open during a blizzard (shelter removes it).")
+            .defineInRange("weather.blizzardChill", 10.0, 0.0, 50.0);
+
     public static final ModConfigSpec.BooleanValue BLIZZARD_FOG = BUILDER
             .comment("Thick white fog outdoors during blizzards (client side).")
             .define("weather.blizzardFog", true);

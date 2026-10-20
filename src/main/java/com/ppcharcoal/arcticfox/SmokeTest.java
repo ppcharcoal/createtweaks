@@ -854,6 +854,12 @@ public final class SmokeTest {
             w.endHideNow();
             com.ppcharcoal.arcticfox.entity.WendigoRules.EXTRA_PLAYERS.remove(friend);
 
+            if (net.neoforged.fml.ModList.get().isLoaded("cold_sweat")) {
+                String r = com.ppcharcoal.arcticfox.compat.coldsweat.BlizzardCold.selfTest(level, friend, base.offset(30, 1, 0));
+                log("%s", r);
+                if (!r.startsWith("PASS")) ok = false;
+            }
+
             // careless: it gets within reach unseen -> scream, then attack
             w.calm();
             w.setPrey(fake);

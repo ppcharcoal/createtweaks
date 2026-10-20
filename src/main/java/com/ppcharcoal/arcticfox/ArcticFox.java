@@ -38,6 +38,7 @@ public final class ArcticFox {
         }
         if (ModList.get().isLoaded("cold_sweat")) {
             com.ppcharcoal.arcticfox.compat.coldsweat.CreateHeat.init();
+            com.ppcharcoal.arcticfox.compat.coldsweat.BlizzardCold.init();
         }
     }
 

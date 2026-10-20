@@ -23,6 +23,9 @@ Mod id: `arcticfox` · Requires NeoForge 21.1+ · Server **and** client.
 - Frostmaw, igloos, mineshafts, ruined portals and trial chambers all generate in the wastes.
 
 ### Blizzards and deep snow
+- **Night blizzards are dark**: the storm fog turns a deep blue-grey at night instead of glowing white (snow-white by day), and a torch or lantern faintly lights the snow around you.
+- **Wind-driven snow**: during a blizzard the snow falls about ten times faster than normal and streaks sideways in gusts, in two layers. Calm snowy days keep the gentle vanilla snowfall.
+- **Blizzards bite** (Cold Sweat): out in the open during a blizzard it is another **10 °C colder** (about -25 °C instead of -15 °C). Any roof over your head removes the wind chill. Config: `weather.blizzardChill`.
 - **Arctic Fox runs the weather**: each day is either **sunny** or **snowy** (about 50/50, rolled per day from the world seed), and **every night is a blizzard**. Natural lightning is suppressed, so blizzards aren't thunderstorms (Trident Channeling still works).
 - **Blizzard fog**: outdoors in a blizzard, thick white fog closes in to about 20 blocks. Under a roof it clears.
 - **Snow piles up**, up to **2 blocks deep**: layers grow to a full block, then become snow blocks with new layers on top. It builds about a block per stormy night. Snow never settles on glass, ice, campfires or magma, or next to bright light (torches), so greenhouse roofs and lit paths stay clear. Works on its own and alongside Snow! Real Magic.

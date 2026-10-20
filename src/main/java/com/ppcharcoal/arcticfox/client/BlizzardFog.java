@@ -47,11 +47,26 @@ public final class BlizzardFog {
         event.setCanceled(true);
     }
 
+    /**
+     * Snow-white by day, a dark blue-grey murk at night: the fog follows the daylight, so a night blizzard is
+     * properly dark instead of glowing white.
+     */
     @SubscribeEvent
     public static void onFogColor(ViewportEvent.ComputeFogColor event) {
         if (strength < 0.01F) return;
-        event.setRed(Mth.lerp(strength, event.getRed(), 0.82F));
-        event.setGreen(Mth.lerp(strength, event.getGreen(), 0.86F));
-        event.setBlue(Mth.lerp(strength, event.getBlue(), 0.90F));
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.level == null) return;
+        float partial = (float) event.getPartialTick();
+        // 1 at noon, 0 at midnight (also darkened by the storm itself)
+        float daylight = Mth.clamp((mc.level.getSkyDarken(partial) - 0.2F) / 0.8F, 0.0F, 1.0F);
+        float r = Mth.lerp(daylight, 0.055F, 0.82F);
+        float g = Mth.lerp(daylight, 0.065F, 0.86F);
+        float b = Mth.lerp(daylight, 0.095F, 0.90F);
+        // lightning-free storm, but your own torch or lantern lights up the snow around you a little
+        int block = mc.level.getBrightness(net.minecraft.world.level.LightLayer.BLOCK, event.getCamera().getBlockPosition());
+        float glow = (1 - daylight) * block / 15.0F * 0.18F;
+        event.setRed(Mth.lerp(strength, event.getRed(), r + glow));
+        event.setGreen(Mth.lerp(strength, event.getGreen(), g + glow * 0.85F));
+        event.setBlue(Mth.lerp(strength, event.getBlue(), b + glow * 0.6F));
     }
 }

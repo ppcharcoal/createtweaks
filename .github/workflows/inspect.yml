@@ -14,16 +14,11 @@ jobs:
             curl -s "https://api.modrinth.com/v2/version/$2" | jq '.dependencies' > "$1.deps.json"
             mkdir -p "$1"; (cd "$1" && unzip -q -o "../$1.jar" -x '*.class' '*.png' '*.ogg' 'assets/*/models/*' 'assets/*/geo/*' 'assets/*/animations/*' 'assets/*/blockstates/*' || true)
             unzip -l "$1.jar" | awk '{print $4}' > "$1.filelist.txt"
-            mkdir -p cls && (cd cls && unzip -q -o "../$1.jar" '*onfig*.class' '*Spoil*.class' '*Heat*.class' '*Heater*.class' '*Temperature*.class' || true)
+            mkdir -p cls && (cd cls && unzip -q -o "../$1.jar" '*onfig*.class' '*illager*.class' '*rofession*.class' '*Trade*.class' || true)
             find cls -name '*.class' | while read c; do echo "=== $c"; strings -n 3 "$c" | head -400; done > "$1.strings.txt" || true
             rm -rf cls "$1.jar"
           }
-          get alexsmobs K4GsS9Si
-          get spoiled ATkEvOWh
-          get cei L6VSDdC4
-          get newage IwtuwMZy
-          get createdeco qrcMVoBD
-          for p in 6oyMM4yX dzb1a5WV; do curl -s "https://api.modrinth.com/v2/project/$p" | jq '{slug,title}' > "dep_$p.json"; curl -s "https://api.modrinth.com/v2/project/$p/version?game_versions=%5B%221.21.1%22%5D&loaders=%5B%22neoforge%22%5D" | jq '[.[0] | {version_number,id}]' >> "dep_$p.json"; done
+          get railways czVeSmZo
           du -sh .
       - name: Push dump
         run: |

@@ -25,16 +25,22 @@ Mod id: `arcticfox` · Requires NeoForge 21.1+ · Server **and** client.
 ### Blizzards and deep snow
 - **Arctic Fox runs the weather**: each day is either **sunny** or **snowy** (about 50/50, rolled per day from the world seed), and **every night is a blizzard**. Natural lightning is suppressed, so blizzards aren't thunderstorms (Trident Channeling still works).
 - **Blizzard fog**: outdoors in a blizzard, thick white fog closes in to about 20 blocks. Under a roof it clears.
-- **Snow piles up**, up to **3 blocks deep**: layers grow to a full block, then become snow blocks with new layers on top. It builds about a block per stormy night. Snow never settles on glass, ice, campfires or magma, or next to bright light (torches), so greenhouse roofs and lit paths stay clear. Works on its own and alongside Snow! Real Magic.
+- **Snow piles up**, up to **2 blocks deep**: layers grow to a full block, then become snow blocks with new layers on top. It builds about a block per stormy night. Snow never settles on glass, ice, campfires or magma, or next to bright light (torches), so greenhouse roofs and lit paths stay clear. Works on its own and alongside Snow! Real Magic.
 
 ### Points of interest
 Rare structures reward exploring the wastes:
+- All surface structures only generate on **dry, fairly flat land**, never on lakes, frozen or not.
 - **Buried Camp**: a half-buried tent with a cold campfire, bedroll and supplies (food, coal, flint, leather, sometimes a spear).
 - **Frozen Supply Cache**: chests and barrels sealed inside packed ice, marked by a lantern pole. Seeds, ingots, coal, bone meal.
-- **Trapper's Cabin**: a spruce cabin with a lit fireplace, bed, furnace and stocked chests (seeds, food, saplings, a fishing rod).
-- With Create: **Abandoned Train Station**, a copper-roofed platform with a ticket booth and overgrown rails, stocked with Create parts.
-- With Create: **Abandoned Metro Station** (underground, y -24 to 16), a sealed platform hall with old rails and electron tubes and brass.
+- **Trapper's Cabin**: a sealed log cabin with a stone footing, glass windows, a fireplace and a **Cast-Iron Stove** stocked with 2 days of fuel. Inside it's about +11 °C on a -18 °C night.
+- With Create: **Abandoned Train Station**, a copper-roofed platform with **Create tracks**, a ticket booth and flickering roof lights. Loot is food, coal, torches, rails and a few Create parts.
+- With Create: **Abandoned Metro Station** (underground, y -24 to 16), a sealed platform hall with Create tracks and **flickering ceiling lamps**.
+- With **Steam 'n' Rails**: station tracks become spruce S&R tracks and platform edges get hazard stripes.
 - Ruined portals no longer generate.
+
+### New blocks
+- **Cast-Iron Stove** (5 iron, a furnace, 3 bricks): feed it any furnace fuel and it holds up to 3 in-game days. While burning it's a strong heat source (+32 °C with Cold Sweat, fading over 8 blocks) and greenhouse heat.
+- **Flickering Lamp** (iron nuggets, glass panes, a torch): an old industrial lamp that mostly shines but stutters now and then.
 
 ### Survival
 - **Cook your food**: raw meat and fish (vanilla and Farmer's Delight) have an 80% chance to give Hunger for 30 s, like rotten flesh.
@@ -131,9 +137,10 @@ With the End sealed, both are built on a **Mechanical Crafter** grid (Create req
 | Spoiled | Food spoils after **3 in-game days** instead of 1. Cold Sweat's icebox slows it as usual. |
 | Create: Enchantment Industry | Emeralds grind into liquid XP, and Mending books are made with it (see Emeralds). Slice & Dice sprinklers can already spray liquid XP. The Gem Cutter only works with Apotheosis gems. |
 | Create: New Age | Heaters, heat pipes and pumps, Stirling engines, solar heating plates, reactor vents and corium warm players (Cold Sweat) and count as greenhouse heat. Corium measured +21 °C two blocks away. |
-| Alex's Mobs (Continued) | Its spawn rules use `forge:` climate tags, which now include the frozen biomes. 23 species spawn here: moose, snow leopards, bison, grizzlies, froststalkers, tusklins, seals, orcas, crows, eagles and more. Hostile ones on the surface (centipedes, murmurs, farseers) are cave creatures and stay blocked above ground by the frozen-surface rule. |
+| Alex's Mobs (Continued) | Its spawn rules use `forge:` climate tags, which now include the frozen biomes. 17 cold-climate species spawn here: moose, snow leopards, bison, grizzlies, froststalkers, tusklins, seals, orcas, whales, crows, eagles and more. Flies, platypuses, raccoons, cockroaches, pupfish and other warm-climate animals are removed (`#arcticfox:out_of_place_wildlife`). Hostile ones on the surface (centipedes, murmurs, farseers) are cave creatures and stay blocked above ground by the frozen-surface rule. |
 | Create Deco | Train and metro stations get Create Deco versions with shipping containers, catwalks, warning decals, industrial lamps, cracked and mossy bricks and iron supports. |
 | Sophisticated Backpacks / Storage | Use the official **Sophisticated Backpacks Create Integration** and **Sophisticated Storage Create Integration** mods for contraption support. Tested alongside: Backpacks 3.26.9 with integration 0.2.2 (0.2.3 needs Backpacks 3.26.10). |
+| Steam 'n' Rails | Parts and blocks only: Conductor mobs are banished. Stations use its tracks and hazard stripes when it's installed. |
 | Snow! Real Magic | Its own snow covering still works; Arctic Fox stacks snow above one block, up to 3 blocks deep. |
 | Mowzie's Mobs | **Frostmaw is the only boss, and a very rare find** (one per ~96 chunks instead of 25). Ferrous Wroughtnaut, Umvuthi and the Sculptor are removed, along with their structures (wrought chamber, Umvuthana grove, monastery) and advancements. Frostmaw spawns in Frozen Wastes and snowfields, and drops and steals its ice crystal as normal. Advancements for jungle, savanna and forest Mowzie mobs that can't spawn here are removed. |
 | Create: Netherless | Detected automatically; keeps the Nether-material advancements reachable. |

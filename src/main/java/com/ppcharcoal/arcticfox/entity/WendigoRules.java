@@ -36,13 +36,12 @@ public final class WendigoRules {
     }
 
     /**
-     * Underground: no open sky above and more than 6 blocks of ground/rock overhead (caves, mines, tunnels).
+     * Underground: more than 6 blocks of solid ground/rock overhead (leaves don't count) (caves, mines, tunnels).
      * A house with a roof is still the surface.
      */
     public static boolean isUnderground(net.minecraft.world.entity.Entity entity) {
         Level level = entity.level();
         BlockPos pos = entity.blockPosition();
-        if (level.canSeeSky(pos.above())) return false;
         int top = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, pos.getX(), pos.getZ());
         return top - pos.getY() > 6;
     }

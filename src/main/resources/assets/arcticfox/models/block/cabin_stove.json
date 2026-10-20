@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "front": "arcticfox:block/cabin_stove_front",
+    "side": "arcticfox:block/cabin_stove_side",
+    "top": "arcticfox:block/cabin_stove_top"
+  }
+}

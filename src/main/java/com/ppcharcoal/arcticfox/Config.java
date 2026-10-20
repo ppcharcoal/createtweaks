@@ -71,7 +71,7 @@ public final class Config {
 
     public static final ModConfigSpec.IntValue SNOW_MAX_DEPTH = BUILDER
             .comment("Maximum snow depth in blocks.")
-            .defineInRange("snow.maxDepthBlocks", 3, 1, 8);
+            .defineInRange("snow.maxDepthBlocks", 2, 1, 8);
 
     public static final ModConfigSpec.IntValue SNOW_ATTEMPTS_PER_TICK = BUILDER
             .comment("Columns per player per tick that receive snow while it snows (doubled during snowstorms). ~6 gives roughly 1 block per snowstorm night.")

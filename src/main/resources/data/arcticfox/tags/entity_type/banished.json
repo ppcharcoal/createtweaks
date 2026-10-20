@@ -10,6 +10,10 @@
     "minecraft:illusioner",
     "minecraft:ravager",
     "minecraft:vex",
-    "minecraft:witch"
+    "minecraft:witch",
+    {
+      "id": "railways:conductor",
+      "required": false
+    }
   ]
 }

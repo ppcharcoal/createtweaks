@@ -1,15 +1,10 @@
 {
-  "type": "minecraft:jigsaw",
+  "type": "arcticfox:dry_land",
   "biomes": "#arcticfox:has_structure/buried_camp",
   "step": "surface_structures",
   "spawn_overrides": {},
   "terrain_adaptation": "beard_thin",
-  "start_pool": "arcticfox:buried_camp/start",
-  "size": 1,
-  "start_height": {
-    "absolute": -2
-  },
-  "max_distance_from_center": 80,
-  "use_expansion_hack": false,
-  "project_start_to_heightmap": "WORLD_SURFACE_WG"
+  "inner": "arcticfox:buried_camp_inner",
+  "radius": 6,
+  "max_slope": 4
 }

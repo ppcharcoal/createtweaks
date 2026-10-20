@@ -49,6 +49,9 @@ public final class ModBusEvents {
             event.insertAfter(new ItemStack(ModItems.DIAMOND_SPEAR.get()), new ItemStack(ModItems.NETHERITE_SPEAR.get()), both);
         } else if (event.getTabKey() == CreativeModeTabs.NATURAL_BLOCKS) {
             event.accept(ModItems.SCORIA.get());
+        } else if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
+            event.accept(ModItems.CABIN_STOVE.get());
+            event.accept(ModItems.FLICKERING_LAMP.get());
         } else if (event.getTabKey() == CreativeModeTabs.SPAWN_EGGS) {
             event.accept(ModItems.WINTER_COW_SPAWN_EGG.get());
             event.accept(ModItems.WINTER_SHEEP_SPAWN_EGG.get());

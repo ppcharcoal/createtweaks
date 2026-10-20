@@ -62,6 +62,8 @@ public final class CreateHeat {
     }
 
     private static void onRegister(BlockTempRegisterEvent event) {
+        // Arctic Fox's own cast-iron stove: +18 C while burning (range 7)
+        event.register(new StoveTemp(com.ppcharcoal.arcticfox.registry.ModBlocks.CABIN_STOVE.get()));
         if (!com.ppcharcoal.arcticfox.Config.CREATE_HEAT.get()) return;
         Block[] burners = blocks("blaze_burner");
         if (burners.length == 0) return; // Create not installed
@@ -80,6 +82,17 @@ public final class CreateHeat {
             event.register(new SimpleHeat(6 * C, 5, 12 * C, blocksOf("create_new_age", "solid_corium")));
         }
         ArcticFox.LOGGER.info("Registered Create heat sources for Cold Sweat");
+    }
+
+    static class StoveTemp extends SimpleHeat {
+        StoveTemp(Block... blocks) {
+            super(18 * C, 7, 26 * C, blocks);
+        }
+
+        @Override
+        public boolean isValid(Level level, BlockPos pos, BlockState state) {
+            return state.hasProperty(com.ppcharcoal.arcticfox.block.CabinStoveBlock.LIT) && state.getValue(com.ppcharcoal.arcticfox.block.CabinStoveBlock.LIT);
+        }
     }
 
     /** Fixed heat while the block exists. */

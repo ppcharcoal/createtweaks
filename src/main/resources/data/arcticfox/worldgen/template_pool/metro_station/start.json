@@ -20,7 +20,7 @@
         "element_type": "minecraft:single_pool_element",
         "location": "arcticfox:metro_station",
         "projection": "rigid",
-        "processors": "minecraft:empty"
+        "processors": "arcticfox:rail_swaps"
       }
     }
   ]

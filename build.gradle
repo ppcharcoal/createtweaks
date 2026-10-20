@@ -75,6 +75,7 @@ dependencies {
             cei    : ["JWGBpFUP:${cei_version}", "dzb1a5WV:${dragons_plus_version}"],
             newage : ["FTeXqI9v:${new_age_version}"],
             deco   : ["sMvUb4Rb:${create_deco_version}"],
+            rails  : ["L3Jv0QZI:${steam_n_rails_version}"],
             soph   : ["nmoqTijg:${soph_core_version}", "TyCTlI4b:${soph_backpacks_version}", "hMlaZH8f:${soph_storage_version}",
                       "s85zLEDe:${soph_backpacks_create_version}", "MJ0hdevs:${soph_storage_create_version}"],
         ]

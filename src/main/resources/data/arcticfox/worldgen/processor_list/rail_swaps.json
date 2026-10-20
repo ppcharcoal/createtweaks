@@ -1,0 +1,17 @@
+{
+  "processors": [
+    {
+      "processor_type": "arcticfox:optional_swap",
+      "rules": [
+        {
+          "input": "create:track",
+          "output": "railways:track_spruce"
+        },
+        {
+          "input": "create:railway_casing",
+          "output": "railways:hazard_stripes_diagonal_on_black"
+        }
+      ]
+    }
+  ]
+}

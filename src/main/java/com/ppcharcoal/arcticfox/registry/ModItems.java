@@ -72,6 +72,8 @@ public final class ModItems {
             () -> new HoeItem(COPPER, new Item.Properties().attributes(DiggerItem.createAttributes(COPPER, -1.0F, -2.0F))));
 
     public static final DeferredItem<BlockItem> SCORIA = ITEMS.registerSimpleBlockItem(ModBlocks.SCORIA);
+    public static final DeferredItem<BlockItem> FLICKERING_LAMP = ITEMS.registerSimpleBlockItem(ModBlocks.FLICKERING_LAMP);
+    public static final DeferredItem<BlockItem> CABIN_STOVE = ITEMS.registerSimpleBlockItem(ModBlocks.CABIN_STOVE);
 
     public static final DeferredItem<DeferredSpawnEggItem> WINTER_COW_SPAWN_EGG = ITEMS.register("winter_cow_spawn_egg",
             () -> new DeferredSpawnEggItem(ModEntities.WINTER_COW, 0xD9DCE0, 0x6B7380, new Item.Properties()));

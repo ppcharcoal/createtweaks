@@ -22,5 +22,8 @@
   "structure.arcticfox.cabin": "Trapper's Cabin",
   "structure.arcticfox.train_station": "Abandoned Train Station",
   "structure.arcticfox.metro_station": "Abandoned Metro Station",
-  "item.arcticfox.incomplete_mending_book": "Incomplete Mending Book"
+  "item.arcticfox.incomplete_mending_book": "Incomplete Mending Book",
+  "block.arcticfox.cabin_stove": "Cast-Iron Stove",
+  "block.arcticfox.flickering_lamp": "Flickering Lamp",
+  "message.arcticfox.stove_full": "The stove is already full"
 }

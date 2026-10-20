@@ -17,7 +17,7 @@
         "element_type": "minecraft:single_pool_element",
         "location": "arcticfox:train_station_deco",
         "projection": "rigid",
-        "processors": "minecraft:empty"
+        "processors": "arcticfox:rail_swaps"
       }
     }
   ]

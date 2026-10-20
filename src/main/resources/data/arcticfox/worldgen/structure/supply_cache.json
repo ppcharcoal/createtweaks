@@ -1,15 +1,10 @@
 {
-  "type": "minecraft:jigsaw",
+  "type": "arcticfox:dry_land",
   "biomes": "#arcticfox:has_structure/supply_cache",
   "step": "surface_structures",
   "spawn_overrides": {},
   "terrain_adaptation": "beard_thin",
-  "start_pool": "arcticfox:supply_cache/start",
-  "size": 1,
-  "start_height": {
-    "absolute": -1
-  },
-  "max_distance_from_center": 80,
-  "use_expansion_hack": false,
-  "project_start_to_heightmap": "WORLD_SURFACE_WG"
+  "inner": "arcticfox:supply_cache_inner",
+  "radius": 4,
+  "max_slope": 4
 }

@@ -305,8 +305,10 @@ public final class SmokeTest {
         int snowBlocks = 0;
         for (int dy = 0; dy < 5; dy++) if (level.getBlockState(base.above(dy)).is(Blocks.SNOW_BLOCK)) snowBlocks++;
         BlockState topLayer = level.getBlockState(base.above(2));
-        log("snow stacking: layers added=%d (expected 24) snow blocks=%d (2) top=%s", added, snowBlocks, topLayer);
-        if (added != 24 || snowBlocks != 2 || !topLayer.is(Blocks.SNOW)) ok = false;
+        int depthBlocks = Config.SNOW_MAX_DEPTH.get();
+        topLayer = level.getBlockState(base.above(depthBlocks - 1));
+        log("snow stacking: layers added=%d (expected %d) snow blocks=%d (%d) top=%s", added, depthBlocks * 8, snowBlocks, depthBlocks - 1, topLayer);
+        if (added != depthBlocks * 8 || snowBlocks != depthBlocks - 1 || !topLayer.is(Blocks.SNOW)) ok = false;
         BlockPos glass = base.east(4);
         level.setBlock(glass, Blocks.GLASS.defaultBlockState(), 3);
         level.setBlock(glass.above(), Blocks.AIR.defaultBlockState(), 3);
@@ -415,13 +417,36 @@ public final class SmokeTest {
             BlockPos at = new BlockPos(2000 + ours.indexOf(id) * 40, 200, 2000);
             level.getChunk(at.getX() >> 4, at.getZ() >> 4);
             var t = template.get();
-            t.placeInWorld(level, at, at, new net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings(), level.random, 2);
-            int lootChests = 0;
+            var settings = new net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings();
+            if (id.startsWith("train") || id.startsWith("metro")) {
+                level.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.PROCESSOR_LIST)
+                        .getOptional(ArcticFox.id("rail_swaps")).ifPresent(list -> list.list().forEach(settings::addProcessor));
+            }
+            t.placeInWorld(level, at, at, settings, level.random, 2);
+            int lootChests = 0, createTracks = 0, railwaysTracks = 0, vanillaRails = 0, lamps = 0;
             for (BlockPos p : BlockPos.betweenClosed(at, at.offset(t.getSize()).offset(-1, -1, -1))) {
                 if (level.getBlockEntity(p) instanceof net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity c && c.getLootTable() != null) lootChests++;
+                BlockState st = level.getBlockState(p);
+                String key = BuiltInRegistries.BLOCK.getKey(st.getBlock()).toString();
+                if (key.equals("create:track")) createTracks++;
+                if (key.startsWith("railways:track")) railwaysTracks++;
+                if (st.is(Blocks.RAIL)) vanillaRails++;
+                if (st.is(com.ppcharcoal.arcticfox.registry.ModBlocks.FLICKERING_LAMP.get())) lamps++;
             }
-            log("structure %s: size=%s nearest=%s loot chests=%d", id, t.getSize().toShortString(), found == null ? "none within 100 chunks" : found.toShortString(), lootChests);
-            if (found == null || lootChests == 0) ok = false;
+            boolean dry = true;
+            if (found != null && !id.startsWith("metro")) {
+                var gen = level.getChunkSource().getGenerator();
+                int surface = gen.getBaseHeight(found.getX(), found.getZ(), Heightmap.Types.WORLD_SURFACE_WG, level, level.getChunkSource().randomState());
+                int floor = gen.getBaseHeight(found.getX(), found.getZ(), Heightmap.Types.OCEAN_FLOOR_WG, level, level.getChunkSource().randomState());
+                dry = surface == floor;
+            }
+            log("structure %s: size=%s nearest=%s on dry land=%s loot chests=%d create tracks=%d S&R tracks=%d vanilla rails=%d lamps=%d",
+                    id, t.getSize().toShortString(), found == null ? "none within 100 chunks" : found.toShortString(), dry, lootChests,
+                    createTracks, railwaysTracks, vanillaRails, lamps);
+            if (found == null || lootChests == 0 || !dry || vanillaRails > 0) ok = false;
+            if ((id.startsWith("train") || id.startsWith("metro")) && (createTracks + railwaysTracks == 0 || lamps == 0)) ok = false;
+            if (mods.isLoaded("railways") && createTracks > 0) ok = false;
+            if (id.equals("cabin")) ok &= checkCabinWarmth(level, at, t.getSize());
         }
 
         // --- weather: sunny/snowy days, blizzard nights
@@ -512,6 +537,31 @@ public final class SmokeTest {
         return ok;
     }
 
+    /** The cabin's stove must be burning, and with Cold Sweat the inside must be above freezing at midnight. */
+    private static boolean checkCabinWarmth(ServerLevel level, BlockPos at, net.minecraft.core.Vec3i size) {
+        boolean ok = true;
+        BlockPos stovePos = null;
+        for (BlockPos p : BlockPos.betweenClosed(at, at.offset(size).offset(-1, -1, -1))) {
+            if (level.getBlockEntity(p) instanceof com.ppcharcoal.arcticfox.block.CabinStoveBlockEntity) stovePos = p.immutable();
+        }
+        int fuel = stovePos == null ? 0 : ((com.ppcharcoal.arcticfox.block.CabinStoveBlockEntity) level.getBlockEntity(stovePos)).getFuel();
+        log("cabin stove found=%s fuel=%d ticks (expected 48000) lit=%s", stovePos != null, fuel,
+                stovePos != null && level.getBlockState(stovePos).getValue(com.ppcharcoal.arcticfox.block.CabinStoveBlock.LIT));
+        if (stovePos == null || fuel < 40000) ok = false;
+        if (com.ppcharcoal.arcticfox.compat.ColdSweatCompat.loaded()) {
+            long keep = level.getDayTime();
+            level.setDayTime(keep - keep % 24000 + 18000);
+            BlockPos inside = at.offset(5, 2, 5);
+            BlockPos outside = at.offset(5, 2, -30);
+            double in = com.ppcharcoal.arcticfox.compat.ColdSweatCompat.temperatureCelsius(level, inside, true);
+            double out = com.ppcharcoal.arcticfox.compat.ColdSweatCompat.temperatureCelsius(level, outside, true);
+            level.setDayTime(keep);
+            log("cabin at midnight: %.1f C inside vs %.1f C outside (expected inside > 5)", in, out);
+            if (in <= 5) ok = false;
+        }
+        return ok;
+    }
+
     private static boolean checkV13(MinecraftServer server, ServerLevel level) {
         boolean ok = true;
         var mods = net.neoforged.fml.ModList.get();
@@ -568,8 +618,11 @@ public final class SmokeTest {
                 }
                 log("alex's mobs in %s: %s", b, found);
             }
-            log("alex's mobs that can spawn in the frozen world: %d species", all.size());
+            log("alex's mobs that can spawn in the frozen world: %d species: %s", all.size(), all);
             if (all.isEmpty()) ok = false;
+            for (String bad : List.of("fly", "platypus", "raccoon", "cockroach", "devils_hole_pupfish", "sunbird")) {
+                if (all.contains(bad)) { log("FAIL: %s still spawns", bad); ok = false; }
+            }
         }
         if (mods.isLoaded("create_new_age") && com.ppcharcoal.arcticfox.compat.ColdSweatCompat.loaded()) {
             BlockPos at = new BlockPos(2900, 150, 2600), control = at.offset(0, 0, 20);
@@ -582,6 +635,12 @@ public final class SmokeTest {
             double cold = com.ppcharcoal.arcticfox.compat.ColdSweatCompat.temperatureCelsius(level, control.offset(2, 0, 0), true);
             log("create new age: corium %.1f C two blocks away vs %.1f C without it (+%.1f, expected > 3)", hot, cold, hot - cold);
             if (hot - cold <= 3) ok = false;
+        }
+        if (mods.isLoaded("railways")) {
+            var conductor = BuiltInRegistries.ENTITY_TYPE.getOptional(ResourceLocation.parse("railways:conductor"));
+            boolean banned = conductor.map(c -> c.is(ModTags.BANISHED)).orElse(false);
+            log("steam 'n' rails: conductor mob banished=%s (true)", banned);
+            if (!banned) ok = false;
         }
         List<String> sophisticated = mods.getMods().stream().map(m -> m.getModId()).filter(id -> id.startsWith("sophisticated")).sorted().toList();
         if (!sophisticated.isEmpty()) log("sophisticated mods loaded alongside: %s", sophisticated);

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "arcticfox:block/flickering_lamp"
+    },
+    "lit=true": {
+      "model": "arcticfox:block/flickering_lamp_on"
+    }
+  }
+}

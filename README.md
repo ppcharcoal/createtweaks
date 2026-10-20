@@ -88,6 +88,13 @@ So farms belong in heated glass greenhouses or underground, watered by Create. S
 - **Smoker: rotten flesh → leather.**
 - Progression: punch logs → dig gravel → flint tools → copper → copper tools → iron → diamond.
 
+### Emeralds have a job again
+Without villagers, emeralds buy what villagers and illagers used to give:
+- **Mending books** (Create sequenced assembly): book, then 3 loops of *deploy emerald → fill 250 mB liquid XP → press*. Without Create: Enchantment Industry, the XP step deploys an experience nugget instead.
+- **Totem of Undying** on the Mechanical Crafter: 4 emeralds, gold, a golden apple and a precision mechanism. "Postmortal" is achievable again.
+- **Bell**: sticks, gold and an emerald.
+- **Liquid XP**: with Create: Enchantment Industry, the Mechanical Grindstone turns an emerald into 30 mB of experience (270 mB for a block).
+
 ### Elytra & shulker boxes, Create-made
 With the End sealed, both are built on a **Mechanical Crafter** grid (Create required):
 - **Elytra** (7x4): brass sheets, a precision mechanism, andesite alloy, leather, white sails and phantom membranes.
@@ -121,6 +128,12 @@ With the End sealed, both are built on a **Mechanical Crafter** grid (Create req
 | Cold Sweat + Create (replaces Create: Cold Sweat) | **A working factory keeps you warm.** Blaze burners (+3 to +20 °C by heat level), lit blaze burners, steam engines on a running boiler, and pipes, pumps, valves, basins, spouts and item drains holding lava or other hot fluids all radiate heat. Fluid tanks with lava and boilers use Cold Sweat's own heating. Measured 2 blocks away: seething burner +13 °C, lava basin +13 °C, lava tank +7 °C. |
 | Cold Sweat | Surface biomes sit around **-12 °C by day and -18 °C at night** (colder in storms), measured in game. Crop growth uses Cold Sweat's real temperature. **No grace period when you respawn at your own bed or respawn anchor** (Cold Sweat would otherwise grant it after every death); first join still gets it. |
 | Farmer's Delight | Its wild crops only spawn in warm biomes, so its seeds (cabbage, tomato, onion, rice) are added to cabin and supply cache loot. Greenhouse crops then feed Slice & Dice's cutting automation. Raw FD meats count as raw food. |
+| Spoiled | Food spoils after **3 in-game days** instead of 1. Cold Sweat's icebox slows it as usual. |
+| Create: Enchantment Industry | Emeralds grind into liquid XP, and Mending books are made with it (see Emeralds). Slice & Dice sprinklers can already spray liquid XP. The Gem Cutter only works with Apotheosis gems. |
+| Create: New Age | Heaters, heat pipes and pumps, Stirling engines, solar heating plates, reactor vents and corium warm players (Cold Sweat) and count as greenhouse heat. Corium measured +21 °C two blocks away. |
+| Alex's Mobs (Continued) | Its spawn rules use `forge:` climate tags, which now include the frozen biomes. 23 species spawn here: moose, snow leopards, bison, grizzlies, froststalkers, tusklins, seals, orcas, crows, eagles and more. Hostile ones on the surface (centipedes, murmurs, farseers) are cave creatures and stay blocked above ground by the frozen-surface rule. |
+| Create Deco | Train and metro stations get Create Deco versions with shipping containers, catwalks, warning decals, industrial lamps, cracked and mossy bricks and iron supports. |
+| Sophisticated Backpacks / Storage | Use the official **Sophisticated Backpacks Create Integration** and **Sophisticated Storage Create Integration** mods for contraption support. Tested alongside: Backpacks 3.26.9 with integration 0.2.2 (0.2.3 needs Backpacks 3.26.10). |
 | Snow! Real Magic | Its own snow covering still works; Arctic Fox stacks snow above one block, up to 3 blocks deep. |
 | Mowzie's Mobs | **Frostmaw is the only boss, and a very rare find** (one per ~96 chunks instead of 25). Ferrous Wroughtnaut, Umvuthi and the Sculptor are removed, along with their structures (wrought chamber, Umvuthana grove, monastery) and advancements. Frostmaw spawns in Frozen Wastes and snowfields, and drops and steals its ice crystal as normal. Advancements for jungle, savanna and forest Mowzie mobs that can't spawn here are removed. |
 | Create: Netherless | Detected automatically; keeps the Nether-material advancements reachable. |

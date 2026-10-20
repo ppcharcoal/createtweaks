@@ -1,0 +1,30 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": "#arcticfox:snowy_land",
+  "spawners": [
+    {
+      "type": "arcticfox:winter_sheep",
+      "weight": 5,
+      "minCount": 2,
+      "maxCount": 3
+    },
+    {
+      "type": "arcticfox:winter_cow",
+      "weight": 4,
+      "minCount": 2,
+      "maxCount": 3
+    },
+    {
+      "type": "minecraft:pig",
+      "weight": 3,
+      "minCount": 2,
+      "maxCount": 3
+    },
+    {
+      "type": "minecraft:chicken",
+      "weight": 3,
+      "minCount": 2,
+      "maxCount": 3
+    }
+  ]
+}

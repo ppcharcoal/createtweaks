@@ -1,0 +1,42 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "create:mechanical_crafting",
+  "accept_mirrored": false,
+  "category": "equipment",
+  "key": {
+    "B": {
+      "item": "create:brass_sheet"
+    },
+    "M": {
+      "item": "minecraft:phantom_membrane"
+    },
+    "S": {
+      "item": "create:white_sail"
+    },
+    "P": {
+      "item": "create:precision_mechanism"
+    },
+    "A": {
+      "item": "create:andesite_alloy"
+    },
+    "L": {
+      "item": "minecraft:leather"
+    }
+  },
+  "pattern": [
+    "BB P BB",
+    "MSALASM",
+    "MS   SM",
+    "M     M"
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:elytra"
+  },
+  "show_notification": true
+}

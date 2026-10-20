@@ -1,0 +1,20 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create_enchantment_industry"
+    }
+  ],
+  "type": "create_enchantment_industry:grinding",
+  "ingredients": [
+    {
+      "item": "minecraft:emerald"
+    }
+  ],
+  "results": [
+    {
+      "amount": 30,
+      "id": "create_enchantment_industry:experience"
+    }
+  ]
+}

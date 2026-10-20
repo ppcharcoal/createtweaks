@@ -1,0 +1,121 @@
+modLoader = "javafml"
+loaderVersion = "${loader_version_range}"
+license = "${mod_license}"
+issueTrackerURL = "https://github.com/ppcharcoal/createtweaks/issues"
+
+[[mods]]
+modId = "${mod_id}"
+version = "${mod_version}"
+displayName = "${mod_name}"
+displayURL = "https://github.com/ppcharcoal/createtweaks"
+logoFile = "arcticfox_logo.png"
+authors = "${mod_authors}"
+description = '''${mod_description}'''
+
+[[dependencies.${mod_id}]]
+modId = "neoforge"
+type = "required"
+versionRange = "${neo_version_range}"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "minecraft"
+type = "required"
+versionRange = "${minecraft_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "create"
+type = "optional"
+versionRange = "*"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "sereneseasons"
+type = "optional"
+versionRange = "*"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "jei"
+type = "optional"
+versionRange = "*"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "mowziesmobs"
+type = "optional"
+versionRange = "*"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "cold_sweat"
+type = "optional"
+versionRange = "*"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "snowrealmagic"
+type = "optional"
+versionRange = "*"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "spoiled"
+type = "optional"
+versionRange = "*"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "createdeco"
+type = "optional"
+versionRange = "*"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "create_new_age"
+type = "optional"
+versionRange = "*"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "alexsmobs"
+type = "optional"
+versionRange = "*"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "create_enchantment_industry"
+type = "optional"
+versionRange = "*"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "farmersdelight"
+type = "optional"
+versionRange = "*"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "sliceanddice"
+type = "optional"
+versionRange = "*"
+ordering = "AFTER"
+side = "BOTH"
+
+[[mixins]]
+config = "arcticfox.mixins.json"

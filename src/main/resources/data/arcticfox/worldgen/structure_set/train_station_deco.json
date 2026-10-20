@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "createdeco"
+    }
+  ],
+  "structures": [
+    {
+      "structure": "arcticfox:train_station_deco",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 72,
+    "separation": 30,
+    "salt": 31928475
+  }
+}

@@ -1,0 +1,30 @@
+name: Bisect compat
+on: push
+permissions:
+  contents: write
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        groups: [ "base,am", "base,spoiled", "base,cei", "base,newage", "base,deco", "base,soph" ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with: { distribution: temurin, java-version: 21 }
+      - uses: gradle/actions/setup-gradle@v4
+      - run: |
+          chmod +x gradlew; mkdir -p run-smoke; echo "eula=true" > run-smoke/eula.txt
+          printf "online-mode=false\nlevel-seed=arcticfox\nmax-tick-time=-1\n" > run-smoke/server.properties
+          timeout 1500 ./gradlew runSmokeTest -PcompatMods -PcompatGroups=${{ matrix.groups }} 2>&1 | tee run.log || true
+          if grep -q "ARCTICFOX SMOKETEST PASS" run.log; then r=PASS; elif grep -q "ARCTICFOX SMOKETEST FAIL" run.log; then r=TESTFAIL; else r=CRASH; fi
+          echo "${{ matrix.groups }} $r" > result.txt
+          grep -E "ArcticFox/SMOKE\] (alex|spoiled|emeralds|CEI|create new age|structure (train|metro)|sophisticated|ARCTIC)|FATAL|unused register|requires" run.log | cut -c1-400 >> result.txt || true
+      - name: publish
+        run: |
+          mkdir /tmp/r && cp result.txt /tmp/r/ && cd /tmp/r
+          git init -q -b "bisect-$(echo '${{ matrix.groups }}' | tr ',' '-')"
+          git config user.name ci; git config user.email ci@users.noreply.github.com
+          git add -A && git commit -q -m r
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD

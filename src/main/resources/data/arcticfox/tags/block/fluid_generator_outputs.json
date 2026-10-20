@@ -1,0 +1,14 @@
+{
+  "values": [
+    "minecraft:cobblestone",
+    "minecraft:stone",
+    {
+      "id": "create:limestone",
+      "required": false
+    },
+    {
+      "id": "create:scoria",
+      "required": false
+    }
+  ]
+}

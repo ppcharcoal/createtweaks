@@ -1,0 +1,81 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create_enchantment_industry"
+    }
+  ],
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "item": "minecraft:book"
+  },
+  "transitional_item": {
+    "id": "arcticfox:incomplete_mending_book"
+  },
+  "loops": 3,
+  "results": [
+    {
+      "id": "minecraft:enchanted_book",
+      "components": {
+        "minecraft:stored_enchantments": {
+          "levels": {
+            "minecraft:mending": 1
+          }
+        }
+      }
+    }
+  ],
+  "sequence": [
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "arcticfox:incomplete_mending_book"
+        },
+        {
+          "item": "minecraft:emerald"
+        }
+      ],
+      "results": [
+        {
+          "id": "arcticfox:incomplete_mending_book"
+        }
+      ]
+    },
+    {
+      "type": "create:filling",
+      "ingredients": [
+        {
+          "item": "arcticfox:incomplete_mending_book"
+        },
+        {
+          "type": "neoforge:single",
+          "amount": 250,
+          "fluid": "create_enchantment_industry:experience"
+        }
+      ],
+      "results": [
+        {
+          "id": "arcticfox:incomplete_mending_book"
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "arcticfox:incomplete_mending_book"
+        }
+      ],
+      "results": [
+        {
+          "id": "arcticfox:incomplete_mending_book"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "values": [
+    "minecraft:carrot",
+    "minecraft:potato",
+    "minecraft:beetroot_seeds",
+    {
+      "id": "farmersdelight:cabbage_seeds",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:onion",
+      "required": false
+    }
+  ]
+}

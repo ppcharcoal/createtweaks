@@ -1,0 +1,12 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mowziesmobs"
+    }
+  ],
+  "type": "mowziesmobs:wrought_chamber",
+  "biomes": [],
+  "spawn_overrides": {},
+  "step": "surface_structures"
+}

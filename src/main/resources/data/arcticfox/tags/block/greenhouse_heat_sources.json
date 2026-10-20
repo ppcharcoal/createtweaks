@@ -1,0 +1,44 @@
+{
+  "values": [
+    "#minecraft:campfires",
+    "minecraft:magma_block",
+    "minecraft:lava",
+    "minecraft:fire",
+    "minecraft:soul_fire",
+    "minecraft:furnace",
+    "minecraft:blast_furnace",
+    "minecraft:smoker",
+    {
+      "id": "create:blaze_burner",
+      "required": false
+    },
+    {
+      "id": "create:lit_blaze_burner",
+      "required": false
+    },
+    {
+      "id": "cold_sweat:hearth_bottom",
+      "required": false
+    },
+    {
+      "id": "cold_sweat:boiler",
+      "required": false
+    },
+    {
+      "id": "create_new_age:heater",
+      "required": false
+    },
+    {
+      "id": "create_new_age:heat_pipe",
+      "required": false
+    },
+    {
+      "id": "create_new_age:corium",
+      "required": false
+    },
+    {
+      "id": "create_new_age:reactor_heat_vent",
+      "required": false
+    }
+  ]
+}

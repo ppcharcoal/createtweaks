@@ -1,0 +1,8 @@
+{
+  "biomes": [
+    "#arcticfox:snowy_surface"
+  ],
+  "min_temp": -2.7,
+  "max_temp": 3.3,
+  "units": "c"
+}
